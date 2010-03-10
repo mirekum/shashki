@@ -14,7 +14,7 @@
 using namespace std;
 
 // точка входа
-int main (void) {
+int main () {
 	// белые, чёрные
 	GAME shashki(AI2, AI);
 	return 0;

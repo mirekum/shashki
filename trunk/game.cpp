@@ -14,18 +14,18 @@ using namespace std;
 
 // конструктор класса
 GAME::GAME (int w, int b) {
-	/* подготовка к игре */
 	// игрок белыми
 	wp = createPlayer(w);
-	wp->setType(WHITE);
 	// игрок чёрными
 	bp = createPlayer(b);
-	bp->setType(BLACK);
-	/* игровой цикл */
-	if (wp != NULL && bp != NULL)
+	// игровой цикл
+	if (wp != NULL && bp != NULL) {
+		wp->setType(WHITE);
+		bp->setType(BLACK);
 		process();
-	else
+	} else {
 		cout << "Error: undefined type of player(s)!" << endl;
+	}
 }
 
 PLAYER* GAME::createPlayer(int plr) {
@@ -57,7 +57,7 @@ void GAME::process () {
 			getchar();
 		}
 		// проверяем, есть ли ещё неполные полуходы
-		while (board.can_move(WHITE));
+		while (board.can_move());
 		// проверка на выигрыш
 		if (res_flag = board.is_win()) return result(res_flag);
 		
@@ -72,7 +72,7 @@ void GAME::process () {
 			getchar();
 		}
 		// проверяем, есть ли ещё неполные полуходы
-		while (board.can_move(BLACK));
+		while (board.can_move());
 		// проверка на выигрыш
 		if (res_flag = board.is_win()) return result(res_flag);
 		
