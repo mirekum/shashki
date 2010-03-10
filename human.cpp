@@ -14,9 +14,9 @@ using namespace std;
 /* методы класса "Игрок-человек" */
 
 // выполнение хода
-BOARD_MOVE HUMAN_PLAYER::move(BOARD board) {
+MOVE HUMAN_PLAYER::move(BOARD board) {
 	// неполный полуход
-	BOARD_MOVE res;
+	MOVE res;
 	// вводим неполный полуход
 	do {
 		cout << "x1 = "; cin >> res.from.x;

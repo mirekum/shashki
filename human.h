@@ -8,7 +8,7 @@
 	class HUMAN_PLAYER: public PLAYER {
 	public:
 		// выполнение хода
-		virtual BOARD_MOVE move(BOARD board);
+		virtual MOVE move(BOARD board);
 	};
 	
 #endif

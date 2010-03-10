@@ -16,10 +16,10 @@
 		// конструктор класса
 		AI_PLAYER() {max_step = 4;}
 		// выполнение хода
-		virtual BOARD_MOVE move(BOARD board);
+		virtual MOVE move(BOARD board);
 	protected:
 		// выбор наилучшего хода
-		virtual int choose(BOARD board, int _type, BOARD_MOVE *res, int step = 0, int last = -MINMAX_END, bool smflag = true);
+		virtual int choose(BOARD board, int _type, MOVE *res, int step = 0, int last = -MINMAX_END, bool smflag = true);
 	};
 	
 	// немного другой игрок-компьютер

@@ -13,9 +13,9 @@ using namespace std;
 /* методы класса "Игрок-человек" */
 
 // выполнение хода
-BOARD_MOVE AI_PLAYER::move(BOARD board) {
+MOVE AI_PLAYER::move(BOARD board) {
 	// неполный полуход
-	BOARD_MOVE res;
+	MOVE res;
 	// выбираем лучший неполный полуход
 	choose(board, type, &res);
 	// результат
@@ -23,16 +23,16 @@ BOARD_MOVE AI_PLAYER::move(BOARD board) {
 }
 
 // выбор наилучшего хода
-int AI_PLAYER::choose(BOARD board, int _type, BOARD_MOVE *res, int step, int last, bool smflag) {
+int AI_PLAYER::choose(BOARD board, int _type, MOVE *res, int step, int last, bool smflag) {
 	// не последний ход
 	if (step < max_step) {
 		bool minimax = (step % 2 == 0 ? 1 : 0); // минимум или максимум необходимо считать (1 - max, 0 - min)
 		int max = -MINMAX_END, min = MINMAX_END; // максимум и минимум по СОФ
 		// двойной цикл по шашкам
-		for (int i = 0; i < board.getSize(); i++) {
-			for (int j = 0; j < board.getSize(); j++) {
+		for (int i = 0; i < board.size; i++) {
+			for (int j = 0; j < board.size; j++) {
 				int m;
-				BOARD_CELL d(i, j), arr[16];
+				CELL d(i, j), arr[16];
 				// если это первый неполный полуход - начинаем полуход
 				if (smflag) board.start_move(_type);
 				// возможные ходы текущей шашки
@@ -87,7 +87,7 @@ int AI_PLAYER::choose(BOARD board, int _type, BOARD_MOVE *res, int step, int las
 						}
 					}
 					// для отладки
-					if (step <= 0 && 0) {
+					if (step <= 0) {
 						cout << "> [" << step << "/" << max_step << ", " << s << ", " << last << "] " <<
 							"(" << d.x << ", " << d.y << ") -> (" << arr[k].x << ", " << arr[k].y << ")" << endl;
 					}
@@ -110,11 +110,11 @@ int AI_PLAYER::choose(BOARD board, int _type, BOARD_MOVE *res, int step, int las
 int AI_PLAYER::srf(BOARD board) {
 	// для белых
 	if (type > 0) {
-		return board.white() - board.black();
+		return (board.white() - board.black()) + 3*(board.white_king() - board.black_king());
 	}
 	// для чёрных
 	else if (type < 0) {
-		return board.black() - board.white();
+		return (board.black() - board.white()) + 3*(board.black_king() - board.white_king());
 	}
 	// для неопределённого значения
 	return 0;

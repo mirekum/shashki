@@ -4,7 +4,7 @@
 	#define HUMAN 10
 	#define AI    20
 	#define AI2   30
-		
+	
 	// класс "Игрок в шашки"
 	class PLAYER {
 	protected:
@@ -16,7 +16,7 @@
 		// установка цвета игрока
 		void setType(int _type) {type = _type;};
 		// выполнение неполного полухода
-		virtual BOARD_MOVE move(BOARD board) = 0;
+		virtual MOVE move(BOARD board) = 0;
 	};
 	
 #endif

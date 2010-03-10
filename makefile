@@ -12,5 +12,5 @@ include $(wildcard *.d)
 
 # очистка ненужностей
 clean:
-	rm -f *.o *.d *~
+	rm -f *.o *.d *~ res
 
