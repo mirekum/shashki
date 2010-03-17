@@ -1,5 +1,6 @@
 #ifndef _AI_H_
 	#define _AI_H_
+	#include "player.h"
 	
 	#define MINMAX_END 2000000
 	
