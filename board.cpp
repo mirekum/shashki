@@ -1,7 +1,5 @@
 #include <iostream>
-#include <iomanip>
 #include <stdlib.h>
-#include <math.h>
 
 #include "board.h"
 

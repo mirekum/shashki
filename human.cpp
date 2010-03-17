@@ -1,8 +1,4 @@
 #include <iostream>
-#include <iomanip>
-#include <string>
-#include <string.h>
-#include <stdlib.h>
 
 #include "board.h"
 #include "player.h"
@@ -28,12 +24,5 @@ MOVE HUMAN_PLAYER::move(BOARD board) {
 	} while (1);
 	// результат
 	return res;
-}
-
-// ввод C-подобной строки
-void fgetstr (char *str, int len) {
-	if (len <= 1) {strcpy(str, ""); return;}
-	fgets(str, len, stdin);
-	fseek(stdin, 0, SEEK_END);
 }
 
