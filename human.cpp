@@ -1,11 +1,6 @@
 #include <iostream>
-
 #include "board.h"
-#include "player.h"
 #include "human.h"
-#include "game.h"
-
-using namespace std;
 
 /* методы класса "Игрок-человек" */
 
@@ -15,12 +10,12 @@ MOVE HUMAN_PLAYER::move(BOARD board) {
 	MOVE res;
 	// вводим неполный полуход
 	do {
-		cout << "x1 = "; cin >> res.from.x;
-		cout << "y1 = "; cin >> res.from.y;
-		cout << "x2 = "; cin >> res.to.x;
-		cout << "y2 = "; cin >> res.to.y;
+		std::cout << "x1 = "; std::cin >> res.from.x;
+		std::cout << "y1 = "; std::cin >> res.from.y;
+		std::cout << "x2 = "; std::cin >> res.to.x;
+		std::cout << "y2 = "; std::cin >> res.to.y;
 		if (board.move(res)) break;
-		else cout << "Error, please repeat move!" << endl;
+		else std::cout << "Error, please repeat move!" << std::endl;
 	} while (1);
 	// результат
 	return res;

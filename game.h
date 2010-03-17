@@ -1,5 +1,7 @@
 #ifndef _GAME_H_
 	#define _GAME_H_
+	#include "board.h"
+	#include "player.h"
 	
 	// класс "Игра в шашки"
 	class GAME {

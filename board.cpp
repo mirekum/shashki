@@ -1,9 +1,6 @@
 #include <iostream>
 #include <stdlib.h>
-
 #include "board.h"
-
-using namespace std;
 
 /* методы класса "Доска для игры в шашки" */
 
@@ -305,7 +302,7 @@ int BOARD::is_win() {
 			}
 		}
 	}
-	cout << "[белые: " << tw << "/" << w << " | чёрные: " << tb << "/" << b << "]" << endl;
+	std::cout << "[белые: " << tw << "/" << w << " | чёрные: " << tb << "/" << b << "]" << std::endl;
 	// проверка выигрышей и ничьи
 	if ( tw && !tb) return ISWIN_WHITE;
 	if (!tw &&  tb) return ISWIN_BLACK;
@@ -315,25 +312,25 @@ int BOARD::is_win() {
 }
 
 // вывод доски на экран
-ostream& operator<< (ostream &cout, BOARD &board) {
-	cout << "------ Доска ------" << endl;
-	cout << "   0 1 2 3 4 5 6 7 " << endl << endl;
+std::ostream& operator<< (std::ostream &cout, BOARD &board) {
+	std::cout << "------ Доска ------" << std::endl;
+	std::cout << "   0 1 2 3 4 5 6 7 " << std::endl << std::endl;
 	for (int y = 0; y < board.size; y++) {
-		cout << y << "  ";
+		std::cout << y << "  ";
 		for (int x = 0; x < board.size; x++) {
 			if (board.cells[x][y] == WHITE)
-				cout << "x ";
+				std::cout << "x ";
 			else if (board.cells[x][y] == BLACK)
-				cout << "o ";
+				std::cout << "o ";
 			else if (board.cells[x][y] == WHITE_KING)
-				cout << "X ";
+				std::cout << "X ";
 			else if (board.cells[x][y] == BLACK_KING)
-				cout << "O ";
+				std::cout << "O ";
 			else
-				cout << "  ";
+				std::cout << "  ";
 		}
-		cout << endl;
+		std::cout << std::endl;
 	}
-	cout << "-------------------";
-	return cout;
+	std::cout << "-------------------";
+	return std::cout;
 }

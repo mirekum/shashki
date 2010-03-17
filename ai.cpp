@@ -1,13 +1,8 @@
 #include <iostream>
-
 #include "board.h"
-#include "player.h"
 #include "ai.h"
-#include "game.h"
 
-using namespace std;
-
-/* методы класса "Игрок-человек" */
+/* методы класса "Игрок-компьютер" */
 
 // выполнение хода
 MOVE AI_PLAYER::move(BOARD board) {
@@ -84,9 +79,9 @@ int AI_PLAYER::choose(BOARD board, int _type, MOVE *res, int step, int last, boo
 						}
 					}
 					// для отладки
-					if (step <= 0) {
-						cout << "> [" << step << "/" << max_step << ", " << s << ", " << last << "] " <<
-							"(" << d.x << ", " << d.y << ") -> (" << arr[k].x << ", " << arr[k].y << ")" << endl;
+					if (step < 0) {
+						std::cout << "> [" << step << "/" << max_step << ", " << s << ", " << last << "] " <<
+							"(" << d.x << ", " << d.y << ") -> (" << arr[k].x << ", " << arr[k].y << ")" << std::endl;
 					}
 				}
 				
