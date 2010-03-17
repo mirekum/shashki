@@ -25,6 +25,41 @@ BOARD::BOARD () {
 	}
 }
 
+// вспомогательные функции
+int BOARD::can_move_S_sq(CELL a, int dep, int type, CELL *res) {
+	int k = 0;
+	if (dep <= 0) return 0;
+	if (can_move(a, CELL(a.x+dep, a.y+dep), NULL, type)) if (res != NULL) res[k++] = CELL(a.x+dep, a.y+dep); else k++;
+	if (can_move(a, CELL(a.x-dep, a.y+dep), NULL, type)) if (res != NULL) res[k++] = CELL(a.x-dep, a.y+dep); else k++;
+	if (can_move(a, CELL(a.x+dep, a.y-dep), NULL, type)) if (res != NULL) res[k++] = CELL(a.x+dep, a.y-dep); else k++;
+	if (can_move(a, CELL(a.x-dep, a.y-dep), NULL, type)) if (res != NULL) res[k++] = CELL(a.x-dep, a.y-dep); else k++;
+	return k;
+}
+int BOARD::can_scnd(CELL a) {
+	if (ufirst) return 1;
+	// проверяем, что наша фигура - заблокированая, и в предыдущем ходу она покушала
+	return (!(a.x == ublocked.x && a.y == ublocked.y && ueaten)) ? 0 : 1;
+}
+int BOARD::can_frst(CELL a) {
+	if (!ufirst) return 1;
+	// если есть фигуры, которые могут есть, ходить можно только ими
+	int flag = 0;
+	// обходим доску в поисках фигур нашего цвета, которые могут есть
+	for (int i = 0; i < size; i ++) {
+		for (int j = 0; j < size; j++) {
+			/***** TODO: kings *****/
+			if (cells[i][j] == utype && can_move_S_sq(CELL(i, j), 2, utype)) {
+				flag = 1;
+				// если найденная фигура - это наша фигура, всё нормально
+				if (a.x == i && a.y == j) return 1;
+			}
+		}
+	}
+	// если есть фигуры, которые могут есть, а наша фигура к ним не относится, - ходить нельзя
+	// если нет фигур, которые могут ходить, ходить можно
+	return flag == 1 ? 0 : 1;
+}
+
 // получение набора возможных ходов
 // a - исходная фигура
 // ходы помещаются по адресу res, если он не NULL
@@ -32,57 +67,23 @@ BOARD::BOARD () {
 int BOARD::moves(CELL a, CELL *res) {
 	int k = 0; // количество возможных ходов
 	/* учтём факты, а может ли фигура ходить вообще */
-	// если это не первый неполный полуход - проверяем, что наша фигура - заблокированая,
-	// и в предыдущем ходу она покушала (факт съедения важен для второго неполного полухода)
-	if (!ufirst && !(a.x == ublocked.x && a.y == ublocked.y && ueaten)) return 0;
-	// рассмотрим первый неполный полуход
-	if (ufirst) {
-		// если есть фигуры, которые могут есть, ходить можно только ими
-		int flag = 0; // нет фигур, которые могут есть
-		for (int i = 0; i < size; i ++) {
-			for (int j = 0; j < size; j++) {
-				if (cells[i][j] == utype && (0
-					|| can_move(CELL(i, j), CELL(i+2, j+2), NULL, utype)
-					|| can_move(CELL(i, j), CELL(i-2, j+2), NULL, utype)
-					|| can_move(CELL(i, j), CELL(i+2, j-2), NULL, utype)
-					|| can_move(CELL(i, j), CELL(i-2, j-2), NULL, utype)
-				)) {
-					flag = 1; // нашли шашку, которая может есть
-					if (a.x == i && a.y == j) {
-						// если найденная шашка - это наша шашка, всё нормально
-						flag = 0;
-						goto lbl1;
-					}
-				}
-			}
-		}
-		lbl1:
-		if (flag) {
-			// если есть фигуры, которые могут есть, а наша фигура к ним не относится, - ходить нельзя
-			return 0;
-		}
-	}
+	// первый неполный полуход
+	if (ufirst && !can_frst(a)) return 0;
+	// не первый неполный полуход
+	if (!ufirst && !can_scnd(a)) return 0;
 	/* пересмотрим все возможные ходы */
 	// шашки
 	if (abs(utype) == 1) {
 		// начнём с ходов-поеданий
-		if (can_move(a, CELL(a.x+2, a.y+2), NULL, utype)) if (res != NULL) res[k++] = CELL(a.x+2, a.y+2); else k++;
-		if (can_move(a, CELL(a.x-2, a.y+2), NULL, utype)) if (res != NULL) res[k++] = CELL(a.x-2, a.y+2); else k++;
-		if (can_move(a, CELL(a.x+2, a.y-2), NULL, utype)) if (res != NULL) res[k++] = CELL(a.x+2, a.y-2); else k++;
-		if (can_move(a, CELL(a.x-2, a.y-2), NULL, utype)) if (res != NULL) res[k++] = CELL(a.x-2, a.y-2); else k++;
+		k += can_move_S_sq(a, 2, utype, res);
 		// совершать обычные ходы можно только при первом неполном полуходе, если нечего есть
-		if (ufirst && !k) {
-			if (can_move(a, CELL(a.x+1, a.y+1), NULL, utype)) if (res != NULL) res[k++] = CELL(a.x+1, a.y+1); else k++;
-			if (can_move(a, CELL(a.x-1, a.y+1), NULL, utype)) if (res != NULL) res[k++] = CELL(a.x-1, a.y+1); else k++;
-			if (can_move(a, CELL(a.x+1, a.y-1), NULL, utype)) if (res != NULL) res[k++] = CELL(a.x+1, a.y-1); else k++;
-			if (can_move(a, CELL(a.x-1, a.y-1), NULL, utype)) if (res != NULL) res[k++] = CELL(a.x-1, a.y-1); else k++;
-		}
+		if (ufirst && !k) k += can_move_S_sq(a, 1, utype, res);
 	}
 	// дамки
 	else {
-		/***** TODO *****/
+		/***** TODO: kings *****/
 	}
-	// результат
+	/* результат */
 	return k;
 }
 
@@ -92,61 +93,30 @@ int BOARD::moves(CELL a, CELL *res) {
 // возвращаемое значение - 0 (так ходить нельзя) или 1 (ход выполнен)
 int BOARD::move(CELL /* from */ a, CELL /* to */ z) {
 	CANMOVE flags;
-	// если это не первый неполный полуход - проверяем, что наша шашка - заблокированая,
-	// и в предыдущем ходу она покушала (факт съедения важен для второго неполного полухода)
-	if (!ufirst && !(a.x == ublocked.x && a.y == ublocked.y && ueaten)) return 0;
-	// проверка возможности данного неполного полухода (с заданным цветом)
-	if (!can_move(a, z, &flags, utype)) return 0;
-	// рассмотрим первый неполный полуход
+	/* может ли фигура ходить вообще */
+	// первый неполный полуход
 	if (ufirst) {
-		// если есть фигуры, которые могут есть, ходить можно только ими
-		int flag = 0; // нет фигур, которые могут есть
-		for (int i = 0; i < size; i ++) {
-			for (int j = 0; j < size; j++) {
-				if ((0
-					|| can_move(CELL(i, j), CELL(i+2, j+2), NULL, utype)
-					|| can_move(CELL(i, j), CELL(i-2, j+2), NULL, utype)
-					|| can_move(CELL(i, j), CELL(i+2, j-2), NULL, utype)
-					|| can_move(CELL(i, j), CELL(i-2, j-2), NULL, utype)
-				)) {
-					flag = 1; // нашли фигуру, которая может есть
-					if (a.x == i && a.y == j) {
-						// если найденная фигура - это наша фигура, всё нормально
-						flag = 0;
-						goto lbl1;
-					}
-				}
-			}
-		}
-		lbl1:
-		if (flag) {
-			// если есть фигуры, которые могут есть, а наша фигура к ним не относится, - ходить нельзя
-			return 0;
-		}
+		if (!can_frst(a)) return 0;
 		// если фигура может есть - она должна есть
-		if ((0
-			|| can_move(a, CELL(a.x+2, a.y+2), NULL, utype)
-			|| can_move(a, CELL(a.x-2, a.y+2), NULL, utype)
-			|| can_move(a, CELL(a.x+2, a.y-2), NULL, utype)
-			|| can_move(a, CELL(a.x-2, a.y-2), NULL, utype)
-		) && (1
+		/***** TODO: kings *****/
+		if (can_move_S_sq(a, 2, utype) && (1
 			&& (z.x != a.x+2 || z.y != a.y+2)
 			&& (z.x != a.x-2 || z.y != a.y+2)
 			&& (z.x != a.x+2 || z.y != a.y-2)
 			&& (z.x != a.x-2 || z.y != a.y-2)
 		)) return 0;
 	}
-	// рассмотрим не первый неполный полуход
-	else {
+	// не первый неполный полуход
+	if (!ufirst) {
+		if (!can_scnd(a)) return 0;
 		// если фигура есть не может - ходить нельзя (конец полухода)
-		if (!(0
-			|| can_move(a, CELL(a.x+2, a.y+2), NULL, utype)
-			|| can_move(a, CELL(a.x-2, a.y+2), NULL, utype)
-			|| can_move(a, CELL(a.x+2, a.y-2), NULL, utype)
-			|| can_move(a, CELL(a.x-2, a.y-2), NULL, utype)
-		)) return 0;
+		/***** TODO: kings *****/
+		if (!can_move_S_sq(a, 2, utype)) return 0;
 	}
-	// выполняем ход
+	/* может ли фигура ходить в заданную точку */
+	if (!can_move(a, z, &flags, utype)) return 0;
+	/* выполняем ход */
+	// перемещаем фигуру
 	cells[z.x][z.y] = cells[a.x][a.y];
 	cells[a.x][a.y] = 0;
 	// блокируем фигуру
@@ -154,7 +124,7 @@ int BOARD::move(CELL /* from */ a, CELL /* to */ z) {
 	ufirst = false;
 	// если была съедена фигура
 	if (flags.eat) {
-		/***** TODO *****/
+		/***** TODO: kings *****/
 		     if ((a.x - z.x) ==  2 && (a.y - z.y) ==  2) cells[a.x - 1][a.y - 1] = 0;
 		else if ((a.x - z.x) == -2 && (a.y - z.y) ==  2) cells[a.x + 1][a.y - 1] = 0;
 		else if ((a.x - z.x) ==  2 && (a.y - z.y) == -2) cells[a.x - 1][a.y + 1] = 0;
@@ -166,7 +136,8 @@ int BOARD::move(CELL /* from */ a, CELL /* to */ z) {
 	}
 	// если шашка стала дамкой
 	if (flags.king) {
-		/***** TODO *****/
+		/***** TODO: kings *****/
+		
 	}
 	// ход выполнен
 	return 1;
@@ -223,7 +194,7 @@ int BOARD::can_move(CELL /* from */ a, CELL /* to */ z, CANMOVE *flags, int _typ
 		}
 		// дамки
 		else {
-			/***** TODO *****/
+			/***** TODO: kings *****/
 		}
 	}
 	// для чёрных
@@ -250,7 +221,7 @@ int BOARD::can_move(CELL /* from */ a, CELL /* to */ z, CANMOVE *flags, int _typ
 		}
 		// дамки
 		else {
-			/***** TODO *****/
+			/***** TODO: kings *****/
 		}
 	}
 	// в остальных случаях ход запрещён
@@ -287,23 +258,14 @@ int BOARD::is_win() {
 	// проверяем возможность хода шашек
 	for (int i = 0; i < size; i++) {
 		for (int j = 0; j < size; j++) {
-			if (0
-				|| can_move(CELL(i, j), CELL(i+1, j+1))
-				|| can_move(CELL(i, j), CELL(i-1, j+1))
-				|| can_move(CELL(i, j), CELL(i+1, j-1))
-				|| can_move(CELL(i, j), CELL(i-1, j-1))
-				|| can_move(CELL(i, j), CELL(i+2, j+2))
-				|| can_move(CELL(i, j), CELL(i-2, j+2))
-				|| can_move(CELL(i, j), CELL(i+2, j-2))
-				|| can_move(CELL(i, j), CELL(i-2, j-2))
-			) {
+			if (can_move_S_sq(CELL(i, j), 1) || can_move_S_sq(CELL(i, j), 2)) {
 				if (cells[i][j] > 0) tw++;
 				if (cells[i][j] < 0) tb++;
 			}
 		}
 	}
 	std::cout << "[белые: " << tw << "/" << w << " | чёрные: " << tb << "/" << b << "]" << std::endl;
-	// проверка выигрышей и ничьи
+	// проверяем выигрыши и ничью
 	if ( tw && !tb) return ISWIN_WHITE;
 	if (!tw &&  tb) return ISWIN_BLACK;
 	if (!tw && !tb) return ISWIN_DRAW;
