@@ -1,10 +1,10 @@
 #include <iostream>
 #include "game.h"
 
-// точка входа
+// entry point
 int main () {
-	// белые, чёрные
-	GAME shashki(AI2, AI);
+	// GAME(white player, black player)
+	GAME draughts(AI2, AI);
 	return 0;
 }
 

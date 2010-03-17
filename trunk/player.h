@@ -5,17 +5,17 @@
 	#define AI    20
 	#define AI2   30
 	
-	// класс "Игрок в шашки"
+	// class of the player for draughts
 	class PLAYER {
 	protected:
-		// цвет игрока
+		// player color
 		int type;
 	public:
-		// конструктор класса
+		// class constructor
 		PLAYER () {type = 0;}
-		// установка цвета игрока
+		// sets player color
 		void setType(int _type) {type = _type;};
-		// выполнение неполного полухода
+		// chooses partial half-move
 		virtual MOVE move(BOARD board) = 0;
 	};
 	

@@ -2,22 +2,22 @@
 #include "board.h"
 #include "human.h"
 
-/* методы класса "Игрок-человек" */
+/* mathods of class of the human player */
 
-// выполнение хода
+// chooses partial half-move
 MOVE HUMAN_PLAYER::move(BOARD board) {
-	// неполный полуход
+	// partial half-move
 	MOVE res;
-	// вводим неполный полуход
+	// request partial half-move
 	do {
 		std::cout << "x1 = "; std::cin >> res.from.x;
 		std::cout << "y1 = "; std::cin >> res.from.y;
 		std::cout << "x2 = "; std::cin >> res.to.x;
 		std::cout << "y2 = "; std::cin >> res.to.y;
 		if (board.move(res)) break;
-		else std::cout << "Error, please repeat move!" << std::endl;
+		else std::cout << "Ошибка! Повторите ввод!" << std::endl;
 	} while (1);
-	// результат
+	// result
 	return res;
 }
 
