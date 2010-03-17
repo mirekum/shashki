@@ -90,6 +90,11 @@
 		int white_king() {return wk;}
 		// количество чёрных дамок
 		int black_king() {return bk;}
+	protected:
+		// вспомогательные функции
+		int can_move_S_sq(CELL a, int dep, int type = 0, CELL *res = NULL);
+		int can_scnd(CELL a);
+		int can_frst(CELL a);
 	};
 	
 #endif
