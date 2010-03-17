@@ -1,9 +1,4 @@
 #include <iostream>
-#include <iomanip>
-#include <string>
-#include <string.h>
-#include <cstdlib>
-#include <ncurses.h>
 
 #include "board.h"
 #include "player.h"

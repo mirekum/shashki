@@ -1,7 +1,4 @@
 #include <iostream>
-#include <iomanip>
-#include <stdlib.h>
-#include <ncurses.h>
 
 #include "board.h"
 #include "player.h"

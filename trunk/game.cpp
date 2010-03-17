@@ -1,6 +1,4 @@
 #include <iostream>
-#include <iomanip>
-#include <stdlib.h>
 
 #include "board.h"
 #include "player.h"
