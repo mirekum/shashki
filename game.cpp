@@ -5,15 +5,15 @@
 #include "ai.h"
 #include "game.h"
 
-/* методы класса "Игра в шашки" */
+/* methods of the class for playing draughts */
 
-// конструктор класса
+// class constructor
 GAME::GAME (int w, int b) {
-	// игрок белыми
+	// white player creating
 	wp = createPlayer(w);
-	// игрок чёрными
+	// black player creating
 	bp = createPlayer(b);
-	// игровой цикл
+	// start the game process
 	if (wp != NULL && bp != NULL) {
 		wp->setType(WHITE);
 		bp->setType(BLACK);
@@ -23,6 +23,7 @@ GAME::GAME (int w, int b) {
 	}
 }
 
+// creates player
 PLAYER* GAME::createPlayer(int plr) {
 	switch (plr) {
 		case HUMAN:
@@ -36,59 +37,59 @@ PLAYER* GAME::createPlayer(int plr) {
 	}
 }
 
-// игровой цикл
+// the game process
 void GAME::process () {
 	do {
 		int res_flag; // флаг результата игры
 		
-		// ход белых
+		/* white moves */
 		std::cout << "*** ХОД БЕЛЫХ ***" << std::endl;
 		board.start_move(WHITE);
 		do {
 			std::cout << board << std::endl;
-			// запрашиваем неполный полуход и ходим
+			// request partial half-move and exec it
 			board.move(wp->move(board));
 			std::cout << "[жмакни ENTER]" << std::endl;
 			getchar();
 		}
-		// проверяем, есть ли ещё неполные полуходы
+		// check if there are partial half-moves
 		while (board.can_move());
-		// проверка на выигрыш
+		// check the winning
 		if (res_flag = board.is_win()) return result(res_flag);
 		
-		// ход чёрных
+		/* black moves */
 		std::cout << "*** ХОД ЧЁРНЫХ ***" << std::endl;
 		board.start_move(BLACK);
 		do {
 			std::cout << board << std::endl;
-			// запрашиваем неполный полуход и ходим
+			// request partial half-move and exec it
 			board.move(bp->move(board));
 			std::cout << "[жмакни ENTER]" << std::endl;
 			getchar();
 		}
-		// проверяем, есть ли ещё неполные полуходы
+		// check if there are partial half-moves
 		while (board.can_move());
-		// проверка на выигрыш
+		// check the winning
 		if (res_flag = board.is_win()) return result(res_flag);
 		
-		// возврат
+		/* the end */
 		std::cout << std::endl;
 	} while(1);
 }
 
-// сообщаем о результатах
+// reports the results
 void GAME::result (int res) {
 	std::cout << board << std::endl;
 	switch(res) {
-		// выиграли белые
+		// white won
 		case ISWIN_WHITE:
 			std::cout << "\n\n********** БЕЛЫЕ ВЫИГРАЛИ **********\n\n" << std::endl;
 		break;
-		// выиграли чёрные
+		// black won
 		case ISWIN_BLACK:
 			std::cout << "\n\n********** ЧЁРНЫЕ ВЫИГРАЛИ **********\n\n" << std::endl;
 		break;
-		// ничья
+		// the draw
 		case ISWIN_DRAW:
 			std::cout << "\n\n***** НИЧЬЯ *****\n\n" << std::endl;
 		break;

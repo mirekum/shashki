@@ -3,24 +3,24 @@
 	#include "board.h"
 	#include "player.h"
 	
-	// класс "Игра в шашки"
+	// class for playing draughts
 	class GAME {
 	protected:
-		// доска для игры в шашки
+		// the board for game
 		BOARD board;
-		// игрок белыми
+		// white player
 		PLAYER *wp;
-		// игрок чёрными
+		// black player
 		PLAYER *bp;
 	public:
-		// конструктор класса
-		explicit GAME(int w, int b);
+		// class constructor
+		GAME(int w, int b);
 	protected:
-		// создание игрока
+		// creates player
 		PLAYER* createPlayer(int plr);
-		// игровой цикл
+		// the game process
 		void process();
-		// сообщаем о результатах
+		// reports the results
 		void result(int res);
 	};
 	

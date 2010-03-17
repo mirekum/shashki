@@ -2,17 +2,17 @@
 #include <stdlib.h>
 #include "board.h"
 
-/* методы класса "Доска для игры в шашки" */
+/* methods of class of the board for playing draughts */
 
-// конструктор класса
-// (задаём начальное состояние доски)
+// class constructor
+// set firstly figures positions and the board state
 BOARD::BOARD () {
-	// обнуляем всю доску
+	// zeroize the board
 	b = w = bk = wk = 0;
 	for (int i = 0; i < size; i ++)
 		for (int j = 0; j < size; j++)
 			cells[i][j] = 0;
-	// задаём начальное расположение фигур
+	// set firstly figures positions
 	for (int i = 0; i < size; i += 2) {
 		cells[i+1][0] = BLACK;
 		cells[i][1]   = BLACK;
@@ -25,7 +25,7 @@ BOARD::BOARD () {
 	}
 }
 
-// вспомогательные функции
+// small assistant functions
 int BOARD::can_move_S_sq(CELL a, int dep, int type, CELL *res) {
 	int k = 0;
 	if (dep <= 0) return 0;

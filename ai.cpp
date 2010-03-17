@@ -2,55 +2,53 @@
 #include "board.h"
 #include "ai.h"
 
-/* методы класса "Игрок-компьютер" */
+/* methods of class of the ai player */
 
-// выполнение хода
+// chooses partial half-move
 MOVE AI_PLAYER::move(BOARD board) {
-	// неполный полуход
+	// partial half-move
 	MOVE res;
-	// выбираем лучший неполный полуход
+	// choose the best partial half-move
 	choose(board, type, &res);
-	// результат
+	// result
 	return res;
 }
 
-// выбор наилучшего хода
+// choose the best partial half-move
 int AI_PLAYER::choose(BOARD board, int _type, MOVE *res, int step, int last, bool smflag) {
-	// не последний ход
+	// not last partial half-move
 	if (step < max_step) {
-		bool minimax = (step % 2 == 0 ? 1 : 0); // минимум или максимум необходимо считать (1 - max, 0 - min)
-		int max = -MINMAX_END, min = MINMAX_END; // максимум и минимум по СОФ
-		// двойной цикл по шашкам
+		bool minimax = (step % 2 == 0 ? 1 : 0); // max or min we must calculate (1 - max, 0 - min)
+		int max = -MINMAX_END, min = MINMAX_END; // max and min of SRF value
+		// go round all figures on the board
 		for (int i = 0; i < board.size; i++) {
 			for (int j = 0; j < board.size; j++) {
 				int m;
 				CELL d(i, j), arr[16];
-				// если это первый неполный полуход - начинаем полуход
+				// first partial half-move
 				if (smflag) board.start_move(_type);
-				// возможные ходы текущей шашки
+				// array of the possible partial half-moves for current figure
 				m = board.moves(d, arr);
-				// цикл по возможным ходам текущей шашки
+				// go round array of the possible partial half-moves for current figure
 				for (int k = 0; k < m; k++) {
-					int s; // текущая величина соф
-					// копия доски
+					int s; // current SRF value
 					BOARD board_copy = board;
-					// если это первый неполный полуход - начинаем полуход
+					// first partial half-move
 					if (smflag) board.start_move(_type);
-					// выполняем текущий возможный ход
+					// exec current partial half-move
 					board_copy.move(d, arr[k]);
-					// если полуход не окончен
+					// half-move continuing
 					if (board_copy.moves(arr[k])) {
-						// продолжаем полуход
+						// continue current half-move
 						s = choose(board_copy, _type, NULL, step, (minimax ? max : min), false);
 					}
-					// если полуход окончен
+					// half-move is finished
 					else {
-						// начинаем полуход противника
+						// start enemy half-move
 						s = choose(board_copy, _type == WHITE ? BLACK : WHITE, NULL, step + 1, (minimax ? max : min), true);
 					}
-					// считаем максимум по СОФ
+					// calculate max of SRF values
 					if (minimax) {
-						// подсчёт максимума
 						if (s >= max) {
 							if (res != NULL) {
 								res->from = d;
@@ -58,14 +56,13 @@ int AI_PLAYER::choose(BOARD board, int _type, MOVE *res, int step, int last, boo
 							}
 							max = s;
 						}
-						// альфа-бета усечение
+						// alpha-beta pruning
 						if (ab && s > last && last > -MINMAX_END && last < MINMAX_END) {
 							return s;
 						}
 					}
-					// считаем минимум по СОФ
+					// calculate min of SRF values
 					else {
-						// подсчёт минимума
 						if (s <= min) {
 							if (res != NULL) {
 								res->from = d;
@@ -73,12 +70,12 @@ int AI_PLAYER::choose(BOARD board, int _type, MOVE *res, int step, int last, boo
 							}
 							min = s;
 						}
-						// альфа-бета усечение
+						// alpha-beta pruning
 						if (ab && s < last && last > -MINMAX_END && last < MINMAX_END) {
 							return s;
 						}
 					}
-					// для отладки
+					// for debugging
 					if (step < 0) {
 						std::cout << "> [" << step << "/" << max_step << ", " << s << ", " << last << "] " <<
 							"(" << d.x << ", " << d.y << ") -> (" << arr[k].x << ", " << arr[k].y << ")" << std::endl;
@@ -87,28 +84,28 @@ int AI_PLAYER::choose(BOARD board, int _type, MOVE *res, int step, int last, boo
 				
 			}
 		}
-		// перебор ветви закончен
+		// result of going round this tree branch
 		return (minimax ? max : min);
 	}
-	// последний ход
+	// last partial half-move
 	else {
 		return srf(board);
 	}
-	// сюда мы попасть не должны
+	// error
 	return 0;
 }
 
-// СОФ
+// statictiс rating function
 int AI_PLAYER::srf(BOARD board) {
-	// для белых
+	// for white player
 	if (type > 0) {
 		return (board.white() - board.black()) + 3*(board.white_king() - board.black_king());
 	}
-	// для чёрных
+	// for black player
 	else if (type < 0) {
 		return (board.black() - board.white()) + 3*(board.black_king() - board.white_king());
 	}
-	// для неопределённого значения
+	// error
 	return 0;
 }
 

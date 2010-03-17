@@ -4,26 +4,26 @@
 	
 	#define MINMAX_END 2000000
 	
-	// класс "Игрок-компьютер"
+	// class of the ai player
 	class AI_PLAYER: public PLAYER {
 	protected:
-		// альфа-бета-усечение
-		const static int ab = 0;
-		// глубина просмотра (кол-во полуходов) - должна быть чётной
+		// alpha-beta pruning
+		const static int ab = 1;
+		// search tree depth
 		int max_step;
-		// статистическая оценочная функция
+		// statictiс rating function
 		virtual int srf(BOARD board);
 	public:
-		// конструктор класса
+		// class constructor
 		AI_PLAYER() {max_step = 4;}
-		// выполнение хода
+		// chooses partial half-move
 		virtual MOVE move(BOARD board);
 	protected:
-		// выбор наилучшего хода
+		// choose the best partial half-move
 		virtual int choose(BOARD board, int _type, MOVE *res, int step = 0, int last = -MINMAX_END, bool smflag = true);
 	};
 	
-	// немного другой игрок-компьютер
+	// another class of the ai player
 	class AI_PLAYER2: public AI_PLAYER {
 	public:
 		AI_PLAYER2() {max_step = 4;}

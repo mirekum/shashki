@@ -2,10 +2,10 @@
 	#define _HUMAN_H_
 	#include "player.h"
 	
-	// класс "Игрок-человек"
+	// class of the human player
 	class HUMAN_PLAYER: public PLAYER {
 	public:
-		// выполнение хода
+		// chooses partial half-move
 		virtual MOVE move(BOARD board);
 	};
 	
