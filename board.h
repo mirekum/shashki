@@ -2,6 +2,7 @@
 	#define _BOARD_H_
 	
 	#include <iostream>
+	#include <stdlib.h>
 	
 	// player colors
 	enum PCOLOR {PNONE, PWHITE, PBLACK};
@@ -16,15 +17,15 @@
 	};
 	
 	// is figure color white?
-	inline bool IS_WHITE(FIGURE type);
+	inline bool IS_WHITE(FIGURE type) {return type > 0 ? true : false;};
 	// is figure color black?
-	inline bool IS_BLACK(FIGURE type);
+	inline bool IS_BLACK(FIGURE type) {return type < 0 ? true : false;};
 	// is figure is a draught?
-	inline bool IS_DRT(FIGURE type);
+	inline bool IS_DRT(FIGURE type) {return abs(type) == 1 ? true : false;};
 	// is figure is a king ?
-	inline bool IS_KNG(FIGURE type);
+	inline bool IS_KNG(FIGURE type) {return abs(type) == 2 ? true : false;};
 	// is cell empty?
-	inline bool IS_EMP(FIGURE type);
+	inline bool IS_EMP(FIGURE type) {return type == NONE ? true : false;};
 	
 	// win states
 	enum GAMESTATE {
@@ -84,19 +85,22 @@
 		// checks the end of the game
 		GAMESTATE is_win();
 	protected:
+	public: // temporary
 		// checks the physical possibility of the move from one cell to the other one
 		bool can_move(MOVE _move, CANMOVE *flags = NULL, FIGURE _type = NONE);
 		bool can_move(CELL from, CELL to, CANMOVE *flags = NULL, FIGURE _type = NONE);
 		bool can_move(int x1, int y1, int x2, int y2, CANMOVE *flags = NULL, FIGURE _type = NONE);
 		// checks the possibility of move in square
-		unsigned int can_move_square(CELL a, int dep, FIGURE type = NONE, CELL *res = NULL);
+		unsigned int get_square_moves(CELL figure, int dep, FIGURE type = NONE, CELL *res = NULL, CANMOVE *flags = NULL);
+		// checks the possibility of eating
+		bool can_eat(CELL figure);
 		// checks the possibility of the first partial half-move or a not first partial half-move
-		bool can_move(CELL a);
+		bool can_move(CELL figure);
 	public:
 		// checks the possibility of continuing the half-move by current player
 		bool can_move();
 		// gets array of the possible partial half-moves for the cell
-		unsigned int moves(CELL cell, CELL *arr = NULL);
+		unsigned int moves(CELL figure, CELL *arr = NULL);
 		// execs the partial half-move
 		bool move(MOVE _move);
 		bool move(CELL from, CELL to);
