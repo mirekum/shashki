@@ -1,32 +1,34 @@
 #ifndef _AI_H_
 	#define _AI_H_
-	#include "player.h"
 	
-	#define MINMAX_END 2000000
+	#include <iostream>
+	#include "player.h"
 	
 	// class of the ai player
 	class AI_PLAYER: public PLAYER {
 	protected:
+		// minimax limit
+		const static int MINMAX_END = 2000000;
 		// alpha-beta pruning
-		const static int ab = 1;
+		bool ab;
 		// search tree depth
-		int max_step;
+		unsigned int max_step;
 		// statictiс rating function
 		virtual int srf(BOARD board);
 	public:
 		// class constructor
-		AI_PLAYER() {max_step = 4;}
+		AI_PLAYER() {max_step = 4; ab = true;}
 		// chooses partial half-move
-		virtual MOVE move(BOARD board);
+		virtual MOVE get_move(BOARD board);
 	protected:
 		// choose the best partial half-move
-		virtual int choose(BOARD board, int _type, MOVE *res, int step = 0, int last = -MINMAX_END, bool smflag = true);
+		virtual int choose(BOARD board, PCOLOR _type, MOVE *res, int step = 0, int last = -MINMAX_END, bool smflag = true);
 	};
 	
 	// another class of the ai player
 	class AI_PLAYER2: public AI_PLAYER {
 	public:
-		AI_PLAYER2() {max_step = 4;}
+		AI_PLAYER2() {max_step = 4; ab = true;}
 	};
 	
 #endif

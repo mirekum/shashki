@@ -5,7 +5,7 @@
 /* methods of class of the ai player */
 
 // chooses partial half-move
-MOVE AI_PLAYER::move(BOARD board) {
+MOVE AI_PLAYER::get_move(BOARD board) {
 	// partial half-move
 	MOVE res;
 	// choose the best partial half-move
@@ -15,7 +15,7 @@ MOVE AI_PLAYER::move(BOARD board) {
 }
 
 // choose the best partial half-move
-int AI_PLAYER::choose(BOARD board, int _type, MOVE *res, int step, int last, bool smflag) {
+int AI_PLAYER::choose(BOARD board, PCOLOR _type, MOVE *res, int step, int last, bool smflag) {
 	// not last partial half-move
 	if (step < max_step) {
 		bool minimax = (step % 2 == 0 ? 1 : 0); // max or min we must calculate (1 - max, 0 - min)
@@ -45,7 +45,7 @@ int AI_PLAYER::choose(BOARD board, int _type, MOVE *res, int step, int last, boo
 					// half-move is finished
 					else {
 						// start enemy half-move
-						s = choose(board_copy, _type == WHITE ? BLACK : WHITE, NULL, step + 1, (minimax ? max : min), true);
+						s = choose(board_copy, _type == PWHITE ? PBLACK : PWHITE, NULL, step + 1, (minimax ? max : min), true);
 					}
 					// calculate max of SRF values
 					if (minimax) {
