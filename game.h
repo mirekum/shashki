@@ -1,5 +1,7 @@
 #ifndef _GAME_H_
 	#define _GAME_H_
+	
+	#include <iostream>
 	#include "board.h"
 	#include "player.h"
 	
@@ -14,14 +16,16 @@
 		PLAYER *bp;
 	public:
 		// class constructor
-		GAME(int w, int b);
+		GAME(PGAMER w, PGAMER b);
+		// class destructor
+		~GAME();
 	protected:
 		// creates player
-		PLAYER* createPlayer(int plr);
+		PLAYER* createPlayer(PGAMER plr);
 		// the game process
 		void process();
 		// reports the results
-		void result(int res);
+		void result(GAMESTATE res);
 	};
 	
 #endif
