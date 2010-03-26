@@ -29,6 +29,12 @@ int AI_PLAYER::choose(BOARD board, PCOLOR _type, MOVE *res, int step, int last, 
 				if (smflag) board.start_move(_type);
 				// array of the possible partial half-moves for current figure
 				m = board.moves(d, arr);
+				// for debugging
+				if (step < 0) {
+					for (int k = 0; k < m; k++) {
+						std::cout << d.x << ", " << d.y << " -> " << arr[k].x << ", " << arr[k].y << std::endl;
+					}
+				}
 				// go round array of the possible partial half-moves for current figure
 				for (int k = 0; k < m; k++) {
 					int s; // current SRF value
@@ -74,11 +80,6 @@ int AI_PLAYER::choose(BOARD board, PCOLOR _type, MOVE *res, int step, int last, 
 						if (ab && s < last && last > -MINMAX_END && last < MINMAX_END) {
 							return s;
 						}
-					}
-					// for debugging
-					if (step < 0) {
-						std::cout << "> [" << step << "/" << max_step << ", " << s << ", " << last << "] " <<
-							"(" << d.x << ", " << d.y << ") -> (" << arr[k].x << ", " << arr[k].y << ")" << std::endl;
 					}
 				}
 				
