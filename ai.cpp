@@ -98,12 +98,12 @@ int AI_PLAYER::choose(BOARD board, PCOLOR _type, MOVE *res, int step, int last, 
 // statictiс rating function
 int AI_PLAYER::srf(BOARD board) {
 	// for white player
-	if (type > 0) {
-		return (board.white() - board.black()) + 3*(board.white_king() - board.black_king());
+	if (type == PWHITE) {
+		return (board.white() - board.white_king() - board.black() + board.black_king()) + 3*(board.white_king() - board.black_king());
 	}
 	// for black player
-	else if (type < 0) {
-		return (board.black() - board.white()) + 3*(board.black_king() - board.white_king());
+	else if (type == PBLACK) {
+		return (board.black() - board.black_king() - board.white() + board.white_king()) + 3*(board.black_king() - board.white_king());
 	}
 	// error
 	return 0;

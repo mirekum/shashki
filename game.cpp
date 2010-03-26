@@ -43,6 +43,20 @@ PLAYER* GAME::createPlayer(PGAMER plr) {
 	}
 }
 
+// player move
+void GAME::exec_move(PLAYER *plr, PCOLOR type) {
+	board.start_move(type);
+	do {
+		std::cout << board << std::endl;
+		// request partial half-move and exec it
+		board.move(plr->get_move(board));
+		std::cout << "[жмакни ENTER]" << std::endl;
+		getchar();
+	}
+	// check if there are partial half-moves
+	while (board.can_move());
+}
+
 // the game process
 void GAME::process () {
 	do {
@@ -50,31 +64,13 @@ void GAME::process () {
 		
 		/* white moves */
 		std::cout << "*** ХОД БЕЛЫХ ***" << std::endl;
-		board.start_move(PWHITE);
-		do {
-			std::cout << board << std::endl;
-			// request partial half-move and exec it
-			board.move(wp->get_move(board));
-			std::cout << "[жмакни ENTER]" << std::endl;
-			getchar();
-		}
-		// check if there are partial half-moves
-		while (board.can_move());
+		exec_move(wp, PWHITE);
 		// check the winning
 		if (res_flag = board.is_win()) return result(res_flag);
 		
 		/* black moves */
 		std::cout << "*** ХОД ЧЁРНЫХ ***" << std::endl;
-		board.start_move(PBLACK);
-		do {
-			std::cout << board << std::endl;
-			// request partial half-move and exec it
-			board.move(bp->get_move(board));
-			std::cout << "[жмакни ENTER]" << std::endl;
-			getchar();
-		}
-		// check if there are partial half-moves
-		while (board.can_move());
+		exec_move(bp, PBLACK);
 		// check the winning
 		if (res_flag = board.is_win()) return result(res_flag);
 		
