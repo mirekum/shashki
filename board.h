@@ -30,6 +30,8 @@
 	inline bool IS_KNG(FIGURE type) {return abs(type) == 2 ? true : false;};
 	// is cell empty?
 	inline bool IS_EMP(FIGURE type) {return type == NONE ? true : false;};
+	// FIGURE -> PCOLOR
+	PCOLOR COLOR(FIGURE type);
 	
 	// win states
 	enum GAMESTATE {
@@ -65,7 +67,6 @@
 		// size of the board
 		const static unsigned int size = 8;
 	protected:
-	public:
 		// number of white and black figures
 		unsigned int b, w;
 		// number of white and black kings
@@ -76,8 +77,8 @@
 		bool ufirst;
 		// flag, indicating eating at last partial half-move
 		bool ueaten;
-		// figure type for current half-move
-		FIGURE utype;
+		// player type for current half-move
+		PCOLOR utype;
 		// blocked for current half-move figure
 		CELL ublocked;
 	public:
@@ -91,11 +92,11 @@
 		GAMESTATE is_win();
 	protected:
 		// checks the physical possibility of the move from one cell to the other one
-		bool can_move(MOVE _move, CANMOVE *flags = NULL, FIGURE _type = NONE);
-		bool can_move(CELL from, CELL to, CANMOVE *flags = NULL, FIGURE _type = NONE);
-		bool can_move(int x1, int y1, int x2, int y2, CANMOVE *flags = NULL, FIGURE _type = NONE);
+		bool can_move(MOVE _move, CANMOVE *flags = NULL, PCOLOR _type = PNONE);
+		bool can_move(CELL from, CELL to, CANMOVE *flags = NULL, PCOLOR _type = PNONE);
+		bool can_move(int x1, int y1, int x2, int y2, CANMOVE *flags = NULL, PCOLOR _type = PNONE);
 		// checks the possibility of move in square
-		unsigned int get_square_moves(CELL figure, int dep, FIGURE type = NONE, CELL *res = NULL, CANMOVE *flags = NULL);
+		unsigned int get_square_moves(CELL figure, int dep, PCOLOR type = PNONE, CELL *res = NULL, CANMOVE *flags = NULL);
 		// checks the possibility of eating
 		bool can_eat(CELL figure);
 		// checks the possibility of the first partial half-move or a not first partial half-move
