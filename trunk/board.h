@@ -5,7 +5,11 @@
 	#include <stdlib.h>
 	
 	// player colors
-	enum PCOLOR {PNONE, PWHITE, PBLACK};
+	enum PCOLOR {
+		PBLACK = -1,
+		PNONE   = 0,
+		PWHITE  = 1
+	};
 	
 	// figure types
 	enum FIGURE {
@@ -61,6 +65,7 @@
 		// size of the board
 		const static unsigned int size = 8;
 	protected:
+	public:
 		// number of white and black figures
 		unsigned int b, w;
 		// number of white and black kings
@@ -85,7 +90,6 @@
 		// checks the end of the game
 		GAMESTATE is_win();
 	protected:
-	public: // temporary
 		// checks the physical possibility of the move from one cell to the other one
 		bool can_move(MOVE _move, CANMOVE *flags = NULL, FIGURE _type = NONE);
 		bool can_move(CELL from, CELL to, CANMOVE *flags = NULL, FIGURE _type = NONE);
