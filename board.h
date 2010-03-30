@@ -57,7 +57,7 @@
 	// move flags (eating enemy figure, king transformation)
 	class CANMOVE {
 		public: FIGURE eat, king;
-		public: CELL eat_c, king_c;
+		public: CELL eat_c;
 		CANMOVE(): eat(NONE), king(NONE) {};
 	};
 	
@@ -101,6 +101,14 @@
 		bool can_eat(CELL figure);
 		// checks the possibility of the first partial half-move or a not first partial half-move
 		bool can_move(CELL figure);
+		// set cell value
+		bool scell(int x, int y, FIGURE type);
+		bool scell(CELL figure, FIGURE type);
+		bool scell(int x1, int y1, int x2, int y2);
+		bool scell(CELL figure1, CELL figure2);
+		// get cell value
+		FIGURE gcell(int x, int y);
+		FIGURE gcell(CELL figure);
 	public:
 		// checks the possibility of continuing the half-move by current player
 		bool can_move();

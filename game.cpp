@@ -21,6 +21,8 @@ GAME::GAME (PGAMER w, PGAMER b) {
 	} else {
 		std::cout << "Error: undefined type of player(s)!" << std::endl;
 	}
+	// number of moves
+	int move_num = 0;
 }
 
 // class destructor
@@ -45,9 +47,12 @@ PLAYER* GAME::createPlayer(PGAMER plr) {
 
 // player move
 void GAME::exec_move(PLAYER *plr, PCOLOR type) {
+	move_num++;
 	board.start_move(type);
+	// get moves
 	do {
 		std::cout << board << std::endl;
+		std::cout << "Move #" << move_num << std::endl;
 		// request partial half-move and exec it
 		board.move(plr->get_move(board));
 		std::cout << "[жмакни ENTER]" << std::endl;
