@@ -22,21 +22,46 @@ PCOLOR COLOR(FIGURE type) {
 BOARD::BOARD() {
 	// zeroize the board
 	b = w = bk = wk = 0;
-	for (int i = 0; i < size; i ++)
+	for (int i = 0; i < size; i++)
 		for (int j = 0; j < size; j++)
-			cells[i][j] = NONE;
+			scell(i, j, NONE);
 	// set firstly figures positions
 	for (int i = 0; i < size; i += 2) {
-		cells[i+1][0] = BLACK;
-		cells[i][1]   = BLACK;
-		cells[i+1][2] = BLACK;
+		scell(i+1, 0, BLACK);
+		scell(i,   1, BLACK);
+		scell(i+1, 2, BLACK);
 		b += 3;
-		cells[i][5]   = WHITE;
-		cells[i+1][6] = WHITE;
-		cells[i][7]   = WHITE;
+		scell(i,   5, WHITE);
+		scell(i+1, 6, WHITE);
+		scell(i,   7, WHITE);
 		w += 3;
 	}
 }
+
+// set cell value
+bool BOARD::scell(int x, int y, FIGURE type) {
+	if (x < 0 || y < 0 || x >= size || y >= size) {
+		return false;
+	}
+	cells[x][y] = type;
+	return true;
+}
+bool BOARD::scell(CELL figure, FIGURE type) {return scell(figure.x, figure.y, type);}
+bool BOARD::scell(int x1, int y1, int x2, int y2) {
+	scell(x1, y1, gcell(x2, y2));
+}
+bool BOARD::scell(CELL figure1, CELL figure2) {
+	scell(figure1, gcell(figure2));
+}
+
+// get cell value
+FIGURE BOARD::gcell(int x, int y) {
+	if (x < 0 || y < 0 || x >= size || y >= size) {
+		return NONE;
+	}
+	return cells[x][y];
+}
+FIGURE BOARD::gcell(CELL figure) {return gcell(figure.x, figure.y);}
 
 // print the board on the screen
 std::ostream& operator<< (std::ostream &cout, BOARD &board) {
@@ -81,8 +106,8 @@ GAMESTATE BOARD::is_win() {
 	for (int i = 0; i < size; i++) {
 		for (int j = 0; j < size; j++) {
 			if (get_square_moves(CELL(i, j), 1) || get_square_moves(CELL(i, j), 2)) {
-				if (IS_WHITE(cells[i][j])) tw++;
-				if (IS_BLACK(cells[i][j])) tb++;
+				if (IS_WHITE(gcell(i, j))) tw++;
+				if (IS_BLACK(gcell(i, j))) tb++;
 			}
 		}
 	}
@@ -102,23 +127,17 @@ bool BOARD::can_move(CELL from, CELL to, CANMOVE *flags, PCOLOR _type) {
 	if (from.x < 0 || from.y < 0 || from.x >= size || from.y >= size) return false;
 	if (to.x < 0   || to.y < 0   || to.x >= size   || to.y >= size) return false;
 	// initial figure color
-	FIGURE type = cells[from.x][from.y];
+	FIGURE type = gcell(from);
 	// moves by empty cells, by enemy figures and to occupied cells are denied
 	if (!type) return false;
 	if (_type && COLOR(type) != _type) return false;
-	if (cells[to.x][to.y]) return false;
+	if (gcell(to)) return false;
 	// check king transformation
 	if (flags != NULL && IS_DRT(type)) {
 		// whites
-		if (IS_WHITE(type) && to.y == 0) {
-			flags->king = WHITE;
-			flags->king_c = to;
-		}
+		if (IS_WHITE(type) && to.y == 0) flags->king = WHITE;
 		// blacks
-		else if (IS_BLACK(type) && to.y == size - 1) {
-			flags->king = BLACK;
-			flags->king_c = to;
-		}
+		else if (IS_BLACK(type) && to.y == size - 1) flags->king = BLACK;
 	}
 	// draughts
 	if (IS_DRT(type)) {
@@ -128,18 +147,18 @@ bool BOARD::can_move(CELL from, CELL to, CANMOVE *flags, PCOLOR _type) {
 		if (IS_WHITE(type)) {
 			// eating moves
 			if (0
-				|| (((from.x - to.x) ==  2 && (from.y - to.y) ==  2) && (eaten = cells[x = from.x-1][y = from.y-1]) < 0)
-				|| (((from.x - to.x) == -2 && (from.y - to.y) ==  2) && (eaten = cells[x = from.x+1][y = from.y-1]) < 0)
-				|| (((from.x - to.x) ==  2 && (from.y - to.y) == -2) && (eaten = cells[x = from.x-1][y = from.y+1]) < 0)
-				|| (((from.x - to.x) == -2 && (from.y - to.y) == -2) && (eaten = cells[x = from.x+1][y = from.y+1]) < 0)
+				|| (((from.x - to.x) ==  2 && (from.y - to.y) ==  2) && (eaten = gcell(x = from.x-1, y = from.y-1)) < 0)
+				|| (((from.x - to.x) == -2 && (from.y - to.y) ==  2) && (eaten = gcell(x = from.x+1, y = from.y-1)) < 0)
+				|| (((from.x - to.x) ==  2 && (from.y - to.y) == -2) && (eaten = gcell(x = from.x-1, y = from.y+1)) < 0)
+				|| (((from.x - to.x) == -2 && (from.y - to.y) == -2) && (eaten = gcell(x = from.x+1, y = from.y+1)) < 0)
 			) {
 				if (flags != NULL) {flags->eat = eaten; flags->eat_c = CELL(x, y);}
 				return true;
 			}
 			// common move - if we haven't eat, we can move forward
 			if (abs(to.x - from.x) == 1 && (from.y - to.y) == 1) {
-				if (from.x - 2 > 0 && from.y - 2 > 0 && cells[from.x-1][from.y-1] < 0 && cells[from.x-2][from.y-2] == 0) return false;
-				if (from.x + 2 < 0 && from.y - 2 > 0 && cells[from.x+1][from.y-1] < 0 && cells[from.x+2][from.y-2] == 0) return false;
+				if (from.x - 2 > 0 && from.y - 2 > 0 && gcell(from.x-1, from.y-1) < 0 && gcell(from.x-2, from.y-2) == 0) return false;
+				if (from.x + 2 < 0 && from.y - 2 > 0 && gcell(from.x+1, from.y-1) < 0 && gcell(from.x+2, from.y-2) == 0) return false;
 				return true;
 			}
 		}
@@ -147,18 +166,18 @@ bool BOARD::can_move(CELL from, CELL to, CANMOVE *flags, PCOLOR _type) {
 		if (IS_BLACK(type)) {
 			// eating moves
 			if (0
-				|| (((from.x - to.x) ==  2 && (from.y - to.y) ==  2) && (eaten = cells[x = from.x-1][y = from.y-1]) > 0)
-				|| (((from.x - to.x) == -2 && (from.y - to.y) ==  2) && (eaten = cells[x = from.x+1][y = from.y-1]) > 0)
-				|| (((from.x - to.x) ==  2 && (from.y - to.y) == -2) && (eaten = cells[x = from.x-1][y = from.y+1]) > 0)
-				|| (((from.x - to.x) == -2 && (from.y - to.y) == -2) && (eaten = cells[x = from.x+1][y = from.y+1]) > 0)
+				|| (((from.x - to.x) ==  2 && (from.y - to.y) ==  2) && (eaten = gcell(x = from.x-1, y = from.y-1)) > 0)
+				|| (((from.x - to.x) == -2 && (from.y - to.y) ==  2) && (eaten = gcell(x = from.x+1, y = from.y-1)) > 0)
+				|| (((from.x - to.x) ==  2 && (from.y - to.y) == -2) && (eaten = gcell(x = from.x-1, y = from.y+1)) > 0)
+				|| (((from.x - to.x) == -2 && (from.y - to.y) == -2) && (eaten = gcell(x = from.x+1, y = from.y+1)) > 0)
 			) {
 				if (flags != NULL) {flags->eat = eaten; flags->eat_c = CELL(x, y);}
 				return true;
 			}
 			// common move - if we haven't eat, we can move back
 			if (abs(to.x - from.x) == 1 && (to.y - from.y) == 1) {
-				if (from.x - 2 > 0 && from.y + 2 < 0 && cells[from.x-1][from.y+1] > 0 && cells[from.x-2][from.y+2] == 0) return false;
-				if (from.x + 2 < 0 && from.y + 2 < 0 && cells[from.x+1][from.y+1] > 0 && cells[from.x+2][from.y+2] == 0) return false;
+				if (from.x - 2 > 0 && from.y + 2 < 0 && gcell(from.x-1, from.y+1) > 0 && gcell(from.x-2, from.y+2) == 0) return false;
+				if (from.x + 2 < 0 && from.y + 2 < 0 && gcell(from.x+1, from.y+1) > 0 && gcell(from.x+2, from.y+2) == 0) return false;
 				return true;
 			}
 		}
@@ -168,51 +187,51 @@ bool BOARD::can_move(CELL from, CELL to, CANMOVE *flags, PCOLOR _type) {
 		unsigned int enemy_count = 0;
 		// loop to left top corner
 		for (int i = from.x - 1, j = from.y - 1; i >= to.x && j >= to.y; i--, j--) {
-			if ((IS_WHITE(type) && IS_WHITE(cells[i][j])) || (IS_BLACK(type) && IS_BLACK(cells[i][j]))) return false;
+			if ((IS_WHITE(type) && IS_WHITE(gcell(i, j))) || (IS_BLACK(type) && IS_BLACK(gcell(i, j)))) return false;
 			if (enemy_count) {
 				if (i == to.x && j == to.y) {
-					if (flags != NULL) {flags->eat = cells[i+1][j+1]; flags->eat_c = CELL(i+1, j+1);}
+					if (flags != NULL) {flags->eat = gcell(i+1, j+1); flags->eat_c = CELL(i+1, j+1);}
 					return true;
 				}
 				return false;
 			}
-			if ((IS_WHITE(type) && IS_BLACK(cells[i][j])) || (IS_BLACK(type) && IS_WHITE(cells[i][j]))) enemy_count++;
+			if ((IS_WHITE(type) && IS_BLACK(gcell(i, j))) || (IS_BLACK(type) && IS_WHITE(gcell(i, j)))) enemy_count++;
 		}
 		// loop to right top corner
 		for (int i = from.x + 1, j = from.y - 1; i <= to.x && j >= to.y; i++, j--) {
-			if ((IS_WHITE(type) && IS_WHITE(cells[i][j])) || (IS_BLACK(type) && IS_BLACK(cells[i][j]))) return false;
+			if ((IS_WHITE(type) && IS_WHITE(gcell(i, j))) || (IS_BLACK(type) && IS_BLACK(gcell(i, j)))) return false;
 			if (enemy_count) {
 				if (i == to.x && j == to.y) {
-					if (flags != NULL) {flags->eat = cells[i-1][j+1]; flags->eat_c = CELL(i-1, j+1);}
+					if (flags != NULL) {flags->eat = gcell(i-1, j+1); flags->eat_c = CELL(i-1, j+1);}
 					return true;
 				}
 				return false;
 			}
-			if ((IS_WHITE(type) && IS_BLACK(cells[i][j])) || (IS_BLACK(type) && IS_WHITE(cells[i][j]))) enemy_count++;
+			if ((IS_WHITE(type) && IS_BLACK(gcell(i, j))) || (IS_BLACK(type) && IS_WHITE(gcell(i, j)))) enemy_count++;
 		}
 		// loop to left bottom corner
 		for (int i = from.x - 1, j = from.y + 1; i >= to.x && j <= to.y; i--, j++) {
-			if ((IS_WHITE(type) && IS_WHITE(cells[i][j])) || (IS_BLACK(type) && IS_BLACK(cells[i][j]))) return false;
+			if ((IS_WHITE(type) && IS_WHITE(gcell(i, j))) || (IS_BLACK(type) && IS_BLACK(gcell(i, j)))) return false;
 			if (enemy_count) {
 				if (i == to.x && j == to.y) {
-					if (flags != NULL) {flags->eat = cells[i+1][j-1]; flags->eat_c = CELL(i+1, j-1);}
+					if (flags != NULL) {flags->eat = gcell(i+1, j-1); flags->eat_c = CELL(i+1, j-1);}
 					return true;
 				}
 				return false;
 			}
-			if ((IS_WHITE(type) && IS_BLACK(cells[i][j])) || (IS_BLACK(type) && IS_WHITE(cells[i][j]))) enemy_count++;
+			if ((IS_WHITE(type) && IS_BLACK(gcell(i, j))) || (IS_BLACK(type) && IS_WHITE(gcell(i, j)))) enemy_count++;
 		}
 		// loop to right bottom corner
 		for (int i = from.x + 1, j = from.y + 1; i <= to.x, j <= to.y; i++, j++) {
-			if ((IS_WHITE(type) && IS_WHITE(cells[i][j])) || (IS_BLACK(type) && IS_BLACK(cells[i][j]))) return false;
+			if ((IS_WHITE(type) && IS_WHITE(gcell(i, j))) || (IS_BLACK(type) && IS_BLACK(gcell(i, j)))) return false;
 			if (enemy_count) {
 				if (i == to.x && j == to.y) {
-					if (flags != NULL) {flags->eat = cells[i-1][j-1]; flags->eat_c = CELL(i-1, j-1);}
+					if (flags != NULL) {flags->eat = gcell(i-1, j-1); flags->eat_c = CELL(i-1, j-1);}
 					return true;
 				}
 				return false;
 			}
-			if ((IS_WHITE(type) && IS_BLACK(cells[i][j])) || (IS_BLACK(type) && IS_WHITE(cells[i][j]))) enemy_count++;
+			if ((IS_WHITE(type) && IS_BLACK(gcell(i, j))) || (IS_BLACK(type) && IS_WHITE(gcell(i, j)))) enemy_count++;
 		}
 		// no eating
 		if (!enemy_count) return true;
@@ -235,7 +254,7 @@ unsigned int BOARD::get_square_moves(CELL figure, int dep, PCOLOR type, CELL *re
 
 // checks the possibility of eating
 bool BOARD::can_eat(CELL figure) {
-	FIGURE type = cells[figure.x][figure.y];
+	FIGURE type = gcell(figure);
 	// draught
 	if (IS_DRT(type)) {
 		return (get_square_moves(figure, 2, COLOR(type))) ? true : false;
@@ -260,9 +279,9 @@ bool BOARD::can_move(CELL figure) {
 		// if there are figures which can eat, we can move only them
 		bool flag = false;
 		// go round the board finding our figures which can eat
-		for (int i = 0; i < size; i ++) {
+		for (int i = 0; i < size; i++) {
 			for (int j = 0; j < size; j++) {
-				if (COLOR(cells[i][j]) == utype && can_eat(CELL(i, j))) {
+				if (COLOR(gcell(i, j)) == utype && can_eat(CELL(i, j))) {
 					flag = true;
 					// found figure is our figure
 					if (i == figure.x && j == figure.y) return true;
@@ -295,7 +314,7 @@ bool BOARD::can_move() {
 // return value - number of possible partial half-moves
 unsigned int BOARD::moves(CELL figure, CELL *res) {
 	unsigned int k = 0; // number of possible partial half-moves
-	FIGURE type = cells[figure.x][figure.y]; // figure type
+	FIGURE type = gcell(figure); // figure type
 	/* can the figure move? */
 	if (!can_move(figure)) return 0;
 	/* go round all posible partial half-moves */
@@ -358,15 +377,15 @@ bool BOARD::move(CELL from, CELL to) {
 	}
 	/* exec move */
 	// move the figure
-	cells[to.x][to.y] = cells[from.x][from.y];
-	cells[from.x][from.y] = NONE;
+	scell(to, from);
+	scell(from, NONE);
 	// block the figure
 	ublocked = to;
 	ufirst = false;
 	// if we've eaten the enemy figure
 	if (flags.eat) {
 		// zeroize the eaten figure
-		cells[flags.eat_c.x][flags.eat_c.y] = NONE;
+		scell(flags.eat_c, NONE);
 		// change numbers of the figures
 		if (IS_WHITE(flags.eat)) {
 			if (IS_KNG(flags.eat)) wk--;
@@ -380,12 +399,17 @@ bool BOARD::move(CELL from, CELL to) {
 		ueaten = true;
 	}
 	// if the draugth has to be transformed to the king
-	if (flags.king) {
+	if (flags.king && IS_DRT(gcell(to))) {
 		// transform the figure to the king
-		cells[flags.king_c.x][flags.king_c.y] = IS_WHITE(flags.king) ? WHITE_KING : (IS_BLACK(flags.king) ? BLACK_KING : NONE);
-		// change numbers of the kings
-		if (IS_WHITE(flags.king)) wk++;
-		if (IS_BLACK(flags.king)) bk++;
+		// and change numbers of the kings
+		if (IS_WHITE(flags.king)) {
+			scell(to, WHITE_KING);
+			wk++;
+		}
+		if (IS_BLACK(flags.king)) {
+			scell(to, BLACK_KING);
+			bk++;
+		}
 	}
 	// move has been executed
 	return true;

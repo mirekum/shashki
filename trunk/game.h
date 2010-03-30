@@ -14,6 +14,8 @@
 		PLAYER *wp;
 		// black player
 		PLAYER *bp;
+		// number of moves
+		int move_num;
 	public:
 		// class constructor
 		GAME(PGAMER w, PGAMER b);
