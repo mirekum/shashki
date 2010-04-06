@@ -15,7 +15,7 @@ MOVE AI_PLAYER::get_move(BOARD board) {
 }
 
 // choose the best partial half-move
-int AI_PLAYER::choose(BOARD board, PCOLOR _type, MOVE *res, int step, int last, bool smflag) {
+int AI_PLAYER::choose(BOARD board, PCOLOR _type, MOVE *res, int step, int last, bool smflag, int depth) {
 	// not last partial half-move
 	if (step < max_step) {
 		bool minimax = (step % 2 == 0 ? 1 : 0); // max or min we must calculate (1 - max, 0 - min)
@@ -29,12 +29,6 @@ int AI_PLAYER::choose(BOARD board, PCOLOR _type, MOVE *res, int step, int last, 
 				if (smflag) board.start_move(_type);
 				// array of the possible partial half-moves for current figure
 				m = board.moves(d, arr);
-				// for debugging
-				if (step < 0) {
-					for (int k = 0; k < m; k++) {
-						std::cout << d.x << ", " << d.y << " -> " << arr[k].x << ", " << arr[k].y << std::endl;
-					}
-				}
 				// go round array of the possible partial half-moves for current figure
 				for (int k = 0; k < m; k++) {
 					int s; // current SRF value
@@ -43,15 +37,22 @@ int AI_PLAYER::choose(BOARD board, PCOLOR _type, MOVE *res, int step, int last, 
 					if (smflag) board.start_move(_type);
 					// exec current partial half-move
 					board_copy.move(d, arr[k]);
+					// for debugging
+					if (0) {
+						for (int q = 0; q < step; q++) {
+							std::cout << "  ";
+						}
+						std::cout << d.x << ", " << d.y << " -> " << arr[k].x << ", " << arr[k].y << " (" << depth << ")" << std::endl;
+					}
 					// half-move continuing
 					if (board_copy.moves(arr[k])) {
 						// continue current half-move
-						s = choose(board_copy, _type, NULL, step, (minimax ? max : min), false);
+						s = choose(board_copy, _type, NULL, step, (minimax ? max : min), false, ++depth);
 					}
 					// half-move is finished
 					else {
 						// start enemy half-move
-						s = choose(board_copy, _type == PWHITE ? PBLACK : PWHITE, NULL, step + 1, (minimax ? max : min), true);
+						s = choose(board_copy, _type == PWHITE ? PBLACK : PWHITE, NULL, step + 1, (minimax ? max : min), true, 0);
 					}
 					// calculate max of SRF values
 					if (minimax) {

@@ -234,7 +234,7 @@ bool BOARD::can_move(CELL from, CELL to, CANMOVE *flags, PCOLOR _type) {
 			if ((IS_WHITE(type) && IS_BLACK(gcell(i, j))) || (IS_BLACK(type) && IS_WHITE(gcell(i, j)))) enemy_count++;
 		}
 		// no eating
-		if (!enemy_count) return true;
+		return true;
 	}
 	// move is denied
 	return false;
