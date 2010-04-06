@@ -22,7 +22,7 @@
 		virtual MOVE get_move(BOARD board);
 	protected:
 		// choose the best partial half-move
-		virtual int choose(BOARD board, PCOLOR _type, MOVE *res, int step = 0, int last = -MINMAX_END, bool smflag = true);
+		virtual int choose(BOARD board, PCOLOR _type, MOVE *res, int step = 0, int last = -MINMAX_END, bool smflag = true, int depth = 0);
 	};
 	
 	// another class of the ai player

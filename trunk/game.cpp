@@ -9,6 +9,8 @@
 
 // class constructor
 GAME::GAME (PGAMER w, PGAMER b) {
+	// number of moves
+	int move_num = 0;
 	// white player creating
 	wp = createPlayer(w);
 	// black player creating
@@ -21,8 +23,6 @@ GAME::GAME (PGAMER w, PGAMER b) {
 	} else {
 		std::cout << "Error: undefined type of player(s)!" << std::endl;
 	}
-	// number of moves
-	int move_num = 0;
 }
 
 // class destructor
