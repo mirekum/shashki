@@ -112,7 +112,7 @@ GAMESTATE BOARD::is_win() {
 		}
 	}
 	// some debug info
-	std::cout << "[белые: " << tw << "(" << wk << ")" << "/" << w << " | чёрные: " << tb << "(" << bk << ")" << "/" << b << "]" << std::endl;
+	std::cout << "[белые: " << tw << "/" << w << " | чёрные: " << tb << "/" << b << "]" << std::endl;
 	// check winning and draw
 	if ( tw && !tb) return ISWIN_WHITE;
 	if (!tw &&  tb) return ISWIN_BLACK;
@@ -145,7 +145,7 @@ bool BOARD::can_move(CELL from, CELL to, CANMOVE *flags, PCOLOR _type) {
 		int x, y;
 		// whites
 		if (IS_WHITE(type)) {
-			// eating moves
+			// check eating moves
 			if (0
 				|| (((from.x - to.x) ==  2 && (from.y - to.y) ==  2) && (eaten = gcell(x = from.x-1, y = from.y-1)) < 0)
 				|| (((from.x - to.x) == -2 && (from.y - to.y) ==  2) && (eaten = gcell(x = from.x+1, y = from.y-1)) < 0)
@@ -155,7 +155,7 @@ bool BOARD::can_move(CELL from, CELL to, CANMOVE *flags, PCOLOR _type) {
 				if (flags != NULL) {flags->eat = eaten; flags->eat_c = CELL(x, y);}
 				return true;
 			}
-			// common move - if we haven't eat, we can move forward
+			// check common move - if we haven't eat, we can move forward
 			if (abs(to.x - from.x) == 1 && (from.y - to.y) == 1) {
 				if (from.x - 2 > 0 && from.y - 2 > 0 && gcell(from.x-1, from.y-1) < 0 && gcell(from.x-2, from.y-2) == 0) return false;
 				if (from.x + 2 < 0 && from.y - 2 > 0 && gcell(from.x+1, from.y-1) < 0 && gcell(from.x+2, from.y-2) == 0) return false;
@@ -164,7 +164,7 @@ bool BOARD::can_move(CELL from, CELL to, CANMOVE *flags, PCOLOR _type) {
 		}
 		// blacks
 		if (IS_BLACK(type)) {
-			// eating moves
+			// check eating moves
 			if (0
 				|| (((from.x - to.x) ==  2 && (from.y - to.y) ==  2) && (eaten = gcell(x = from.x-1, y = from.y-1)) > 0)
 				|| (((from.x - to.x) == -2 && (from.y - to.y) ==  2) && (eaten = gcell(x = from.x+1, y = from.y-1)) > 0)
@@ -174,7 +174,7 @@ bool BOARD::can_move(CELL from, CELL to, CANMOVE *flags, PCOLOR _type) {
 				if (flags != NULL) {flags->eat = eaten; flags->eat_c = CELL(x, y);}
 				return true;
 			}
-			// common move - if we haven't eat, we can move back
+			// check common move - if we haven't eat, we can move back
 			if (abs(to.x - from.x) == 1 && (to.y - from.y) == 1) {
 				if (from.x - 2 > 0 && from.y + 2 < 0 && gcell(from.x-1, from.y+1) > 0 && gcell(from.x-2, from.y+2) == 0) return false;
 				if (from.x + 2 < 0 && from.y + 2 < 0 && gcell(from.x+1, from.y+1) > 0 && gcell(from.x+2, from.y+2) == 0) return false;
@@ -184,56 +184,96 @@ bool BOARD::can_move(CELL from, CELL to, CANMOVE *flags, PCOLOR _type) {
 	}
 	// kings
 	if (IS_KNG(type)) {
-		unsigned int enemy_count = 0;
+		bool can_eat = false;
+		/* check eating moves */
 		// loop to left top corner
-		for (int i = from.x - 1, j = from.y - 1; i >= to.x && j >= to.y; i--, j--) {
-			if ((IS_WHITE(type) && IS_WHITE(gcell(i, j))) || (IS_BLACK(type) && IS_BLACK(gcell(i, j)))) return false;
-			if (enemy_count) {
-				if (i == to.x && j == to.y) {
-					if (flags != NULL) {flags->eat = gcell(i+1, j+1); flags->eat_c = CELL(i+1, j+1);}
-					return true;
+		for (int i = from.x - 1, j = from.y - 1, met_enemy = 0; i >= 0 && j >= 0; i--, j--) {
+			if ((IS_WHITE(type) && IS_WHITE(gcell(i, j))) || (IS_BLACK(type) && IS_BLACK(gcell(i, j)))) break; // not eating move
+			if (met_enemy) {
+				if (IS_EMP(gcell(i, j))) {
+					can_eat = true; // eating move detected!
+					if (i == to.x && j == to.y) {
+						if (flags != NULL) {flags->eat = gcell(i+1, j+1); flags->eat_c = CELL(i+1, j+1);}
+						return true;
+					}
 				}
-				return false;
+				break;
 			}
-			if ((IS_WHITE(type) && IS_BLACK(gcell(i, j))) || (IS_BLACK(type) && IS_WHITE(gcell(i, j)))) enemy_count++;
+			if ((IS_WHITE(type) && IS_BLACK(gcell(i, j))) || (IS_BLACK(type) && IS_WHITE(gcell(i, j)))) met_enemy++;
 		}
 		// loop to right top corner
-		for (int i = from.x + 1, j = from.y - 1; i <= to.x && j >= to.y; i++, j--) {
-			if ((IS_WHITE(type) && IS_WHITE(gcell(i, j))) || (IS_BLACK(type) && IS_BLACK(gcell(i, j)))) return false;
-			if (enemy_count) {
-				if (i == to.x && j == to.y) {
-					if (flags != NULL) {flags->eat = gcell(i-1, j+1); flags->eat_c = CELL(i-1, j+1);}
-					return true;
+		for (int i = from.x + 1, j = from.y - 1, met_enemy = 0; i < size && j >= 0; i++, j--) {
+			if ((IS_WHITE(type) && IS_WHITE(gcell(i, j))) || (IS_BLACK(type) && IS_BLACK(gcell(i, j)))) break; // not eating move
+			if (met_enemy) {
+				if (IS_EMP(gcell(i, j))) {
+					can_eat = true; // eating move detected!
+					if (i == to.x && j == to.y) {
+						if (flags != NULL) {flags->eat = gcell(i-1, j+1); flags->eat_c = CELL(i-1, j+1);}
+						return true;
+					}
 				}
-				return false;
+				break;
 			}
-			if ((IS_WHITE(type) && IS_BLACK(gcell(i, j))) || (IS_BLACK(type) && IS_WHITE(gcell(i, j)))) enemy_count++;
+			if ((IS_WHITE(type) && IS_BLACK(gcell(i, j))) || (IS_BLACK(type) && IS_WHITE(gcell(i, j)))) met_enemy++;
 		}
 		// loop to left bottom corner
-		for (int i = from.x - 1, j = from.y + 1; i >= to.x && j <= to.y; i--, j++) {
-			if ((IS_WHITE(type) && IS_WHITE(gcell(i, j))) || (IS_BLACK(type) && IS_BLACK(gcell(i, j)))) return false;
-			if (enemy_count) {
-				if (i == to.x && j == to.y) {
-					if (flags != NULL) {flags->eat = gcell(i+1, j-1); flags->eat_c = CELL(i+1, j-1);}
-					return true;
+		for (int i = from.x - 1, j = from.y + 1, met_enemy = 0; i >= 0 && j < size; i--, j++) {
+			if ((IS_WHITE(type) && IS_WHITE(gcell(i, j))) || (IS_BLACK(type) && IS_BLACK(gcell(i, j)))) break; // not eating move
+			if (met_enemy) {
+				if (IS_EMP(gcell(i, j))) {
+					can_eat = true; // eating move detected!
+					if (i == to.x && j == to.y) {
+						if (flags != NULL) {flags->eat = gcell(i+1, j-1); flags->eat_c = CELL(i+1, j-1);}
+						return true;
+					}
 				}
-				return false;
+				break;
 			}
-			if ((IS_WHITE(type) && IS_BLACK(gcell(i, j))) || (IS_BLACK(type) && IS_WHITE(gcell(i, j)))) enemy_count++;
+			if ((IS_WHITE(type) && IS_BLACK(gcell(i, j))) || (IS_BLACK(type) && IS_WHITE(gcell(i, j)))) met_enemy++;
 		}
 		// loop to right bottom corner
-		for (int i = from.x + 1, j = from.y + 1; i <= to.x, j <= to.y; i++, j++) {
-			if ((IS_WHITE(type) && IS_WHITE(gcell(i, j))) || (IS_BLACK(type) && IS_BLACK(gcell(i, j)))) return false;
-			if (enemy_count) {
-				if (i == to.x && j == to.y) {
-					if (flags != NULL) {flags->eat = gcell(i-1, j-1); flags->eat_c = CELL(i-1, j-1);}
-					return true;
+		for (int i = from.x + 1, j = from.y + 1, met_enemy = 0; i < size && j < size; i++, j++) {
+			if ((IS_WHITE(type) && IS_WHITE(gcell(i, j))) || (IS_BLACK(type) && IS_BLACK(gcell(i, j)))) break; // not eating move
+			if (met_enemy) {
+				if (IS_EMP(gcell(i, j))) {
+					can_eat = true; // eating move detected!
+					if (i == to.x && j == to.y) {
+						if (flags != NULL) {flags->eat = gcell(i-1, j-1); flags->eat_c = CELL(i-1, j-1);}
+						return true;
+					}
 				}
-				return false;
+				break;
 			}
-			if ((IS_WHITE(type) && IS_BLACK(gcell(i, j))) || (IS_BLACK(type) && IS_WHITE(gcell(i, j)))) enemy_count++;
+			if ((IS_WHITE(type) && IS_BLACK(gcell(i, j))) || (IS_BLACK(type) && IS_WHITE(gcell(i, j)))) met_enemy++;
 		}
-		// no eating
+		// we could eat, but we haven't done it
+		if (can_eat) return false; // fail!
+		/* check common moves */
+		// loop to left top corner
+		if (to.x < from.x && to.y < from.y) {
+			for (int i = from.x - 1, j = from.y - 1; i >= to.x && j >= to.y; i--, j--) {
+				if (!IS_EMP(gcell(i, j))) return false;
+			}
+		}
+		// loop to right top corner
+		if (to.x > from.x && to.y < from.y) {
+			for (int i = from.x + 1, j = from.y - 1; i <= to.x && j >= to.y; i++, j--) {
+				if (!IS_EMP(gcell(i, j))) return false;
+			}
+		}
+		// loop to left bottom corner
+		if (to.x < from.x && to.y > from.y) {
+			for (int i = from.x - 1, j = from.y + 1; i >= to.x && j <= to.y; i--, j++) {
+				if (!IS_EMP(gcell(i, j))) return false;
+			}
+		}
+		// loop to right bottom corner
+		if (to.x > from.x && to.y > from.y) {
+			for (int i = from.x + 1, j = from.y + 1; i <= to.x && j <= to.y; i++, j++) {
+				if (!IS_EMP(gcell(i, j))) return false;
+			}
+		}
+		// move is allowed
 		return true;
 	}
 	// move is denied
