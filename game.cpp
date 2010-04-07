@@ -4,13 +4,14 @@
 #include "human.h"
 #include "ai.h"
 #include "game.h"
+#include "cstdio"
 
 /* methods of the class for playing draughts */
 
 // class constructor
 GAME::GAME (PGAMER w, PGAMER b) {
 	// number of moves
-	int move_num = 0;
+	move_num = 0;
 	// white player creating
 	wp = createPlayer(w);
 	// black player creating
