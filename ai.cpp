@@ -38,7 +38,7 @@ int AI_PLAYER::choose(BOARD board, PCOLOR _type, MOVE *res, int step, int last, 
 					// exec current partial half-move
 					board_copy.move(d, arr[k]);
 					// for debugging
-					if (0) {
+					if (step < 0) {
 						for (int q = 0; q < step; q++) {
 							std::cout << "  ";
 						}
@@ -82,8 +82,12 @@ int AI_PLAYER::choose(BOARD board, PCOLOR _type, MOVE *res, int step, int last, 
 							return s;
 						}
 					}
+					// for debugging
+					if (step < 0) {
+						std::cout << "> [" << s << "] " <<
+							"(" << d.x << ", " << d.y << ") -> (" << arr[k].x << ", " << arr[k].y << ")" << std::endl;
+					}
 				}
-				
 			}
 		}
 		// result of going round this tree branch
@@ -101,11 +105,11 @@ int AI_PLAYER::choose(BOARD board, PCOLOR _type, MOVE *res, int step, int last, 
 int AI_PLAYER::srf(BOARD board) {
 	// for white player
 	if (type == PWHITE) {
-		return (board.white() - board.white_king() - board.black() + board.black_king()) + 3*(board.white_king() - board.black_king());
+		return (board.white() - board.black()) + 2*(board.white_king() - board.black_king());
 	}
 	// for black player
 	else if (type == PBLACK) {
-		return (board.black() - board.black_king() - board.white() + board.white_king()) + 3*(board.black_king() - board.white_king());
+		return (board.black() - board.white()) + 2*(board.black_king() - board.white_king());
 	}
 	// error
 	return 0;

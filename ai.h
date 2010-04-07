@@ -17,7 +17,7 @@
 		virtual int srf(BOARD board);
 	public:
 		// class constructor
-		AI_PLAYER() {max_step = 4; ab = true;}
+		AI_PLAYER() {max_step = 6; ab = true;}
 		// chooses partial half-move
 		virtual MOVE get_move(BOARD board);
 	protected:
@@ -28,7 +28,7 @@
 	// another class of the ai player
 	class AI_PLAYER2: public AI_PLAYER {
 	public:
-		AI_PLAYER2() {max_step = 4; ab = true;}
+		AI_PLAYER2() {max_step = 6; ab = true;}
 	};
 	
 #endif
