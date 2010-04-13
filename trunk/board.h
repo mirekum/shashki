@@ -13,23 +13,20 @@
 	
 	// figure types
 	enum FIGURE {
-		BLACK_KING = -2, // black king
-		BLACK      = -1, // black draught
-		NONE       =  0, // no figure
-		WHITE      =  1, // white draught
-		WHITE_KING =  2  // white king
+		BLACK_KING = -2,
+		BLACK      = -1,
+		NONE       =  0,
+		WHITE      =  1,
+		WHITE_KING =  2
 	};
 	
-	// is figure color white?
+	// check figure type
 	inline bool IS_WHITE(FIGURE type) {return type > 0 ? true : false;};
-	// is figure color black?
 	inline bool IS_BLACK(FIGURE type) {return type < 0 ? true : false;};
-	// is figure is a draught?
 	inline bool IS_DRT(FIGURE type) {return abs(type) == 1 ? true : false;};
-	// is figure is a king ?
 	inline bool IS_KNG(FIGURE type) {return abs(type) == 2 ? true : false;};
-	// is cell empty?
 	inline bool IS_EMP(FIGURE type) {return type == NONE ? true : false;};
+	
 	// FIGURE -> PCOLOR
 	PCOLOR COLOR(FIGURE type);
 	
@@ -61,34 +58,21 @@
 		CANMOVE(): eat(NONE), king(NONE) {};
 	};
 	
-	// class of the board for playing draughts
+	// board for playing draughts
 	class BOARD {
 	public:
-		// size of the board
 		const static unsigned int size = 8;
 	protected:
-		// number of white and black figures
-		unsigned int b, w;
-		// number of white and black kings
-		unsigned int bk, wk;
-		// array of the board cells
-		FIGURE cells[size][size]; // [x][y]; x - col, y - row
-		// flag, indicating first partial half-move
-		bool ufirst;
-		// flag, indicating eating at last partial half-move
-		bool ueaten;
-		// player type for current half-move
-		PCOLOR utype;
-		// blocked for current half-move figure
-		CELL ublocked;
+		unsigned int b, w, bk, wk; // numbers of figures and kinks
+		FIGURE cells[size][size];  // [x][y]; x - col, y - row
+		bool ufirst;               // flag, indicating first partial half-move
+		bool ueaten;               // flag, indicating eating at last partial half-move
+		PCOLOR utype;              // player type for current half-move
+		CELL ublocked;             // blocked for current half-move figure
 	public:
-		// class constructor
 		BOARD();
-		// print the board on the screen
 		friend std::ostream& operator<< (std::ostream &cout, BOARD &board);
-		// starts the half-move
-		void start_move(PCOLOR type);
-		// checks the end of the game
+		void start_move(PCOLOR type); // starts the half-move
 		GAMESTATE is_win();
 	protected:
 		// checks the physical possibility of the move from one cell to the other one

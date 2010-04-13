@@ -4,7 +4,6 @@
 	#include <iostream>
 	#include "player.h"
 	
-	// class of the human player
 	class HUMAN_PLAYER: public PLAYER {
 	public:
 		// chooses partial half-move

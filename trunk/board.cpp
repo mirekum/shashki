@@ -89,9 +89,7 @@ std::ostream& operator<< (std::ostream &cout, BOARD &board) {
 
 // starts the half-move
 void BOARD::start_move(PCOLOR type) {
-	// current player color
 	utype = type;
-	// zeroize flags
 	ufirst = true;
 	ueaten = false;
 }
@@ -123,10 +121,8 @@ GAMESTATE BOARD::is_win() {
 
 // checks the physical possibility of the move from one cell to the other one
 bool BOARD::can_move(CELL from, CELL to, CANMOVE *flags, PCOLOR _type) {
-	// check coordinate limits
 	if (from.x < 0 || from.y < 0 || from.x >= size || from.y >= size) return false;
 	if (to.x < 0   || to.y < 0   || to.x >= size   || to.y >= size) return false;
-	// initial figure color
 	FIGURE type = gcell(from);
 	// moves by empty cells, by enemy figures and to occupied cells are denied
 	if (!type) return false;
@@ -134,16 +130,13 @@ bool BOARD::can_move(CELL from, CELL to, CANMOVE *flags, PCOLOR _type) {
 	if (gcell(to)) return false;
 	// check king transformation
 	if (flags != NULL && IS_DRT(type)) {
-		// whites
 		if (IS_WHITE(type) && to.y == 0) flags->king = WHITE;
-		// blacks
 		else if (IS_BLACK(type) && to.y == size - 1) flags->king = BLACK;
 	}
 	// draughts
 	if (IS_DRT(type)) {
 		FIGURE eaten;
 		int x, y;
-		// whites
 		if (IS_WHITE(type)) {
 			// check eating moves
 			if (0
@@ -162,7 +155,6 @@ bool BOARD::can_move(CELL from, CELL to, CANMOVE *flags, PCOLOR _type) {
 				return true;
 			}
 		}
-		// blacks
 		if (IS_BLACK(type)) {
 			// check eating moves
 			if (0
@@ -273,10 +265,10 @@ bool BOARD::can_move(CELL from, CELL to, CANMOVE *flags, PCOLOR _type) {
 				if (!IS_EMP(gcell(i, j))) return false;
 			}
 		}
-		// move is allowed
+		
 		return true;
 	}
-	// move is denied
+	
 	return false;
 }
 bool BOARD::can_move(MOVE _move, CANMOVE *flags, PCOLOR _type) {return can_move(_move.from, _move.to, flags, _type);}bool BOARD::can_move(int x1, int y1, int x2, int y2, CANMOVE *flags, PCOLOR _type) {return can_move(CELL(x1, y1), CELL(x2, y2), flags, _type);};
@@ -295,11 +287,9 @@ unsigned int BOARD::get_square_moves(CELL figure, int dep, PCOLOR type, CELL *re
 // checks the possibility of eating
 bool BOARD::can_eat(CELL figure) {
 	FIGURE type = gcell(figure);
-	// draught
 	if (IS_DRT(type)) {
 		return (get_square_moves(figure, 2, COLOR(type))) ? true : false;
 	}
-	// king
 	if (IS_KNG(type)) {
 		CANMOVE flags;
 		for (int k = 2; k <= size/2; k++) {
@@ -308,7 +298,7 @@ bool BOARD::can_eat(CELL figure) {
 		}
 		return false;
 	}
-	// nothing
+	
 	return false;
 }
 
@@ -337,7 +327,7 @@ bool BOARD::can_move(CELL figure) {
 	else {
 		return (!(figure.x == ublocked.x && figure.y == ublocked.y && ueaten)) ? false : true;
 	}
-	// nothing
+	
 	return false;
 }
 
@@ -424,9 +414,7 @@ bool BOARD::move(CELL from, CELL to) {
 	ufirst = false;
 	// if we've eaten the enemy figure
 	if (flags.eat) {
-		// zeroize the eaten figure
-		scell(flags.eat_c, NONE);
-		// change numbers of the figures
+		scell(flags.eat_c, NONE); // zeroize the eaten figure
 		if (IS_WHITE(flags.eat)) {
 			if (IS_KNG(flags.eat)) wk--;
 			w--;
@@ -441,7 +429,6 @@ bool BOARD::move(CELL from, CELL to) {
 	// if the draugth has to be transformed to the king
 	if (flags.king && IS_DRT(gcell(to))) {
 		// transform the figure to the king
-		// and change numbers of the kings
 		if (IS_WHITE(flags.king)) {
 			scell(to, WHITE_KING);
 			wk++;

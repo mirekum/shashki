@@ -4,17 +4,13 @@
 #include "human.h"
 #include "ai.h"
 #include "game.h"
-#include "cstdio"
 
 /* methods of the class for playing draughts */
 
 // class constructor
 GAME::GAME (PGAMER w, PGAMER b) {
-	// number of moves
 	move_num = 0;
-	// white player creating
 	wp = createPlayer(w);
-	// black player creating
 	bp = createPlayer(b);
 	// start the game process
 	if (wp != NULL && bp != NULL) {
@@ -37,10 +33,12 @@ PLAYER* GAME::createPlayer(PGAMER plr) {
 	switch (plr) {
 		case HUMAN:
 			return new HUMAN_PLAYER();
-		case AI:
-			return new AI_PLAYER();
-		case AI2:
-			return new AI_PLAYER2();
+		case AI_SEQ:
+			return new AI_SEQ_PLAYER();
+		case AI_SEQ2:
+			return new AI_SEQ_PLAYER2();
+		case AI_PRL:
+			return new AI_PRL_PLAYER();
 		default:
 			return NULL;
 	}
@@ -66,21 +64,16 @@ void GAME::exec_move(PLAYER *plr, PCOLOR type) {
 // the game process
 void GAME::process () {
 	do {
-		GAMESTATE res_flag; // флаг результата игры
+		GAMESTATE res_flag;
 		
-		/* white moves */
 		std::cout << "*** ХОД БЕЛЫХ ***" << std::endl;
 		exec_move(wp, PWHITE);
-		// check the winning
 		if (res_flag = board.is_win()) return result(res_flag);
 		
-		/* black moves */
 		std::cout << "*** ХОД ЧЁРНЫХ ***" << std::endl;
 		exec_move(bp, PBLACK);
-		// check the winning
 		if (res_flag = board.is_win()) return result(res_flag);
 		
-		/* continue game */
 		std::cout << std::endl;
 	} while(1);
 }
@@ -89,15 +82,12 @@ void GAME::process () {
 void GAME::result (GAMESTATE res) {
 	std::cout << board << std::endl;
 	switch(res) {
-		// white won
 		case ISWIN_WHITE:
 			std::cout << "\n\n********** БЕЛЫЕ ВЫИГРАЛИ **********\n\n" << std::endl;
 		break;
-		// black won
 		case ISWIN_BLACK:
 			std::cout << "\n\n********** ЧЁРНЫЕ ВЫИГРАЛИ **********\n\n" << std::endl;
 		break;
-		// the draw
 		case ISWIN_DRAW:
 			std::cout << "\n\n***** НИЧЬЯ *****\n\n" << std::endl;
 		break;
