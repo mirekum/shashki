@@ -3,8 +3,8 @@
 // entry point
 int main () {
 	// GAME(white player, black player)
-	GAME draughts(AI2, AI);
-	//the end
+	GAME draughts(AI_SEQ, AI_PRL);
+	
 	return 0;
 }
 

@@ -4,16 +4,14 @@
 	#include <iostream>
 	#include "board.h"
 	
-	// player gamers
-	enum PGAMER {HUMAN, AI, AI2};
+	// gamers
+	enum PGAMER {HUMAN, AI_SEQ, AI_SEQ2, AI_PRL};
 	
-	// class of the player for draughts
 	class PLAYER {
 	protected:
 		// player color
 		PCOLOR type;
 	public:
-		// class constructor
 		PLAYER () {type = PNONE;}
 		// sets player color
 		void setType(PCOLOR _type) {type = _type;};

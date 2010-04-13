@@ -1,21 +1,18 @@
 #include <iostream>
 #include "board.h"
-#include "ai.h"
+#include "aiseq.h"
 
 /* methods of class of the ai player */
 
 // chooses partial half-move
-MOVE AI_PLAYER::get_move(BOARD board) {
-	// partial half-move
+MOVE AI_SEQ_PLAYER::get_move(BOARD board) {
 	MOVE res;
-	// choose the best partial half-move
-	choose(board, type, &res);
-	// result
+	choose(board, type, &res); // choose the best partial half-move
 	return res;
 }
 
 // choose the best partial half-move
-int AI_PLAYER::choose(BOARD board, PCOLOR _type, MOVE *res, int step, int last, bool smflag, int depth) {
+int AI_SEQ_PLAYER::choose(BOARD board, PCOLOR _type, MOVE *res, int step, int last, bool smflag) {
 	// not last partial half-move
 	if (step < max_step) {
 		bool minimax = (step % 2 == 0 ? 1 : 0); // max or min we must calculate (1 - max, 0 - min)
@@ -34,7 +31,7 @@ int AI_PLAYER::choose(BOARD board, PCOLOR _type, MOVE *res, int step, int last, 
 					int s; // current SRF value
 					BOARD board_copy = board;
 					// first partial half-move
-					if (smflag) board.start_move(_type);
+					if (smflag) board_copy.start_move(_type);
 					// exec current partial half-move
 					board_copy.move(d, arr[k]);
 					// for debugging
@@ -42,17 +39,17 @@ int AI_PLAYER::choose(BOARD board, PCOLOR _type, MOVE *res, int step, int last, 
 						for (int q = 0; q < step; q++) {
 							std::cout << "  ";
 						}
-						std::cout << d.x << ", " << d.y << " -> " << arr[k].x << ", " << arr[k].y << " (" << depth << ")" << std::endl;
+						std::cout << d.x << ", " << d.y << " -> " << arr[k].x << ", " << arr[k].y << std::endl;
 					}
 					// half-move continuing
 					if (board_copy.moves(arr[k])) {
 						// continue current half-move
-						s = choose(board_copy, _type, NULL, step, (minimax ? max : min), false, ++depth);
+						s = choose(board_copy, _type, NULL, step, (minimax ? max : min), false);
 					}
 					// half-move is finished
 					else {
 						// start enemy half-move
-						s = choose(board_copy, _type == PWHITE ? PBLACK : PWHITE, NULL, step + 1, (minimax ? max : min), true, 0);
+						s = choose(board_copy, _type == PWHITE ? PBLACK : PWHITE, NULL, step + 1, (minimax ? max : min), true);
 					}
 					// calculate max of SRF values
 					if (minimax) {
@@ -97,21 +94,19 @@ int AI_PLAYER::choose(BOARD board, PCOLOR _type, MOVE *res, int step, int last, 
 	else {
 		return srf(board);
 	}
-	// error
+	
 	return 0;
 }
 
 // statictiс rating function
-int AI_PLAYER::srf(BOARD board) {
-	// for white player
+int AI_SEQ_PLAYER::srf(BOARD board) {
 	if (type == PWHITE) {
 		return (board.white() - board.black()) + 2*(board.white_king() - board.black_king());
 	}
-	// for black player
 	else if (type == PBLACK) {
 		return (board.black() - board.white()) + 2*(board.black_king() - board.white_king());
 	}
-	// error
+	
 	return 0;
 }
 
