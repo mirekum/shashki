@@ -6,6 +6,7 @@
 	#include <vector>
 	#include "board.h"
 	#include "player.h"
+	#include "aiseq.h"
 	
 	class CHOOSEN_MOVE {
 	public:
@@ -24,21 +25,10 @@
 	void *ai_prl_first_choose(void *ptr);
 	
 	// class of the parallel ai player
-	class AI_PRL_PLAYER: public PLAYER {
-	protected:
-		// minimax limit
-		const static int MINMAX_END = 2000000;
-		// search tree depth
-		unsigned int max_step;
-		// statictiс rating function
-		virtual int srf(BOARD board);
+	class AI_PRL_PLAYER: public AI_SEQ_PLAYER {
 	public:
-		AI_PRL_PLAYER() {max_step = 8;}
-		// chooses partial half-move
-		virtual MOVE get_move(BOARD board);
-	protected:
-		// choose the best partial half-move
-		virtual int choose(BOARD board, PCOLOR _type, MOVE *res, int step = 0, int last = -MINMAX_END, bool smflag = true);
+		AI_PRL_PLAYER() {max_step = 6; ab = true;}
+		virtual MOVE get_move(BOARD board); // choose partial half-move
 	friend void *ai_prl_first_choose(void *ptr);
 	};
 	
@@ -46,9 +36,11 @@
 	public:
 		AI_PRL_PLAYER *plr;
 		BOARD *board;
+		int next_move_num;
 		CHOOSEN_MOVE_ARRAY *moves_queue;
 		pthread_mutex_t *queue_mutex;
-		int next_move_num;
+		int mark;
+		pthread_mutex_t *mark_mutex;
 	};
 	
 #endif

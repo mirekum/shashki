@@ -4,7 +4,7 @@
 
 /* methods of class of the ai player */
 
-// chooses partial half-move
+// choose partial half-move
 MOVE AI_SEQ_PLAYER::get_move(BOARD board) {
 	MOVE res;
 	choose(board, type, &res); // choose the best partial half-move
@@ -30,8 +30,6 @@ int AI_SEQ_PLAYER::choose(BOARD board, PCOLOR _type, MOVE *res, int step, int la
 				for (int k = 0; k < m; k++) {
 					int s; // current SRF value
 					BOARD board_copy = board;
-					// first partial half-move
-					if (smflag) board_copy.start_move(_type);
 					// exec current partial half-move
 					board_copy.move(d, arr[k]);
 					// for debugging
@@ -62,6 +60,7 @@ int AI_SEQ_PLAYER::choose(BOARD board, PCOLOR _type, MOVE *res, int step, int la
 						}
 						// alpha-beta pruning
 						if (ab && s > last && last > -MINMAX_END && last < MINMAX_END) {
+							//if (step <= 1) std::cout << "================ ab1 pruning detected! ================\n"; // for debugging
 							return s;
 						}
 					}
@@ -76,6 +75,7 @@ int AI_SEQ_PLAYER::choose(BOARD board, PCOLOR _type, MOVE *res, int step, int la
 						}
 						// alpha-beta pruning
 						if (ab && s < last && last > -MINMAX_END && last < MINMAX_END) {
+							//if (step <= 1) std::cout << "================ ab2 pruning detected! ================\n"; // for debugging
 							return s;
 						}
 					}
