@@ -27,7 +27,7 @@
 	// class of the parallel ai player
 	class AI_PRL_PLAYER: public AI_SEQ_PLAYER {
 	public:
-		AI_PRL_PLAYER() {max_step = 6; ab = true;}
+		AI_PRL_PLAYER() {max_step = 4; ab = true;}
 		virtual MOVE get_move(BOARD board); // choose partial half-move
 	friend void *ai_prl_first_choose(void *ptr);
 	};
