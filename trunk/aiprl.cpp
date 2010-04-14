@@ -56,7 +56,7 @@ MOVE AI_PRL_PLAYER::get_move(BOARD board) {
 		}
 	}
 	
-	std::cout << "result: " << res.from.x << ", " << res.from.y << " -> " << res.to.x << ", " << res.to.y << " [" << max << "]" << std::endl;
+	//std::cout << "result: " << res.from.x << ", " << res.from.y << " -> " << res.to.x << ", " << res.to.y << " [" << max << "]" << std::endl;
 	
 	// return the best move
 	return res;

@@ -11,14 +11,14 @@
 		const static int MINMAX_END = 2000000;
 		// is alpha-beta pruning on?
 		bool ab;
-		// search tree depth
+		// level (search tree depth)
 		unsigned int max_step;
 		// statictiс rating function
 		virtual int srf(BOARD board);
 	public:
 		AI_SEQ_PLAYER() {max_step = 6; ab = true;}
 		virtual MOVE get_move(BOARD board); // choose partial half-move
-		void set_level(int level) {max_step = level;};
+		virtual void setLevel(int level) {max_step = level;};
 	protected:
 		// choose the best partial half-move
 		virtual int choose(BOARD board, PCOLOR _type, MOVE *res, int step = 0, int last = -MINMAX_END, bool smflag = true);

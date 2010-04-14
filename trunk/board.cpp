@@ -110,7 +110,7 @@ GAMESTATE BOARD::is_win() {
 		}
 	}
 	// some debug info
-	std::cout << "[белые: " << tw << "/" << w << " | чёрные: " << tb << "/" << b << "]" << std::endl;
+	//std::cout << "[белые: " << tw << "/" << w << " | чёрные: " << tb << "/" << b << "]" << std::endl;
 	// check winning and draw
 	if ( tw && !tb) return ISWIN_WHITE;
 	if (!tw &&  tb) return ISWIN_BLACK;

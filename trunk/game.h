@@ -16,11 +16,8 @@
 		~GAME();
 	protected:
 		PLAYER* createPlayer(PGAMER plr);
-		// the game process
 		void process();
-		// player move
 		void exec_move(PLAYER *plr, PCOLOR type);
-		// reports the results
 		void result(GAMESTATE res);
 	};
 	
