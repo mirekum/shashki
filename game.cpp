@@ -7,8 +7,7 @@
 
 /* methods of the class for playing draughts */
 
-// class constructor
-GAME::GAME (PGAMER w, PGAMER b) {
+GAME::GAME(PGAMER w, PGAMER b) {
 	move_num = 0;
 	wp = createPlayer(w);
 	bp = createPlayer(b);
@@ -22,13 +21,11 @@ GAME::GAME (PGAMER w, PGAMER b) {
 	}
 }
 
-// class destructor
 GAME::~GAME() {
 	delete wp;
 	delete bp;
 }
 
-// creates player
 PLAYER* GAME::createPlayer(PGAMER plr) {
 	switch (plr) {
 		case HUMAN:
@@ -44,7 +41,6 @@ PLAYER* GAME::createPlayer(PGAMER plr) {
 	}
 }
 
-// player move
 void GAME::exec_move(PLAYER *plr, PCOLOR type) {
 	move_num++;
 	board.start_move(type);
@@ -61,24 +57,24 @@ void GAME::exec_move(PLAYER *plr, PCOLOR type) {
 	while (board.can_move());
 }
 
-// the game process
 void GAME::process () {
+	GAMESTATE res_flag;
 	do {
-		GAMESTATE res_flag;
-		
 		std::cout << "*** ХОД БЕЛЫХ ***" << std::endl;
 		exec_move(wp, PWHITE);
-		if (res_flag = board.is_win()) return result(res_flag);
+		if (res_flag = board.is_win()) goto res;
 		
 		std::cout << "*** ХОД ЧЁРНЫХ ***" << std::endl;
 		exec_move(bp, PBLACK);
-		if (res_flag = board.is_win()) return result(res_flag);
+		if (res_flag = board.is_win()) goto res;
 		
 		std::cout << std::endl;
 	} while(1);
+	
+	res:
+	return result(res_flag);
 }
 
-// reports the results
 void GAME::result (GAMESTATE res) {
 	std::cout << board << std::endl;
 	switch(res) {
