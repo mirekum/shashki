@@ -16,7 +16,7 @@
 		// statictiс rating function
 		virtual int srf(BOARD board);
 	public:
-		AI_SEQ_PLAYER() {max_step = 6; ab = true;}
+		AI_SEQ_PLAYER() {max_step = 4; ab = true;}
 		virtual MOVE get_move(BOARD board); // choose partial half-move
 		virtual void setLevel(int level) {max_step = level;};
 	protected:
@@ -26,7 +26,7 @@
 	
 	class AI_SEQ_PLAYER2: public AI_SEQ_PLAYER {
 	public:
-		AI_SEQ_PLAYER2() {max_step = 6; ab = true;}
+		AI_SEQ_PLAYER2() {max_step = 4; ab = true;}
 	};
 	
 #endif
