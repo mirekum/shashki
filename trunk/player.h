@@ -5,7 +5,7 @@
 	#include "board.h"
 	
 	// gamers
-	enum PGAMER {HUMAN, AI_SEQ, AI_SEQ2, AI_PRL};
+	enum PGAMER {HUMAN, AI_SEQ, AI_SEQ2, AI_PRL, AI_PRL2, AI_PRL3};
 	
 	class PLAYER {
 	protected:
@@ -26,6 +26,10 @@
 					return "sequence ai 2";
 				case AI_PRL:
 					return "parallel ai";
+				case AI_PRL2:
+					return "parallel ai 2";
+				case AI_PRL3:
+					return "parallel ai 3";
 			}
 			
 			return "";

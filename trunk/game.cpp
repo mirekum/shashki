@@ -37,9 +37,14 @@ PLAYER* GAME::createPlayer(PGAMER plr) {
 			return new AI_SEQ_PLAYER2();
 		case AI_PRL:
 			return new AI_PRL_PLAYER();
+		case AI_PRL2:
+			return new AI_PRL_PLAYER2();
+		case AI_PRL3:
+			return new AI_PRL_PLAYER3();
 		default:
-			return NULL;
+			exit(1);
 	}
+	return NULL;
 }
 
 void GAME::exec_move(PLAYER *plr, PCOLOR type) {

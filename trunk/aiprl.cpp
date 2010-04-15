@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 #include <pthread.h>
 #include "board.h"
 #include "aiprl.h"
@@ -9,8 +10,6 @@
 MOVE AI_PRL_PLAYER::get_move(BOARD board) {
 	MOVE res; // the best move
 	CHOOSEN_MOVE_ARRAY moves_queue; // first level moves queue
-	pthread_t thread1, thread2; // child threads
-	int iret1, iret2; // threads ids
 	// go round all figures on the board and make moves queue
 	for (int i = 0; i < board.size; i++) {
 		for (int j = 0; j < board.size; j++) {
@@ -35,15 +34,18 @@ MOVE AI_PRL_PLAYER::get_move(BOARD board) {
 	sync->mark = -MINMAX_END;
 	sync->mark_mutex = &mark_mutex;
 	
-	// run two child threads
-	iret1 = pthread_create(&thread1, NULL, &ai_prl_first_choose, (void*)sync);
-	if (iret1) exit(1);
-	iret2 = pthread_create(&thread2, NULL, &ai_prl_first_choose, (void*)sync);
-	if (iret2) exit(1);
+	// child threads
+	std::vector<pthread_t> threads(thr_num);
+	
+	// run child threads
+	for (int i = 0; i < thr_num; i++) {
+		if (pthread_create(&threads[i], NULL, &ai_prl_first_choose, (void*)sync)) exit(1);
+	}
 	
 	// wait threads termination
-	pthread_join(thread1, NULL);
-	pthread_join(thread2, NULL);
+	for (int i = 0; i < thr_num; i++) {
+		pthread_join(threads[i], NULL);
+	}
 	
 	// calculate maximum of moves marks and choose the best move
 	int max = -MINMAX_END;
