@@ -85,6 +85,7 @@
 		bool can_eat(CELL figure);
 		// checks the possibility of the first partial half-move or a not first partial half-move
 		bool can_move(CELL figure);
+	public:
 		// set cell value
 		bool scell(int x, int y, FIGURE type);
 		bool scell(CELL figure, FIGURE type);
