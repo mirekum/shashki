@@ -1,45 +1,50 @@
 #include <iostream>
-#include <string>
-#include <vector>
 #include <time.h>
 #include <math.h>
 #include "board.h"
 #include "player.h"
 #include "game.h"
+#include "ai.h"
 #include "experiment.h"
 
 /* methods of the experiment class */
 
 // class constructor
-EXPERIMENT::EXPERIMENT(const BOARD &_board, int _minExp, int _maxExp, double _Covar, int _minLvl, int _maxLvl):
+EXPERIMENT::EXPERIMENT(const BOARD &_board, PCOLOR _ptype, int _minExp, int _maxExp, double _Covar, int _minLvl, int _maxLvl):
 	minExp(_minExp), maxExp(_maxExp), Covar(_Covar), minLvl(_minLvl), maxLvl(_maxLvl)
 {
 	board = _board;
+	ptype = _ptype;
 };
 
-void EXPERIMENT::run(PGAMER plr, const std::string &filename) {
+void EXPERIMENT::run(PGAMER plr) {
 	if (plr == HUMAN) exit(1);
+	board.start_move(ptype);
 	PLAYER *player = GAME::createPlayer(plr);
+	player->setType(ptype);
+	std::cout << "Player: " << PLAYER::getPlrText(plr) << std::endl;
 	time_t start_time, end_time;
 	// go round need levels
 	for (int n = minLvl; n <= maxLvl; n++) {
 		player->setLevel(n);
-		std::vector<int> times;
-		double M;
+		times_array times;
+		double M = -1.0;
 		READY_STATE res;
 		// make experiment for current level
+		int k = 0;
 		while ((res = isReady(times, M)) == EXP_NOREADY) {
-			time(&start_time);
+			start_time = time(NULL);
 			player->get_move(board);
-			time(&end_time);
+			end_time = time(NULL);
 			// adds time difference to array
+			//std::cout << "[" << ++k << "] time: " << difftime(end_time, start_time) << std::endl;
 			times.push_back(difftime(end_time, start_time));
 		}
 		// remember results
-		std::cout << filename << ": " << n << " | ";
+		std::cout << n << " | ";
 		switch (res) {
 			case EXP_READY_MAXEXP: std::cout << "maxexp"; break;
-			case EXP_READY_COVAR:  std::cout << "covar "; break;
+			case EXP_READY_COVAR:  std::cout << "covar"; break;
 		}
 		std::cout << " | " << M << std::endl;
 	}
@@ -47,7 +52,7 @@ void EXPERIMENT::run(PGAMER plr, const std::string &filename) {
 	delete player;
 }
 
-READY_STATE EXPERIMENT::isReady(const std::vector<int> &times, double &M) {
+READY_STATE EXPERIMENT::isReady(const times_array &times, double &M) {
 	// detect minExp
 	if (times.size() < minExp) return EXP_NOREADY;
 	

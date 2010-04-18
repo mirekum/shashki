@@ -41,7 +41,7 @@
 	
 	class AI_PRL_PLAYER3: public AI_PRL_PLAYER {
 	public:
-		AI_PRL_PLAYER3() {max_step = 4; ab = true; thr_num = 8;}
+		AI_PRL_PLAYER3() {max_step = 4; ab = true; thr_num = 1;}
 	};
 	
 	struct MOVES_SYNC {
