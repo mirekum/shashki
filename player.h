@@ -23,13 +23,13 @@
 				case AI_SEQ:
 					return "sequence ai";
 				case AI_SEQ2:
-					return "sequence ai 2";
+					return "sequence ai ver#2";
 				case AI_PRL:
-					return "parallel ai";
+					return "parallel ai (2 threads)";
 				case AI_PRL2:
-					return "parallel ai 2";
+					return "parallel ai (4 threads)";
 				case AI_PRL3:
-					return "parallel ai 3";
+					return "parallel ai (1 thread)";
 			}
 			
 			return "";
