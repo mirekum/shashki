@@ -21,7 +21,7 @@
 		EXPERIMENT(const BOARD &_board, PCOLOR _ptype, int _minExp, int _maxExp, double _Covar, int minLvl, int maxLvl);
 		void run(PGAMER plr);
 	protected:
-		READY_STATE isReady(const times_array &times, double &M);
+		READY_STATE isReady(const times_array &times, double &M, double &covar);
 	};
 	
 #endif
