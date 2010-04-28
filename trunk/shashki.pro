@@ -6,7 +6,7 @@ TEMPLATE = app
 TARGET = res
 DEPENDPATH += .
 INCLUDEPATH += .
-CONFIG = qt warn_on debug
+CONFIG = qt debug
 
 # Input
 HEADERS += ai.h \
