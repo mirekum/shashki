@@ -5,7 +5,7 @@
 /* mathods of class of the human player */
 
 // chooses partial half-move
-MOVE HUMAN_PLAYER::get_move(BOARD board) {
+MOVE HUMAN_PLAYER::getMove(BOARD board) {
 	MOVE res;
 	
 	// request partial half-move

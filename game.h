@@ -11,12 +11,12 @@
 		PLAYER *wp, *bp;
 		int move_num;
 	public:
-		GAME(PGAMER w, PGAMER b);
+		GAME(GAMER w, GAMER b);
 		~GAME();
-		static PLAYER* createPlayer(PGAMER plr);
+		static PLAYER* createPlayer(GAMER plr);
 	protected:
 		void process();
-		void exec_move(PLAYER *plr, PCOLOR type);
+		void execMove(PLAYER *plr, COLOR type);
 		void result(GAMESTATE res);
 	};
 	

@@ -4,38 +4,41 @@
 	#include <iostream>
 	#include <stdlib.h>
 	
-	// player colors
-	enum PCOLOR {
-		PBLACK = -1,
-		PNONE   = 0,
-		PWHITE  = 1
+	// colors
+	enum COLOR {
+		BLACK = -1,
+		NONE  =  0,
+		WHITE =  1
 	};
 	
 	// figure types
 	enum FIGURE {
 		BLACK_KING = -2,
-		BLACK      = -1,
-		NONE       =  0,
-		WHITE      =  1,
+		BLACK_PAWN = -1,
+		EMPTY      =  0,
+		WHITE_PAWN =  1,
 		WHITE_KING =  2
 	};
 	
 	// check figure type
 	inline bool IS_WHITE(FIGURE type) {return type > 0 ? true : false;};
+	inline bool IS_WHITE(COLOR type) {return type > 0 ? true : false;};
 	inline bool IS_BLACK(FIGURE type) {return type < 0 ? true : false;};
+	inline bool IS_BLACK(COLOR type) {return type < 0 ? true : false;};
+	inline bool IS_EMPTY(FIGURE type) {return !type ? true : false;};
+	inline bool IS_EMPTY(COLOR type) {return !type ? true : false;};
 	inline bool IS_DRT(FIGURE type) {return abs(type) == 1 ? true : false;};
 	inline bool IS_KNG(FIGURE type) {return abs(type) == 2 ? true : false;};
-	inline bool IS_EMP(FIGURE type) {return type == NONE ? true : false;};
 	
-	// FIGURE -> PCOLOR
-	PCOLOR COLOR(FIGURE type);
+	// FIGURE -> COLOR
+	COLOR getColor(FIGURE type);
 	
-	// win states
+	// game states
 	enum GAMESTATE {
-		ISWIN_GAME,  // game continues
-		ISWIN_WHITE, // white won
-		ISWIN_BLACK, // black won
-		ISWIN_DRAW   // draw
+		END_NONE,  // game continues
+		END_WHITE, // white won
+		END_BLACK, // black won
+		END_DRAW   // draw
 	};
 	
 	// a cell of the board
@@ -53,9 +56,10 @@
 	
 	// move flags (eating enemy figure, king transformation)
 	class CANMOVE {
-		public: FIGURE eat, king;
+		public: FIGURE eat;
+		public: COLOR king;
 		public: CELL eat_c;
-		CANMOVE(): eat(NONE), king(NONE) {};
+		CANMOVE(): eat(EMPTY), king(NONE) {};
 	};
 	
 	// board for playing draughts
@@ -63,29 +67,20 @@
 	public:
 		const static unsigned int size = 8;
 	protected:
-		unsigned int b, w, bk, wk; // numbers of figures and kinks
+		unsigned int b, w, bk, wk; // numbers of figures and kings
 		FIGURE cells[size][size];  // [x][y]; x - col, y - row
 		bool ufirst;               // flag, indicating first partial half-move
 		bool ueaten;               // flag, indicating eating at last partial half-move
-		PCOLOR utype;              // player type for current half-move
+		COLOR utype;              // player type for current half-move
 		CELL ublocked;             // blocked for current half-move figure
 	public:
 		BOARD();
+		// deprecated method; TODO: replace to the VIEW
 		friend std::ostream& operator<< (std::ostream &cout, BOARD &board);
-		void start_move(PCOLOR type); // starts the half-move
-		GAMESTATE is_win();
-	protected:
-		// checks the physical possibility of the move from one cell to the other one
-		bool can_move(MOVE _move, CANMOVE *flags = NULL, PCOLOR _type = PNONE);
-		bool can_move(CELL from, CELL to, CANMOVE *flags = NULL, PCOLOR _type = PNONE);
-		bool can_move(int x1, int y1, int x2, int y2, CANMOVE *flags = NULL, PCOLOR _type = PNONE);
-		// checks the possibility of move in square
-		unsigned int get_square_moves(CELL figure, int dep, PCOLOR type = PNONE, CELL *res = NULL, CANMOVE *flags = NULL);
-		// checks the possibility of eating
-		bool can_eat(CELL figure);
-		// checks the possibility of the first partial half-move or a not first partial half-move
-		bool can_move(CELL figure);
-	public:
+		// starts the half-move
+		void startMove(COLOR type);
+		// check if game is continuing or finished
+		GAMESTATE isWin();
 		// set cell value
 		bool scell(int x, int y, FIGURE type);
 		bool scell(CELL figure, FIGURE type);
@@ -94,9 +89,6 @@
 		// get cell value
 		FIGURE gcell(int x, int y);
 		FIGURE gcell(CELL figure);
-	public:
-		// checks the possibility of continuing the half-move by current player
-		bool can_move();
 		// gets array of the possible partial half-moves for the cell
 		unsigned int moves(CELL figure, CELL *arr = NULL);
 		// execs the partial half-move
@@ -107,8 +99,21 @@
 		int first() {return ufirst;}
 		int white() {return w;}
 		int black() {return b;}
-		int white_king() {return wk;}
-		int black_king() {return bk;}
-	};
+		int whiteKing() {return wk;}
+		int blackKing() {return bk;}
+		// checks the possibility of continuing the half-move by current player
+		bool canMove();
+	protected:
+		// checks the physical possibility of the move from one cell to the other one
+		bool canMove(MOVE _move, CANMOVE *flags = NULL, COLOR _type = NONE);
+		bool canMove(CELL from, CELL to, CANMOVE *flags = NULL, COLOR _type = NONE);
+		bool canMove(int x1, int y1, int x2, int y2, CANMOVE *flags = NULL, COLOR _type = NONE);
+		// checks the possibility of move in square
+		unsigned int getSquareMoves(CELL figure, int dep, COLOR type = NONE, CELL *res = NULL, CANMOVE *flags = NULL);
+		// checks the possibility of eating
+		bool canEat(CELL figure);
+		// checks the possibility of the first partial half-move or a not first partial half-move
+		bool canMove(CELL figure);
+};
 	
 #endif
