@@ -4,34 +4,31 @@
 	#include <iostream>
 	#include "board.h"
 	
-	// gamers
-	enum PGAMER {HUMAN, AI_SEQ, AI_SEQ2, AI_PRL, AI_PRL2, AI_PRL3};
+	enum GAMER {HUMAN, AI, NETWORK};
 	
 	class PLAYER {
 	protected:
 		// player color
-		PCOLOR type;
+		COLOR type;
 	public:
-		PLAYER () {type = PNONE;}
-		void setType(PCOLOR _type) {type = _type;}; // sets player color
-		virtual MOVE get_move(BOARD board) = 0; // choose partial half-move
-		virtual void setLevel(int level) {}; // for ai players
-		static const char *getPlrText(PGAMER p) {
+		PLAYER () {type = NONE;}
+		// sets player color
+		void setType(COLOR _type) {type = _type;};
+		// choose partial half-move
+		virtual MOVE getMove(BOARD board) = 0;
+		// set ai level (for ai players only)
+		virtual void setLevel(int level) {};
+		// gamer name
+		static const char *getPlrText(GAMER p) {
 			switch (p) {
 				case HUMAN:
-					return "human";
-				case AI_SEQ:
-					return "sequence ai";
-				case AI_SEQ2:
-					return "sequence ai ver#2";
-				case AI_PRL:
-					return "parallel ai (2 threads)";
-				case AI_PRL2:
-					return "parallel ai (4 threads)";
-				case AI_PRL3:
-					return "parallel ai (1 thread)";
+					return "Human";
+				case AI:
+					return "AI";
+				case NETWORK:
+					return "Network";
 			}
-			
+			// TODO: error handling
 			return "";
 		}
 	};

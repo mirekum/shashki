@@ -1,10 +1,10 @@
-#ifndef _HUMAN_H_
-	#define _HUMAN_H_
+#ifndef _NETWORK_H_
+	#define _NETWORK_H_
 	
 	#include <iostream>
 	#include "player.h"
 	
-	class HUMAN_PLAYER: public PLAYER {
+	class NETWORK_PLAYER: public PLAYER {
 	public:
 		// chooses partial half-move
 		virtual MOVE getMove(BOARD board);

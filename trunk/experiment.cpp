@@ -10,16 +10,16 @@
 /* methods of the experiment class */
 
 // class constructor
-EXPERIMENT::EXPERIMENT(const BOARD &_board, PCOLOR _ptype, int _minExp, int _maxExp, double _Covar, int _minLvl, int _maxLvl):
+EXPERIMENT::EXPERIMENT(const BOARD &_board, COLOR _ptype, int _minExp, int _maxExp, double _Covar, int _minLvl, int _maxLvl):
 	minExp(_minExp), maxExp(_maxExp), Covar(_Covar), minLvl(_minLvl), maxLvl(_maxLvl)
 {
 	board = _board;
 	ptype = _ptype;
 };
 
-void EXPERIMENT::run(PGAMER plr) {
-	if (plr == HUMAN) exit(1);
-	board.start_move(ptype);
+void EXPERIMENT::run(GAMER plr) {
+	if (plr == 0) exit(1);
+	board.startMove(ptype);
 	PLAYER *player = GAME::createPlayer(plr);
 	player->setType(ptype);
 	std::cout << "Player: " << PLAYER::getPlrText(plr) << std::endl;
@@ -34,7 +34,7 @@ void EXPERIMENT::run(PGAMER plr) {
 		int k = 0;
 		while ((res = isReady(times, M, covar)) == EXP_NOREADY) {
 			time(&start_time);
-			player->get_move(board);
+			player->getMove(board);
 			time(&end_time);
 			// adds time difference to array
 			//std::cout << "[" << ++k << "] time: " << difftime(end_time, start_time) << " | " << covar << std::endl;
