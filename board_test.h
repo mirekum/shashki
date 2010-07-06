@@ -159,9 +159,8 @@ public:
 		CPPUNIT_ASSERT(board.gcell(board.size, board.size) == EMPTY);
 		
 		CPPUNIT_ASSERT(board.gcell(0, 0) == EMPTY);
-		CPPUNIT_ASSERT(board.gcell(7, 7) == EMPTY);void test_move2() {
+		CPPUNIT_ASSERT(board.gcell(7, 7) == EMPTY);
 		
-	}
 		CPPUNIT_ASSERT(board.gcell(7, 0) == BLACK_PAWN);
 		CPPUNIT_ASSERT(board.gcell(7, 2) == BLACK_PAWN);
 		CPPUNIT_ASSERT(board.gcell(0, 7) == WHITE_PAWN);
