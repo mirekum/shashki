@@ -5,6 +5,7 @@
 class board_test : public CppUnit::TestFixture
 {
 	CPPUNIT_TEST_SUITE(board_test);
+	CPPUNIT_TEST(test_moves_func);
 	CPPUNIT_TEST(test_king_moves);
 	CPPUNIT_TEST(test_difficult_moves);
 	CPPUNIT_TEST(test_simply_moves);
@@ -17,6 +18,56 @@ public:
 	}
 	void tearDown() {
 		
+	}
+	// moves function
+	void test_moves_func() {
+		BOARD board;
+		CANMOVE cmFlag;
+		for (int i = 0; i < board.size; i++) {
+			for (int j = 0; j < board.size; j++) {
+				board.scell(i, j, EMPTY);
+			}
+		}
+		board.scell(2, 5, WHITE_PAWN);
+		board.scell(5, 2, WHITE_PAWN);
+		board.scell(1, 2, WHITE_KING);
+		board.scell(6, 5, WHITE_KING);
+		board.scell(1, 4, BLACK_PAWN);
+		board.scell(3, 6, BLACK_KING);
+		board.scell(5, 4, BLACK_PAWN);
+		board.scell(3, 2, BLACK_KING);
+		board.scell(3, 0, BLACK_PAWN);
+		board.scell(7, 0, BLACK_KING);
+		board.scell(5, 6, BLACK_PAWN);
+		
+		std::cout << board << std::endl;
+		
+		board.startMove(WHITE);
+		CPPUNIT_ASSERT(board.canMove());
+		
+		CELL m[16]; int n;
+		CPPUNIT_ASSERT(n = board.moves(CELL(2, 5), m));
+		std::cout << "moves from 2,5:" << std::endl;
+		for (int i = 0; i < n; i++) {
+			std::cout << m[i].x << "," << m[i].y << std::endl;
+		}
+		
+		std::cout << "moves from 5,2:" << std::endl;
+		CPPUNIT_ASSERT(!board.moves(CELL(5, 2), m));
+		
+		std::cout << "moves from 1,2:" << std::endl;
+		CPPUNIT_ASSERT(n = board.moves(CELL(1, 2), m));
+		for (int i = 0; i < n; i++) {
+			std::cout << m[i].x << "," << m[i].y << std::endl;
+		}
+		
+		std::cout << "moves from 6,5:" << std::endl;
+		CPPUNIT_ASSERT(n = board.moves(CELL(6, 5), m));
+		for (int i = 0; i < n; i++) {
+			std::cout << m[i].x << "," << m[i].y << std::endl;
+		}
+		
+		std::cout << board << std::endl;
 	}
 	// test different moves
 	void test_king_moves() {
