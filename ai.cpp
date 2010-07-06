@@ -50,13 +50,13 @@ MOVE AI_PLAYER::getMove(BOARD board) {
 		//std::cout << "move #" << i << ": " << moves_queue[i].mark << std::endl;
 		if (moves_queue[i].mark >= max) {
 			max = moves_queue[i].mark;
-			PLAYER::result.from = moves_queue[i].from;
-			PLAYER::result.to = moves_queue[i].to;
+			result.from = moves_queue[i].from;
+			result.to = moves_queue[i].to;
 		}
 	}
 	
 	// return the best move
-	return PLAYER::result;
+	return result;
 }
 
 // first call of choose functio

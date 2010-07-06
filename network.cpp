@@ -8,6 +8,6 @@ MOVE NETWORK_PLAYER::getMove(BOARD board) {
 	// request partial half-move
 	exit(1);
 	
-	return PLAYER::result;
+	return result;
 }
 
