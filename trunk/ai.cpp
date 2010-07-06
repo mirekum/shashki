@@ -62,7 +62,7 @@ MOVE AI_PLAYER::getMove(BOARD board) {
 	return res;
 }
 
-// TODO
+// first call of choose functio
 void *ai_prl_first_choose(void *ptr) {
 	// threads synchronisation object
 	MOVES_SYNC *sync = (MOVES_SYNC*)ptr;
