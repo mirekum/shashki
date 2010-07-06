@@ -5,9 +5,9 @@
 class board_test : public CppUnit::TestFixture
 {
 	CPPUNIT_TEST_SUITE(board_test);
-	CPPUNIT_TEST(test_move3);
-	CPPUNIT_TEST(test_move2);
-	CPPUNIT_TEST(test_move1);
+	CPPUNIT_TEST(test_king_moves);
+	CPPUNIT_TEST(test_difficult_moves);
+	CPPUNIT_TEST(test_simply_moves);
 	CPPUNIT_TEST(test_set_get_cell);
 	CPPUNIT_TEST(test_getColor);
 	CPPUNIT_TEST_SUITE_END();
@@ -19,13 +19,101 @@ public:
 		
 	}
 	// test different moves
-	void test_move3() {
+	void test_king_moves() {
 		
 	}
-	void test_move2() {
+	void test_difficult_moves() {
+		BOARD board;
+		CANMOVE cmFlag;
+		for (int i = 0; i < board.size; i++) {
+			for (int j = 0; j < board.size; j++) {
+				board.scell(i, j, EMPTY);
+			}
+		}
+		board.scell(4, 1, BLACK_PAWN);
+		board.scell(6, 1, BLACK_PAWN);
+		board.scell(4, 3, BLACK_KING);
+		board.scell(6, 3, BLACK_KING);
+		board.scell(6, 5, BLACK_PAWN);
+		board.scell(2, 3, BLACK_PAWN);
+		board.scell(2, 5, BLACK_PAWN);
+		board.scell(4, 5, BLACK_PAWN);
+		board.scell(5, 6, BLACK_PAWN);
+		board.scell(1, 6, WHITE_PAWN);
 		
+		board.startMove(WHITE);
+		CPPUNIT_ASSERT(board.canMove());
+		CPPUNIT_ASSERT(!board.canMove(1, 6, 2, 5, NULL, WHITE));
+		CPPUNIT_ASSERT(!board.canMove(1, 6, 0, 5, NULL, WHITE));
+		CPPUNIT_ASSERT(!board.canMove(1, 6, 2, 7, NULL, WHITE));
+		CPPUNIT_ASSERT(!board.canMove(1, 6, 0, 7, NULL, WHITE));
+		CPPUNIT_ASSERT(board.canMove(1, 6, 3, 4, &cmFlag, WHITE));
+		CPPUNIT_ASSERT(cmFlag.eat == BLACK_PAWN && cmFlag.eat_c.x == 2 && cmFlag.eat_c.y == 5);
+		CPPUNIT_ASSERT(!board.canMove(1, 6, 1, 4, NULL, WHITE));
+		CPPUNIT_ASSERT(!board.canMove(1, 6, 3, 6, NULL, WHITE));
+		CPPUNIT_ASSERT(!board.canMove(1, 6, 5, 2, NULL, WHITE));
+		CPPUNIT_ASSERT(!board.canMove(1, 6, 1, 2, NULL, WHITE));
+		CPPUNIT_ASSERT(!board.canMove(1, 6, 6, 7, NULL, WHITE));
+		board.move(1, 6, 3, 4);
+		CPPUNIT_ASSERT(board.gcell(3, 4) == WHITE_PAWN);
+		CPPUNIT_ASSERT(board.gcell(1, 6) == EMPTY);
+		CPPUNIT_ASSERT(board.gcell(2, 5) == EMPTY);
+		CPPUNIT_ASSERT(board.canMove());
+		CPPUNIT_ASSERT(board.canMove(3, 4, 1, 2, &cmFlag, WHITE));
+		CPPUNIT_ASSERT(cmFlag.eat == BLACK_PAWN && cmFlag.eat_c.x == 2 && cmFlag.eat_c.y == 3);
+		CPPUNIT_ASSERT(board.canMove(3, 4, 5, 2, &cmFlag, WHITE));
+		CPPUNIT_ASSERT(cmFlag.eat == BLACK_KING && cmFlag.eat_c.x == 4 && cmFlag.eat_c.y == 3);
+		CPPUNIT_ASSERT(!board.canMove(3, 4, 0, 1, NULL, WHITE));
+		CPPUNIT_ASSERT(!board.canMove(3, 4, 2, 5, NULL, WHITE));
+		CPPUNIT_ASSERT(!board.canMove(3, 4, 1, 6, NULL, WHITE));
+		CPPUNIT_ASSERT(!board.canMove(3, 4, 4, 5, NULL, WHITE));
+		CPPUNIT_ASSERT(!board.canMove(3, 4, 5, 6, NULL, WHITE));
+		CPPUNIT_ASSERT(!board.canMove(3, 4, 6, 7, NULL, WHITE));
+		CPPUNIT_ASSERT(!board.canMove(3, 4, 7, 4, NULL, WHITE));
+		CPPUNIT_ASSERT(!board.canMove(3, 4, 7, 0, NULL, WHITE));
+		CPPUNIT_ASSERT(!board.canMove(3, 4, 3, 0, NULL, WHITE));
+		board.move(3, 4, 5, 2);
+		CPPUNIT_ASSERT(board.gcell(5, 2) == WHITE_PAWN);
+		CPPUNIT_ASSERT(board.gcell(3, 4) == EMPTY);
+		CPPUNIT_ASSERT(board.gcell(4, 3) == EMPTY);
+		CPPUNIT_ASSERT(board.canMove());
+		CPPUNIT_ASSERT(board.canMove(5, 2, 3, 0, &cmFlag, WHITE));
+		CPPUNIT_ASSERT(cmFlag.eat == BLACK_PAWN && cmFlag.king == WHITE && cmFlag.eat_c.x == 4 && cmFlag.eat_c.y == 1);
+		CPPUNIT_ASSERT(board.canMove(5, 2, 7, 0, &cmFlag, WHITE));
+		CPPUNIT_ASSERT(cmFlag.eat == BLACK_PAWN && cmFlag.king == WHITE && cmFlag.eat_c.x == 6 && cmFlag.eat_c.y == 1);
+		CPPUNIT_ASSERT(board.canMove(5, 2, 7, 4, &cmFlag, WHITE));
+		CPPUNIT_ASSERT(cmFlag.eat == BLACK_KING && cmFlag.eat_c.x == 6 && cmFlag.eat_c.y == 3);
+		CPPUNIT_ASSERT(!board.canMove(5, 2, 4, 3, NULL, WHITE));
+		CPPUNIT_ASSERT(!board.canMove(5, 2, 3, 4, NULL, WHITE));
+		CPPUNIT_ASSERT(!board.canMove(5, 2, 4, 1, NULL, WHITE));
+		CPPUNIT_ASSERT(!board.canMove(5, 2, 6, 3, NULL, WHITE));
+		CPPUNIT_ASSERT(!board.canMove(5, 2, 6, 1, NULL, WHITE));
+		CPPUNIT_ASSERT(!board.canMove(5, 2, 5, 0, NULL, WHITE));
+		CPPUNIT_ASSERT(!board.canMove(5, 2, 7, 2, NULL, WHITE));
+		CPPUNIT_ASSERT(!board.canMove(5, 2, 2, 5, NULL, WHITE));
+		CPPUNIT_ASSERT(!board.canMove(5, 2, 1, 6, NULL, WHITE));
+		CPPUNIT_ASSERT(!board.canMove(5, 2, 0, 7, NULL, WHITE));
+		board.move(5, 2, 3, 0);
+		CPPUNIT_ASSERT(board.gcell(3, 0) == WHITE_KING);
+		CPPUNIT_ASSERT(board.gcell(5, 2) == EMPTY);
+		CPPUNIT_ASSERT(board.gcell(4, 1) == EMPTY);
+		CPPUNIT_ASSERT(!board.canMove(3, 0, 2, 1, NULL, WHITE));
+		CPPUNIT_ASSERT(!board.canMove(3, 0, 1, 2, NULL, WHITE));
+		CPPUNIT_ASSERT(!board.canMove(3, 0, 0, 3, NULL, WHITE));
+		CPPUNIT_ASSERT(!board.canMove(3, 0, 4, 1, NULL, WHITE));
+		CPPUNIT_ASSERT(!board.canMove(3, 0, 5, 2, NULL, WHITE));
+		CPPUNIT_ASSERT(!board.canMove(3, 0, 6, 3, NULL, WHITE));
+		CPPUNIT_ASSERT(!board.canMove(3, 0, 3, 1, NULL, WHITE));
+		CPPUNIT_ASSERT(!board.canMove(3, 0, 7, 0, NULL, WHITE));
+		CPPUNIT_ASSERT(!board.canMove(3, 0, 6, 5, NULL, WHITE));
+		CPPUNIT_ASSERT(board.canMove(3, 0, 7, 4, &cmFlag, WHITE));
+		CPPUNIT_ASSERT(cmFlag.eat == BLACK_KING && cmFlag.eat_c.x == 6 && cmFlag.eat_c.y == 3);
+		board.move(3, 0, 7, 4);
+		std::cout << board << std::endl;
+		CPPUNIT_ASSERT(!board.canMove());
+		CPPUNIT_ASSERT(!board.isWin());
 	}
-	void test_move1() {
+	void test_simply_moves() {
 		BOARD board;
 		
 		board.startMove(WHITE);
@@ -149,8 +237,6 @@ public:
 		CPPUNIT_ASSERT(board.gcell(1, 2) == EMPTY);
 		CPPUNIT_ASSERT(!board.canMove());
 		CPPUNIT_ASSERT(!board.isWin());
-		
-		std::cout << board << std::endl;
 	}
 	// test scell and getcell
 	void test_set_get_cell() {

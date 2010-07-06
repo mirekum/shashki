@@ -105,8 +105,6 @@ GAMESTATE BOARD::isWin() {
 			}
 		}
 	}
-	// some debug info
-	//std::cout << "[белые: " << tw << "/" << w << " | чёрные: " << tb << "/" << b << "]" << std::endl;
 	// check winning and draw
 	if ( tw && !tb) return END_WHITE;
 	if (!tw &&  tb) return END_BLACK;
@@ -284,12 +282,12 @@ unsigned int BOARD::getSquareMoves(CELL figure, int dep, COLOR type, CELL *res, 
 bool BOARD::canEat(CELL figure) {
 	FIGURE type = gcell(figure);
 	if (IS_DRT(type)) {
-		return (getSquareMoves(figure, 2, COLOR(type))) ? true : false;
+		return (getSquareMoves(figure, 2, getColor(type))) ? true : false;
 	}
 	if (IS_KNG(type)) {
 		CANMOVE flags;
 		for (int k = 2; k <= size/2; k++) {
-			getSquareMoves(figure, k, COLOR(type), NULL, &flags);
+			getSquareMoves(figure, k, getColor(type), NULL, &flags);
 			if (flags.eat) return true;
 		}
 		return false;
@@ -297,6 +295,7 @@ bool BOARD::canEat(CELL figure) {
 	
 	return false;
 }
+bool BOARD::canEat(int x, int y) {return canEat(CELL(x, y));}
 
 // checks the possibility of the first partial half-move or a not first partial half-move
 bool BOARD::canMove(CELL figure) {
@@ -307,7 +306,7 @@ bool BOARD::canMove(CELL figure) {
 		// go round the board finding our figures which can eat
 		for (int i = 0; i < size; i++) {
 			for (int j = 0; j < size; j++) {
-				if (COLOR(gcell(i, j)) == utype && canEat(CELL(i, j))) {
+				if (getColor(gcell(i, j)) == utype && canEat(CELL(i, j))) {
 					flag = true;
 					// found figure is our figure
 					if (i == figure.x && j == figure.y) return true;
