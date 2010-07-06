@@ -115,6 +115,7 @@ public:
 	}
 	void test_simply_moves() {
 		BOARD board;
+		CANMOVE cmFlag;
 		
 		board.startMove(WHITE);
 		CPPUNIT_ASSERT(board.canMove());
@@ -178,7 +179,8 @@ public:
 		CPPUNIT_ASSERT(!board.isWin());
 		
 		board.startMove(BLACK);
-		CPPUNIT_ASSERT(board.canMove(7, 2, 5, 4, NULL, BLACK));
+		CPPUNIT_ASSERT(board.canMove(7, 2, 5, 4, &cmFlag, BLACK));
+		CPPUNIT_ASSERT(cmFlag.eat == WHITE_PAWN && cmFlag.eat_c.x == 6 && cmFlag.eat_c.y == 3);
 		CPPUNIT_ASSERT(!board.canMove(7, 2, 6, 3, NULL, BLACK));
 		CPPUNIT_ASSERT(!board.canMove(7, 2, 7, 4, NULL, BLACK));
 		CPPUNIT_ASSERT(!board.canMove(7, 2, 5, 2, NULL, BLACK));
@@ -199,7 +201,8 @@ public:
 		
 		board.startMove(WHITE);
 		CPPUNIT_ASSERT(board.canMove());
-		CPPUNIT_ASSERT(board.canMove(4, 5, 6, 3, NULL, WHITE));
+		CPPUNIT_ASSERT(board.canMove(4, 5, 6, 3, &cmFlag, WHITE));
+		CPPUNIT_ASSERT(cmFlag.eat == BLACK_PAWN && cmFlag.eat_c.x == 5 && cmFlag.eat_c.y == 4);
 		CPPUNIT_ASSERT(!board.canMove(4, 5, 5, 4, NULL, WHITE));
 		CPPUNIT_ASSERT(!board.canMove(4, 5, 3, 4, NULL, WHITE));
 		CPPUNIT_ASSERT(!board.canMove(4, 5, 7, 2, NULL, WHITE));
