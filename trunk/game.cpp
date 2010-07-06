@@ -50,7 +50,7 @@ void GAME::execMove(PLAYER *plr, COLOR type) {
 		std::cout << board << std::endl;
 		std::cout << "Move #" << move_num << std::endl;
 		// request partial half-move and exec it
-		board.move(plr->getMove(board));
+		board.move(lastMove = plr->getMove(board));
 		std::cout << "[жмакни ENTER]" << std::endl;
 		getchar();
 	}

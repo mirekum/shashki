@@ -10,6 +10,7 @@
 		BOARD board;
 		PLAYER *wp, *bp;
 		int move_num;
+		MOVE lastMove;
 	public:
 		GAME(GAMER w, GAMER b);
 		~GAME();
