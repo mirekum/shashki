@@ -1,13 +1,17 @@
 # main target
 all: res
 
-# binary program
+# release
 res: $(patsubst %.cpp,%.o,$(wildcard *.cpp))
-	g++ $^ -lpthread -lcppunit -o $@
+	g++ $^ -lpthread -lcppunit -g0 -O3 -o $@
+
+# debug
+debug: $(patsubst %.cpp,%.o,$(wildcard *.cpp))
+	g++ $^ -lpthread -lcppunit -g3 -O0 -o $@
+
 # object files
 %.o: %.cpp
 	g++ -c -MD $<
-# files dependences
 include $(wildcard *.d)
 
 # delete temporary files
