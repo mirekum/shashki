@@ -6,6 +6,7 @@ class board_test : public CppUnit::TestFixture
 {
 	CPPUNIT_TEST_SUITE(board_test);
 	CPPUNIT_TEST(test_move1);
+	CPPUNIT_TEST(test_move2);
 	CPPUNIT_TEST(test_set_get_cell);
 	CPPUNIT_TEST(test_getColor);
 	CPPUNIT_TEST_SUITE_END();
@@ -18,6 +19,9 @@ public:
 	}
 	// test different moves
 	void test_move1() {
+		
+	}
+	void test_move2() {
 		BOARD board;
 		
 		board.startMove(WHITE);
