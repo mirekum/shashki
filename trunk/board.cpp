@@ -287,7 +287,7 @@ bool BOARD::canEat(CELL figure) {
 	}
 	if (IS_KNG(type)) {
 		CANMOVE flags;
-		for (int k = 2; k <= size/2; k++) {
+		for (int k = 2; k <= size; k++) {
 			getSquareMoves(figure, k, getColor(type), NULL, &flags);
 			if (flags.eat) return true;
 		}
@@ -317,7 +317,7 @@ bool BOARD::canMove(CELL figure) {
 		// result
 		// если есть фигуры, которые могут есть, а наша фигура к ним не относится, - ходить нельзя
 		// если нет фигур, которые могут ходить, ходить можно
-		return flag ? false : true;
+		return !flag;
 	}
 	// not first partial half-move
 	else {
@@ -355,7 +355,7 @@ unsigned int BOARD::moves(CELL figure, CELL *res) {
 	if (IS_KNG(type)) {
 		CANMOVE flags;
 		// eating moves
-		for (int q = 2; q <= size/2; q++) {
+		for (int q = 2; q <= size; q++) {
 			if (canMove(figure, CELL(figure.x+q, figure.y+q), &flags, utype))
 				if (flags.eat) if (res != NULL) res[k++] = CELL(figure.x+q, figure.y+q); else k++;
 			if (canMove(figure, CELL(figure.x-q, figure.y+q), &flags, utype))
@@ -367,7 +367,7 @@ unsigned int BOARD::moves(CELL figure, CELL *res) {
 		}
 		// common moves
 		if (ufirst && !k) {
-			for (int q = 1; q <= size/2; q++) {
+			for (int q = 1; q <= size; q++) {
 				if (canMove(figure, CELL(figure.x+q, figure.y+q), &flags, utype))
 					if (!flags.eat) if (res != NULL) res[k++] = CELL(figure.x+q, figure.y+q); else k++;
 				if (canMove(figure, CELL(figure.x-q, figure.y+q), &flags, utype))

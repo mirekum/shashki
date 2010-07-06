@@ -72,7 +72,7 @@
 		FIGURE cells[size][size];  // [x][y]; x - col, y - row
 		bool ufirst;               // flag, indicating first partial half-move
 		bool ueaten;               // flag, indicating eating at last partial half-move
-		COLOR utype;              // player type for current half-move
+		COLOR utype;               // player type for current half-move
 		CELL ublocked;             // blocked for current half-move figure
 	public:
 		BOARD();
