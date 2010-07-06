@@ -118,7 +118,7 @@ GAMESTATE BOARD::isWin() {
 // checks the physical possibility of the move from one cell to the other one
 bool BOARD::canMove(CELL from, CELL to, CANMOVE *flags, COLOR _type) {
 	if (from.x < 0 || from.y < 0 || from.x >= size || from.y >= size) return false;
-	if (to.x < 0   || to.y < 0   || to.x >= size   || to.y >= size) return false;
+	if (to.x < 0   || to.y < 0   || to.x >= size   || to.y >= size)   return false;
 	FIGURE type = gcell(from);
 	// moves by empty cells, by enemy figures and to occupied cells are denied
 	if (!type) return false;
@@ -147,7 +147,7 @@ bool BOARD::canMove(CELL from, CELL to, CANMOVE *flags, COLOR _type) {
 			// check common move - if we haven't eat, we can move forward
 			if (abs(to.x - from.x) == 1 && (from.y - to.y) == 1) {
 				if (from.x - 2 > 0 && from.y - 2 > 0 && gcell(from.x-1, from.y-1) < 0 && gcell(from.x-2, from.y-2) == 0) return false;
-				if (from.x + 2 < 0 && from.y - 2 > 0 && gcell(from.x+1, from.y-1) < 0 && gcell(from.x+2, from.y-2) == 0) return false;
+				if (from.x + 2 < size && from.y - 2 > 0 && gcell(from.x+1, from.y-1) < 0 && gcell(from.x+2, from.y-2) == 0) return false;
 				return true;
 			}
 		}
@@ -165,7 +165,7 @@ bool BOARD::canMove(CELL from, CELL to, CANMOVE *flags, COLOR _type) {
 			// check common move - if we haven't eat, we can move back
 			if (abs(to.x - from.x) == 1 && (to.y - from.y) == 1) {
 				if (from.x - 2 > 0 && from.y + 2 < 0 && gcell(from.x-1, from.y+1) > 0 && gcell(from.x-2, from.y+2) == 0) return false;
-				if (from.x + 2 < 0 && from.y + 2 < 0 && gcell(from.x+1, from.y+1) > 0 && gcell(from.x+2, from.y+2) == 0) return false;
+				if (from.x + 2 < size && from.y + 2 < 0 && gcell(from.x+1, from.y+1) > 0 && gcell(from.x+2, from.y+2) == 0) return false;
 				return true;
 			}
 		}
