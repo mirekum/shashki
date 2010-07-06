@@ -126,6 +126,7 @@ bool BOARD::canMove(CELL from, CELL to, CANMOVE *flags, COLOR _type) {
 	if (flags != NULL && IS_DRT(type)) {
 		if (IS_WHITE(type) && to.y == 0) flags->king = WHITE;
 		else if (IS_BLACK(type) && to.y == size - 1) flags->king = BLACK;
+		else flags->king = NONE;
 	}
 	// draughts
 	if (IS_DRT(type)) {
