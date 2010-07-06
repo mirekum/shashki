@@ -6,7 +6,6 @@
 
 // choose partial half-move
 MOVE AI_PLAYER::getMove(BOARD board) {
-	MOVE res; // the best move
 	CHOOSEN_MOVE_ARRAY moves_queue; // first level moves queue
 	// go round all figures on the board and make moves queue
 	for (int i = 0; i < board.size; i++) {
@@ -51,15 +50,13 @@ MOVE AI_PLAYER::getMove(BOARD board) {
 		//std::cout << "move #" << i << ": " << moves_queue[i].mark << std::endl;
 		if (moves_queue[i].mark >= max) {
 			max = moves_queue[i].mark;
-			res.from = moves_queue[i].from;
-			res.to = moves_queue[i].to;
+			PLAYER::result.from = moves_queue[i].from;
+			PLAYER::result.to = moves_queue[i].to;
 		}
 	}
 	
-	//std::cout << "result: " << res.from.x << ", " << res.from.y << " -> " << res.to.x << ", " << res.to.y << " [" << max << "]" << std::endl;
-	
 	// return the best move
-	return res;
+	return PLAYER::result;
 }
 
 // first call of choose functio

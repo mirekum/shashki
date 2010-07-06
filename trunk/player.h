@@ -10,6 +10,8 @@
 	protected:
 		// player color
 		COLOR type;
+		// chosen move
+		MOVE result;
 	public:
 		PLAYER () {type = NONE;}
 		// sets player color

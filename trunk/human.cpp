@@ -6,18 +6,16 @@
 
 // chooses partial half-move
 MOVE HUMAN_PLAYER::getMove(BOARD board) {
-	MOVE res;
-	
 	// request partial half-move
 	do {
-		std::cout << "x1 = "; std::cin >> res.from.x;
-		std::cout << "y1 = "; std::cin >> res.from.y;
-		std::cout << "x2 = "; std::cin >> res.to.x;
-		std::cout << "y2 = "; std::cin >> res.to.y;
-		if (board.move(res)) break;
+		std::cout << "x1 = "; std::cin >> PLAYER::result.from.x;
+		std::cout << "y1 = "; std::cin >> PLAYER::result.from.y;
+		std::cout << "x2 = "; std::cin >> PLAYER::result.to.x;
+		std::cout << "y2 = "; std::cin >> PLAYER::result.to.y;
+		if (board.move(PLAYER::result)) break;
 		else std::cout << "Ошибка! Повторите ввод!" << std::endl;
 	} while (1);
 	
-	return res;
+	return PLAYER::result;
 }
 
