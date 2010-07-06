@@ -67,6 +67,7 @@
 	public:
 		const static unsigned int size = 8;
 	protected:
+	public:
 		unsigned int b, w, bk, wk; // numbers of figures and kings
 		FIGURE cells[size][size];  // [x][y]; x - col, y - row
 		bool ufirst;               // flag, indicating first partial half-move
@@ -104,6 +105,7 @@
 		// checks the possibility of continuing the half-move by current player
 		bool canMove();
 	protected:
+	public:
 		// checks the physical possibility of the move from one cell to the other one
 		bool canMove(MOVE _move, CANMOVE *flags = NULL, COLOR _type = NONE);
 		bool canMove(CELL from, CELL to, CANMOVE *flags = NULL, COLOR _type = NONE);
