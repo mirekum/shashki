@@ -23,7 +23,7 @@
 	// new type: array of chosen moves
 	typedef std::vector<CHOOSEN_MOVE> CHOOSEN_MOVE_ARRAY;
 	
-	// TODO: write comment
+	// first call of choose function
 	void *ai_prl_first_choose(void *ptr);
 	
 	// player's class
