@@ -114,6 +114,7 @@
 		unsigned int getSquareMoves(CELL figure, int dep, COLOR type = NONE, CELL *res = NULL, CANMOVE *flags = NULL);
 		// checks the possibility of eating
 		bool canEat(CELL figure);
+		bool canEat(int x, int y);
 		// checks the possibility of the first partial half-move or a not first partial half-move
 		bool canMove(CELL figure);
 };
