@@ -10,25 +10,17 @@
 	#include <stdio.h>
 	#include <string.h>
 	class NETWORK_PLAYER: public PLAYER {
-		bool create_Server();
-		bool create_Line();
+	private:
+		bool createServer();
+		bool createLine();
 		int sock;
+		bool isitServer;
+		bool sendServerOrClient();
 	public:
-		NETWORK_PLAYER(){
-                type = NONE;
-		char res[2];
-                std::cout << "do you wont create server game [y/n]:"; std::cin >>res;
-		switch (res[1]) {
-			case 'y':
-				if(!create_Server())exit(1);
-			case 'n':
-				if(!create_Line())exit(2);
-			default:
-				exit(3);
-		}
-		
-
-		}
+		bool getServerOrClient(){return isitServer;};
+		void giveLastMuves(MOVE lastMove[maxCountYouShaSh]) ;
+		NETWORK_PLAYER();
+		~NETWORK_PLAYER();
 		// chooses partial half-move
 		virtual MOVE getMove(BOARD board);
 		

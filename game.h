@@ -3,14 +3,14 @@
 	
 	#include "board.h"
 	#include "player.h"
-	
 	// class for playing draughts
+
 	class GAME {
 	protected:
 		BOARD board;
 		PLAYER *wp, *bp;
 		int move_num;
-		MOVE lastMove;
+		MOVE lastMove[maxCountYouShaSh];
 	public:
 		GAME(GAMER w, GAMER b);
 		~GAME();

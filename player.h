@@ -5,7 +5,7 @@
 	#include "board.h"
 	
 	enum GAMER {HUMAN, AI, NETWORK};
-	
+	const int maxCountYouShaSh=12;
 	class PLAYER {
 	protected:
 		// player color
@@ -20,6 +20,7 @@
 		virtual MOVE getMove(BOARD board) = 0;
 		// set ai level (for ai players only)
 		virtual void setLevel(int level) {};
+		virtual void giveLastMuves(MOVE lastMove[13]) {};
 		// gamer name
 		static const char *getPlrText(GAMER p) {
 			switch (p) {

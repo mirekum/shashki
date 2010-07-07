@@ -16,7 +16,7 @@ int main () {
 	runner.addTest(registry.makeTest());
 	runner.run();
 #endif
-	GAME shashki(HUMAN, AI);
+	GAME shashki(AI, NETWORK);
 	return 0;
 }
 	
