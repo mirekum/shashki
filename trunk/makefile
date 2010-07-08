@@ -1,13 +1,9 @@
 # main target
-all: res
+all: shashki
 
-# release
-res: $(patsubst %.cpp,%.o,$(wildcard *.cpp))
-	g++ $^ -lpthread -lcppunit -g0 -O3 -o $@
-
-# debug
-debug: $(patsubst %.cpp,%.o,$(wildcard *.cpp))
-	g++ $^ -lpthread -lcppunit -g3 -O0 -o $@
+# release version
+shashki: $(patsubst %.cpp,%.o,$(wildcard *.cpp))
+	g++ $^ -lpthread -g0 -O3 -o $@
 
 # object files
 %.o: %.cpp
@@ -16,5 +12,13 @@ include $(wildcard *.d)
 
 # delete temporary files
 clean:
-	rm -f *.o *.d *~ res
+	rm -f *.o *.d *~ shashki
+
+
+# package installation
+#install:
+#    cp shashki $(DESTDIR)/usr/bin/
+#    cp shashki.desktop $(DESTDIR)/usr/share/applications/hildon/
+
+
 

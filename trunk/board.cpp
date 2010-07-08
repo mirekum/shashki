@@ -59,6 +59,22 @@ FIGURE BOARD::gcell(int x, int y) {
 }
 FIGURE BOARD::gcell(CELL figure) {return gcell(figure.x, figure.y);}
 
+// cells comparation
+bool operator== (CELL a, CELL b) {
+	return (a.x == b.x && a.y == b.y);
+}
+bool operator!= (CELL a, CELL b) {
+	return !(a == b);
+}
+
+// moves comparation
+bool operator== (MOVE m1, MOVE m2) {
+	return (m1.from == m2.from && m1.to == m2.to);
+}
+bool operator!= (MOVE m1, MOVE m2) {
+	return !(m1 == m2);
+}
+
 // print the board on the screen
 std::ostream& operator<< (std::ostream &cout, BOARD &board) {
 	std::cout << "------ Доска ------" << std::endl;

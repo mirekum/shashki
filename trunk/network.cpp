@@ -2,10 +2,10 @@
 #include "network.h"
 
 /* methods of class of the network player */
-void NETWORK_PLAYER::giveLastMuves(MOVE lastMove[maxCountYouShaSh]) {
+void NETWORK_PLAYER::giveLastMoves(MOVE lastMove[maxFiguresNumber]) {
 printf("seee send");
 int i=0;
-while(i<maxCountYouShaSh){
+while(i<maxFiguresNumber){
 	send(sock, &lastMove[i], sizeof(lastMove[i]), 0);
 i++;
 }
@@ -21,7 +21,7 @@ MOVE NETWORK_PLAYER::getMove(BOARD board) {
 	 printf("seee send");
 MOVE tmp;
 int i=0;
-while(i<maxCountYouShaSh){
+while(i<maxFiguresNumber){
 		std::cout << "x1 = "; std::cout << result.from.x;
 		std::cout << "y1 = "; std::cout << result.from.y;
 		std::cout << "x2 = "; std::cout << result.to.x;

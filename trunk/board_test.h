@@ -40,34 +40,49 @@ public:
 		board.scell(7, 0, BLACK_KING);
 		board.scell(5, 6, BLACK_PAWN);
 		
-		std::cout << board << std::endl;
+		CELL m[16]; int n;
 		
+		/* white */
 		board.startMove(WHITE);
 		CPPUNIT_ASSERT(board.canMove());
-		
-		CELL m[16]; int n;
 		CPPUNIT_ASSERT(n = board.moves(CELL(2, 5), m));
-		std::cout << "moves from 2,5:" << std::endl;
-		for (int i = 0; i < n; i++) {
-			std::cout << m[i].x << "," << m[i].y << std::endl;
-		}
+		CPPUNIT_ASSERT(n == 2);
+		CPPUNIT_ASSERT(m[0] == CELL(4, 7));
+		CPPUNIT_ASSERT(m[1] == CELL(0, 3));
 		
-		std::cout << "moves from 5,2:" << std::endl;
 		CPPUNIT_ASSERT(!board.moves(CELL(5, 2), m));
 		
-		std::cout << "moves from 1,2:" << std::endl;
 		CPPUNIT_ASSERT(n = board.moves(CELL(1, 2), m));
-		for (int i = 0; i < n; i++) {
-			std::cout << m[i].x << "," << m[i].y << std::endl;
-		}
+		CPPUNIT_ASSERT(n == 1);
+		CPPUNIT_ASSERT(m[0] == CELL(6, 7));
 		
-		std::cout << "moves from 6,5:" << std::endl;
 		CPPUNIT_ASSERT(n = board.moves(CELL(6, 5), m));
-		for (int i = 0; i < n; i++) {
-			std::cout << m[i].x << "," << m[i].y << std::endl;
-		}
+		CPPUNIT_ASSERT(n == 2);
+		CPPUNIT_ASSERT(m[0] == CELL(4, 7));
+		CPPUNIT_ASSERT(m[1] == CELL(4, 3));
 		
-		std::cout << board << std::endl;
+		/* black */
+		board.startMove(BLACK);
+		CPPUNIT_ASSERT(board.canMove());
+		CPPUNIT_ASSERT(!board.moves(CELL(3, 0), m));
+		
+		CPPUNIT_ASSERT(n = board.moves(CELL(7, 0), m));
+		CPPUNIT_ASSERT(n == 1);
+		CPPUNIT_ASSERT(m[0] == CELL(4, 3));
+		
+		CPPUNIT_ASSERT(!board.moves(CELL(3, 2), m));
+		
+		CPPUNIT_ASSERT(!board.moves(CELL(1, 4), m));
+		
+		CPPUNIT_ASSERT(n = board.moves(CELL(5, 4), m));
+		CPPUNIT_ASSERT(n == 1);
+		CPPUNIT_ASSERT(m[0] == CELL(7, 6));
+		
+		CPPUNIT_ASSERT(!board.moves(CELL(3, 6), m));
+		
+		CPPUNIT_ASSERT(n = board.moves(CELL(5, 6), m));
+		CPPUNIT_ASSERT(n == 1);
+		CPPUNIT_ASSERT(m[0] == CELL(7, 4));
 	}
 	// test different moves
 	void test_king_moves() {

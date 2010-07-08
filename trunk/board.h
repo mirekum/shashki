@@ -45,6 +45,8 @@
 	class CELL {
 		public: int x, y;
 		explicit CELL(int _x = 0, int _y = 0): x(_x), y(_y) {};
+		friend bool operator== (CELL a, CELL b);
+		friend bool operator!= (CELL a, CELL b);
 	};
 	
 	// a move from the one cell to the other one
@@ -52,6 +54,8 @@
 		public: CELL from, to;
 		MOVE() {};
 		MOVE(CELL _from, CELL _to) {from = _from; to = _to;};
+		friend bool operator== (MOVE m1, MOVE m2);
+		friend bool operator!= (MOVE m1, MOVE m2);
 	};
 	
 	// move flags (eating enemy figure, king transformation)
@@ -67,7 +71,6 @@
 	public:
 		const static unsigned int size = 8;
 	protected:
-	public:
 		unsigned int b, w, bk, wk; // numbers of figures and kings
 		FIGURE cells[size][size];  // [x][y]; x - col, y - row
 		bool ufirst;               // flag, indicating first partial half-move
@@ -76,7 +79,7 @@
 		CELL ublocked;             // blocked for current half-move figure
 	public:
 		BOARD();
-		// deprecated method; TODO: replace to the VIEW
+		// deprecated function; TODO: replace to the VIEW
 		friend std::ostream& operator<< (std::ostream &cout, BOARD &board);
 		// starts the half-move
 		void startMove(COLOR type);
@@ -105,7 +108,6 @@
 		// checks the possibility of continuing the half-move by current player
 		bool canMove();
 	protected:
-	public:
 		// checks the physical possibility of the move from one cell to the other one
 		bool canMove(MOVE _move, CANMOVE *flags = NULL, COLOR _type = NONE);
 		bool canMove(CELL from, CELL to, CANMOVE *flags = NULL, COLOR _type = NONE);

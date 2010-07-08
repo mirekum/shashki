@@ -10,7 +10,7 @@
 		BOARD board;
 		PLAYER *wp, *bp;
 		int move_num;
-		MOVE lastMove[maxCountYouShaSh];
+		MOVE lastMove[PLAYER::maxFiguresNumber];
 	public:
 		GAME(GAMER w, GAMER b);
 		~GAME();
