@@ -18,7 +18,7 @@
 		bool sendServerOrClient();
 	public:
 		bool getServerOrClient(){return isitServer;};
-		void giveLastMoves(MOVE lastMove[maxFiguresNumber]);
+		void giveLastMoves(MOVE lastMove[maxFiguresNumber]) ;
 		NETWORK_PLAYER();
 		~NETWORK_PLAYER();
 		// chooses partial half-move

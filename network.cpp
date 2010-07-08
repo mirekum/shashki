@@ -7,6 +7,10 @@ printf("seee send");
 int i=0;
 while(i<maxFiguresNumber){
 	send(sock, &lastMove[i], sizeof(lastMove[i]), 0);
+	lastMove[i].from.x=0;
+	lastMove[i].from.y=0;
+	lastMove[i].to.x=0;
+	lastMove[i].to.y=0;
 i++;
 }
 printf("send out");
@@ -19,28 +23,22 @@ printf("send out");
 // chooses partial half-move
 MOVE NETWORK_PLAYER::getMove(BOARD board) {
 	 printf("seee send");
-MOVE tmp;
+
 int i=0;
-while(i<maxFiguresNumber){
+
+	do {
+		recv(sock, &result, sizeof(result), 0);	
+		if (board.move(result)) break;
+	} while (1);
+	
 		std::cout << "x1 = "; std::cout << result.from.x;
 		std::cout << "y1 = "; std::cout << result.from.y;
 		std::cout << "x2 = "; std::cout << result.to.x;
 		std::cout << "y2 = "; std::cout << result.to.y;
-		recv(sock, &result, sizeof(result), 0);	
-		std::cout << board << std::endl;
-		
-		if(board.move(result)){
-		tmp=result;
-		}
-		board.canMove();
-		
-	
-i++;
-}
-		   printf("send in");
+		std::cout << std::endl;	   printf("send in");
 		
 		
-	return tmp;
+	return result;
 
 }
 
