@@ -22,7 +22,7 @@
 		virtual MOVE getMove(BOARD board) = 0;
 		// set ai level (for ai players only)
 		virtual void setLevel(int level) {};
-		virtual void giveLastMoves(MOVE lastMove[13]) {};
+		virtual void giveLastMoves(MOVE lastMove[maxFiguresNumber]) {};
 		// gamer name
 		static const char *getPlrText(GAMER p) {
 			switch (p) {
