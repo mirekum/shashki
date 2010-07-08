@@ -109,11 +109,11 @@
 		int blackKing() {return bk;}
 		// checks the possibility of continuing the half-move by current player
 		bool canMove();
-	protected:
 		// checks the physical possibility of the move from one cell to the other one
 		bool canMove(MOVE _move, CANMOVE *flags = NULL, COLOR _type = NONE);
 		bool canMove(CELL from, CELL to, CANMOVE *flags = NULL, COLOR _type = NONE);
 		bool canMove(int x1, int y1, int x2, int y2, CANMOVE *flags = NULL, COLOR _type = NONE);
+	protected:
 		// checks the possibility of move in square
 		unsigned int getSquareMoves(CELL figure, int dep, COLOR type = NONE, CELL *res = NULL, CANMOVE *flags = NULL);
 		// checks the possibility of eating
