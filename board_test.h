@@ -2,7 +2,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include "board.h"
 
-// TODO: make test on QT
+// TODO: make tests on QT
 
 class board_test : public CppUnit::TestFixture
 {

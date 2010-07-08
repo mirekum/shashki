@@ -55,6 +55,8 @@ MOVE AI_PLAYER::getMove(BOARD board) {
 		}
 	}
 	
+	std::cout << result << std::endl;
+	
 	// return the best move
 	return result;
 }

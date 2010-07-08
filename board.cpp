@@ -99,6 +99,18 @@ std::ostream& operator<< (std::ostream &cout, BOARD &board) {
 	return std::cout;
 }
 
+// print the move on the screen
+std::ostream& operator<< (std::ostream &cout, MOVE &move) {
+	std::cout << move.from << " -> " << move.to;
+	return std::cout;
+}
+
+// print the cell on the screen
+std::ostream& operator<< (std::ostream &cout, CELL &cell) {
+	std::cout << cell.x << "," << cell.y;
+	return std::cout;
+}
+
 // starts the half-move
 void BOARD::startMove(COLOR type) {
 	utype = type;
