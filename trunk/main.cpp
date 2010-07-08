@@ -2,7 +2,7 @@
 
 // entry point
 int main () {
-	GAME shashki(HUMAN, AI);
+	GAME shashki(NETWORK,AI );
 	return 0;
 }
 

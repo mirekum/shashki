@@ -45,20 +45,23 @@ PLAYER* GAME::createPlayer(GAMER plr) {
 void GAME::execMove(PLAYER *plr, COLOR type) {
 	move_num++;
 	board.startMove(type);
-	int i = 0;
+	int i=0;
 	plr->giveLastMoves(lastMove);
 	// get moves
 	do {
 		std::cout << board << std::endl;
 		std::cout << "Move #" << move_num << std::endl;
 		// request partial half-move and exec it
-		board.move(lastMove[i] = plr->getMove(board));
+		lastMove[i] = plr->getMove(board);
+		board.move(lastMove[i]);
 		std::cout << "[жмакни ENTER]" << std::endl;
-		getchar();
+	//	getchar();
 		i++;
+		
 	}
 	// check if there are partial half-moves
 	while (board.canMove());
+	
 }
 
 void GAME::process () {
@@ -76,6 +79,8 @@ void GAME::process () {
 	} while(1);
 	
 	res:
+	wp->giveLastMoves(lastMove);
+	bp->giveLastMoves(lastMove);
 	return result(res_flag);
 }
 
