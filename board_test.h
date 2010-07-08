@@ -2,6 +2,8 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include "board.h"
 
+// TODO: make test on QT
+
 class board_test : public CppUnit::TestFixture
 {
 	CPPUNIT_TEST_SUITE(board_test);
