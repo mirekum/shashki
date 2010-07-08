@@ -70,6 +70,7 @@ void *ai_prl_first_choose(void *ptr) {
 	bool moves_exist = true;
 	while (moves_exist) {
 		CHOOSEN_MOVE *move = 0;
+		
 		// get move from queue
 		pthread_mutex_lock(sync->queue_mutex);
 		if (sync->next_move_num != sync->moves_queue->size()) {
@@ -88,6 +89,9 @@ void *ai_prl_first_choose(void *ptr) {
 			//MOVE res;
 			board_copy.startMove(sync->plr->type);
 			board_copy.move(move->from, move->to);
+			
+			std::cout << "1" << std::endl;
+			
 			// half-move continuing
 			if (board_copy.moves(move->to)) {
 				// continue current half-move
@@ -98,6 +102,9 @@ void *ai_prl_first_choose(void *ptr) {
 				// start enemy half-move
 				move->mark = sync->plr->choose(board_copy, sync->plr->type == WHITE ? BLACK : WHITE, NULL, 1, sync->mark, true);
 			}
+			
+			std::cout << "2" << std::endl;
+			
 			// remember mark
 			pthread_mutex_lock(sync->mark_mutex);
 			if (move->mark > sync->mark) {
