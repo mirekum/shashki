@@ -4,10 +4,10 @@
 
 // entry point
 int main () {
-	Test_Board test_board;
-	QTest::qExec(&test_board);
+	//Test_Board test_board;
+	//QTest::qExec(&test_board);
 	
-	GAME shashki(AI, HUMAN);
+	GAME shashki(HUMAN, AI);
 	return 0;
 }
 
