@@ -23,3 +23,8 @@ SOURCES += ai.cpp \
            network.cpp \
            test_board.cpp
 
+# installation
+target.path = /usr/bin/
+sources.files = $$SOURCES *.pro
+INSTALLS += target sources
+
