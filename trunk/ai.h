@@ -41,7 +41,7 @@
 		unsigned int thr_num;
 	public:
 		// initialization
-		AI_PLAYER() {max_step = 4; ab = true; thr_num = 8;}
+		AI_PLAYER() {max_step = 4; ab = true; thr_num = 1;}
 		// choose partial half-move
 		virtual MOVE getMove(BOARD board);
 		// set ai level
