@@ -1,9 +1,9 @@
-#include <QtTest/QtTest>
-#include "Model/game.h"
+#include "View/view_cui.h"
+#include "View/view_gui.h"
 
 // entry point
-int main () {
-	GAME shashki(HUMAN, AI);
-	return 0;
+int main (int argc, char** argv) {
+	VIEW_CUI view;
+	return view.exec();
 }
 

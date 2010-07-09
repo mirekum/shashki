@@ -7,23 +7,28 @@ QT += testlib
 CONFIG += qt debug warn_off qtestlib
 DEFINES += DATADIR=\\\"$$DATADIR\\\"
 
-HEADERS += Players/ai.h \
-           Model/board.h \
-           Tests/experiment.h \
+HEADERS += Model/board.h \
            Model/game.h \
+           Players/player.h \
+           Players/ai.h \
            Players/human.h \
            Players/network.h \
-           Players/player.h \
-           Tests/test_board.h
+           View/view.h \
+           View/view_gui.h \
+           View/view_cui.h \
+           Tests/test_board.h \
+           Tests/experiment.h
 
-SOURCES += Players/ai.cpp \
-           Model/board.cpp \
-           Tests/experiment.cpp \
+SOURCES += Model/board.cpp \
            Model/game.cpp \
+           Players/ai.cpp \
            Players/human.cpp \
-           main.cpp \
            Players/network.cpp \
-           Tests/test_board.cpp
+           View/view_gui.cpp \
+           View/view_cui.cpp \
+           Tests/test_board.cpp \
+           Tests/experiment.cpp \
+           main.cpp
 
 unix {
 	# variables
