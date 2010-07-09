@@ -16,11 +16,13 @@
 		int sock;
 		bool isitServer;
 		bool sendServerOrClient();
+		bool giveAdres(std::string&adr);
 	public:
 		bool getServerOrClient(){return isitServer;};
 		void giveLastMoves(MOVE lastMove[maxFiguresNumber]) ;
 		NETWORK_PLAYER();
 		~NETWORK_PLAYER();
+		void sendToError(char send);
 		// chooses partial half-move
 		virtual MOVE getMove(BOARD board);
 		
