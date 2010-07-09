@@ -10,16 +10,15 @@
 /* methods of the class for playing draughts */
 
 GAME::GAME(GAMER w, GAMER b) {
-	move_num = 0;
 	wp = createPlayer(w);
 	bp = createPlayer(b);
-	// start the game process
+	plr = NULL;
+	// set player colors
 	if (wp != NULL && bp != NULL) {
 		wp->setType(WHITE);
 		bp->setType(BLACK);
-		process();
 	} else {
-		std::cout << "Error: undefined type of player(s)!" << std::endl;
+		exit(1);
 	}
 }
 
@@ -42,60 +41,42 @@ PLAYER* GAME::createPlayer(GAMER plr) {
 	return NULL;
 }
 
-void GAME::execMove(PLAYER *plr, COLOR type) {
-	move_num++;
-	board.startMove(type);
-	int i=0;
-	plr->giveLastMoves(lastMove);
-	// get moves
-	do {
-		std::cout << board << std::endl;
-		std::cout << "Move #" << move_num << std::endl;
-		// request partial half-move and exec it
-		lastMove[i] = plr->getMove(board);
-		board.move(lastMove[i]);
-		std::cout << "[жмакни ENTER]" << std::endl;
-	//	getchar();
-		i++;
-		
+void GAME::startMove(COLOR type) {
+	moveNum = 0;
+	switch (type) {
+		case WHITE:
+			plr = wp;
+		break;
+		case BLACK:
+			plr = bp;
+		break;
+		default:
+			exit(1);
+		break;
 	}
-	// check if there are partial half-moves
-	while (board.canMove());
-	
+	board.startMove(type);
+	plr->giveLastMoves(lastMove);
 }
 
-void GAME::process () {
-	GAMESTATE res_flag;
-	do {
-		std::cout << "*** ХОД БЕЛЫХ ***" << std::endl;
-		execMove(wp, WHITE);
-		if (res_flag = board.isWin()) goto res;
-		
-		std::cout << "*** ХОД ЧЁРНЫХ ***" << std::endl;
-		execMove(bp, BLACK);
-		if (res_flag = board.isWin()) goto res;
-		
-		std::cout << std::endl;
-	} while(1);
-	
-	res:
+void GAME::execMove() {
+	if (plr == NULL) exit(1);
+	board.move(lastMove[moveNum++] = plr->getMove(board));
+}
+
+bool GAME::canMove() {
+	return board.canMove();
+}
+
+GAMESTATE GAME::checkResult() {
+	return board.isWin();
+}
+
+BOARD& GAME::getBoard() {
+	return board;
+}
+
+void GAME::finish() {
 	wp->giveLastMoves(lastMove);
 	bp->giveLastMoves(lastMove);
-	return result(res_flag);
-}
-
-void GAME::result (GAMESTATE res) {
-	std::cout << board << std::endl;
-	switch(res) {
-		case END_WHITE:
-			std::cout << "\n\n********** БЕЛЫЕ ВЫИГРАЛИ **********\n\n" << std::endl;
-		break;
-		case END_BLACK:
-			std::cout << "\n\n********** ЧЁРНЫЕ ВЫИГРАЛИ **********\n\n" << std::endl;
-		break;
-		case END_DRAW:
-			std::cout << "\n\n***** НИЧЬЯ *****\n\n" << std::endl;
-		break;
-	}
 }
 

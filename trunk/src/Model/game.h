@@ -3,22 +3,23 @@
 	
 	#include "Model/board.h"
 	#include "Players/player.h"
-	// class for playing draughts
-
+	
 	class GAME {
 	protected:
 		BOARD board;
-		PLAYER *wp, *bp;
-		int move_num;
+		PLAYER *wp, *bp, *plr;
+		int moveNum;
 		MOVE lastMove[PLAYER::maxFiguresNumber];
 	public:
 		GAME(GAMER w, GAMER b);
 		~GAME();
 		static PLAYER* createPlayer(GAMER plr);
-	protected:
-		void process();
-		void execMove(PLAYER *plr, COLOR type);
-		void result(GAMESTATE res);
+		void startMove(COLOR type);
+		void execMove();
+		bool canMove();
+		GAMESTATE checkResult();
+		BOARD& getBoard();
+		void finish();
 	};
 	
 #endif
