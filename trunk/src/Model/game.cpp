@@ -1,11 +1,11 @@
 #include <iostream>
 #include <cstdio>
-#include "board.h"
-#include "player.h"
-#include "human.h"
-#include "ai.h"
-#include "network.h"
-#include "game.h"
+#include "Model/board.h"
+#include "Players/player.h"
+#include "Players/human.h"
+#include "Players/ai.h"
+#include "Players/network.h"
+#include "Model/game.h"
 
 /* methods of the class for playing draughts */
 

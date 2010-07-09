@@ -4,8 +4,8 @@
 	#include <iostream>
 	#include <pthread.h>
 	#include <vector>
-	#include "board.h"
-	#include "player.h"
+	#include "Model/board.h"
+	#include "Players/player.h"
 	
 	// chosen move
 	class CHOOSEN_MOVE {

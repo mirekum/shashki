@@ -1,8 +1,8 @@
 #ifndef _GAME_H_
 	#define _GAME_H_
 	
-	#include "board.h"
-	#include "player.h"
+	#include "Model/board.h"
+	#include "Players/player.h"
 	// class for playing draughts
 
 	class GAME {

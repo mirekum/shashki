@@ -3,8 +3,8 @@
 	
 	#include <iostream>
 	#include <vector>
-	#include "board.h"
-	#include "player.h"
+	#include "Model/board.h"
+	#include "Players/player.h"
 	
 	typedef std::vector<double> times_array;
 	

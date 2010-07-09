@@ -2,7 +2,7 @@
 	#define _PLAYER_H_
 	
 	#include <iostream>
-	#include "board.h"
+	#include "Model/board.h"
 	
 	enum GAMER {HUMAN, AI, NETWORK};
 	

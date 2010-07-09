@@ -1,11 +1,11 @@
 #include <iostream>
 #include <time.h>
 #include <math.h>
-#include "board.h"
-#include "player.h"
-#include "game.h"
-#include "ai.h"
-#include "experiment.h"
+#include "Model/board.h"
+#include "Players/player.h"
+#include "Model/game.h"
+#include "Players/ai.h"
+#include "Tests/experiment.h"
 
 /* methods of the experiment class */
 
