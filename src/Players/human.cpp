@@ -1,6 +1,6 @@
 #include <iostream>
-#include "board.h"
-#include "human.h"
+#include "Model/board.h"
+#include "Players/human.h"
 
 /* mathods of class of the human player */
 

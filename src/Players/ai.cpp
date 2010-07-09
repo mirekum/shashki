@@ -1,6 +1,6 @@
 #include <iostream>
-#include "board.h"
-#include "ai.h"
+#include "Model/board.h"
+#include "Players/ai.h"
 
 /* methods of class of the ai player */
 

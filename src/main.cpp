@@ -1,13 +1,9 @@
 #include <QtTest/QtTest>
-#include "game.h"
-#include "test_board.h"
+#include "Model/game.h"
 
 // entry point
 int main () {
-	//Test_Board test_board;
-	//QTest::qExec(&test_board);
-	
-	GAME shashki(NETWORK, AI);
+	GAME shashki(HUMAN, AI);
 	return 0;
 }
 

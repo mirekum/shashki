@@ -2,7 +2,7 @@
 	#define _HUMAN_H_
 	
 	#include <iostream>
-	#include "player.h"
+	#include "Players/player.h"
 	
 	class HUMAN_PLAYER: public PLAYER {
 	public:

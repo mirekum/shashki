@@ -1,6 +1,6 @@
 #include <QObject>
 #include <QtTest/QtTest>
-#include "board.h"
+#include "Model/board.h"
 
 class Test_Board : public QObject {
 	Q_OBJECT

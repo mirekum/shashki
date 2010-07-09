@@ -1,29 +1,29 @@
 # base settings
 TEMPLATE = app
-TARGET = shashki
+TARGET = ../shashki
 DEPENDPATH += .
 INCLUDEPATH += .
 QT += testlib
 CONFIG += qt debug warn_off qtestlib
 DEFINES += DATADIR=\\\"$$DATADIR\\\"
 
-HEADERS += ai.h \
-           board.h \
-           experiment.h \
-           game.h \
-           human.h \
-           network.h \
-           player.h \
-           test_board.h
+HEADERS += Players/ai.h \
+           Model/board.h \
+           Tests/experiment.h \
+           Model/game.h \
+           Players/human.h \
+           Players/network.h \
+           Players/player.h \
+           Tests/test_board.h
 
-SOURCES += ai.cpp \
-           board.cpp \
-           experiment.cpp \
-           game.cpp \
-           human.cpp \
+SOURCES += Players/ai.cpp \
+           Model/board.cpp \
+           Tests/experiment.cpp \
+           Model/game.cpp \
+           Players/human.cpp \
            main.cpp \
-           network.cpp \
-           test_board.cpp
+           Players/network.cpp \
+           Tests/test_board.cpp
 
 unix {
 	# variables

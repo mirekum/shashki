@@ -1,5 +1,5 @@
 #include <iostream>
-#include "board.h"
+#include "Model/board.h"
 
 // FIGURE -> COLOR
 COLOR getColor(FIGURE type) {

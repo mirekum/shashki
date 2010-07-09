@@ -1,5 +1,5 @@
-#include "board.h"
-#include "network.h"
+#include "Model/board.h"
+#include "Players/network.h"
 
 /* methods of class of the network player */
 void NETWORK_PLAYER::sendToError(char send){
