@@ -7,7 +7,7 @@ int main () {
 	//Test_Board test_board;
 	//QTest::qExec(&test_board);
 	
-	GAME shashki(HUMAN, AI);
+	GAME shashki(NETWORK, AI);
 	return 0;
 }
 
