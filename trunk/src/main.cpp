@@ -3,7 +3,7 @@
 
 // entry point
 int main (int argc, char** argv) {
-	VIEW_CUI view;
+	VIEW_GUI view(argc, argv);
 	return view.exec();
 }
 

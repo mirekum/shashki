@@ -8,7 +8,11 @@
 	protected:
 		// game instance
 		GAME *game;
+		// data from command line
+		int argc;
+		char** argv;
 	public:
+		// VIEW(int _argc, char** _argv) {argc = _argc; argv = _argv;}
 		// show application
 		int exec() {
 			game = createGame();

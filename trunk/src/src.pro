@@ -14,6 +14,7 @@ HEADERS += Model/board.h \
            Players/human.h \
            Players/network.h \
            View/view.h \
+           View/view_input.h \
            View/view_gui.h \
            View/view_cui.h \
            Tests/test_board.h \
