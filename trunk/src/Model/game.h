@@ -3,6 +3,7 @@
 	
 	#include "Model/board.h"
 	#include "Players/player.h"
+	#include "View/view_input.h"
 	
 	class GAME {
 	protected:
@@ -10,16 +11,18 @@
 		PLAYER *wp, *bp, *plr;
 		int moveNum;
 		MOVE lastMove[PLAYER::maxFiguresNumber];
+		VIEW_INPUT *gameInput;
 	public:
-		GAME(GAMER w, GAMER b);
+		explicit GAME(PLAYER_TYPE w, PLAYER_TYPE b);
+		static PLAYER* createPlayer(PLAYER_TYPE _type);
 		~GAME();
-		static PLAYER* createPlayer(GAMER plr);
+		void start(VIEW_INPUT &_gameInput);
 		void startMove(COLOR type);
 		void execMove();
 		bool canMove();
+		void finish();
 		GAMESTATE checkResult();
 		BOARD& getBoard();
-		void finish();
 	};
 	
 #endif

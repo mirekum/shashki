@@ -1,18 +1,15 @@
-#include <iostream>
-#include <cstdio>
-#include "Model/board.h"
-#include "Players/player.h"
+#include "Model/game.h"
 #include "Players/human.h"
 #include "Players/ai.h"
 #include "Players/network.h"
-#include "Model/game.h"
 
 /* methods of the class for playing draughts */
 
-GAME::GAME(GAMER w, GAMER b) {
+GAME::GAME(PLAYER_TYPE w, PLAYER_TYPE b) {
 	wp = createPlayer(w);
 	bp = createPlayer(b);
 	plr = NULL;
+	gameInput = NULL;
 	// set player colors
 	if (wp != NULL && bp != NULL) {
 		wp->setType(WHITE);
@@ -25,10 +22,11 @@ GAME::GAME(GAMER w, GAMER b) {
 GAME::~GAME() {
 	delete wp;
 	delete bp;
+	delete plr;
 }
 
-PLAYER* GAME::createPlayer(GAMER plr) {
-	switch (plr) {
+PLAYER* GAME::createPlayer(PLAYER_TYPE _type) {
+	switch (_type) {
 		case HUMAN:
 			return new HUMAN_PLAYER();
 		case AI:
@@ -41,9 +39,13 @@ PLAYER* GAME::createPlayer(GAMER plr) {
 	return NULL;
 }
 
-void GAME::startMove(COLOR type) {
+void GAME::start(VIEW_INPUT &_gameInput) {
+	gameInput = &_gameInput;
+}
+
+void GAME::startMove(COLOR color) {
 	moveNum = 0;
-	switch (type) {
+	switch (color) {
 		case WHITE:
 			plr = wp;
 		break;
@@ -54,13 +56,21 @@ void GAME::startMove(COLOR type) {
 			exit(1);
 		break;
 	}
-	board.startMove(type);
+	board.startMove(color);
 	plr->giveLastMoves(lastMove);
 }
 
 void GAME::execMove() {
 	if (plr == NULL) exit(1);
-	board.move(lastMove[moveNum++] = plr->getMove(board));
+	switch (plr->getType()) {
+		case HUMAN:
+			lastMove[moveNum] = gameInput->humanGetmove(board);
+		break;
+		default:
+			lastMove[moveNum] = plr->getMove(board);
+		break;
+	}
+	board.move(lastMove[moveNum++]);
 }
 
 bool GAME::canMove() {

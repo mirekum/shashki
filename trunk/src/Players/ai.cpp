@@ -1,11 +1,11 @@
-#include <iostream>
-#include "Model/board.h"
 #include "Players/ai.h"
 
 /* methods of class of the ai player */
 
 // choose partial half-move
 MOVE AI_PLAYER::getMove(BOARD board) {
+	MOVE result; // chosen move
+	
 	CHOOSEN_MOVE_ARRAY moves_queue; // first level moves queue
 	// go round all figures on the board and make moves queue
 	for (int i = 0; i < board.size; i++) {
@@ -47,7 +47,6 @@ MOVE AI_PLAYER::getMove(BOARD board) {
 	// calculate maximum of moves marks and choose the best move
 	int max = -MINMAX_END;
 	for (int i = 0; i < moves_queue.size(); i++) {
-		//std::cout << "move #" << i << ": " << moves_queue[i].mark << std::endl;
 		if (moves_queue[i].mark >= max) {
 			max = moves_queue[i].mark;
 			result.from = moves_queue[i].from;
@@ -73,8 +72,6 @@ void *ai_prl_first_choose(void *ptr) {
 		pthread_mutex_lock(sync->queue_mutex);
 		if (sync->next_move_num != sync->moves_queue->size()) {
 			move = &((*(sync->moves_queue))[sync->next_move_num]);
-			//std::cout << "get move from queue #" << sync->next_move_num << ": "
-			//		  << move->from.x << ", " << move->from.y << " -> " << move->to.x << ", " << move->to.y << std::endl;
 			++sync->next_move_num;
 		} else {
 			moves_exist = false;
@@ -84,19 +81,18 @@ void *ai_prl_first_choose(void *ptr) {
 		// calculate mark for gotten move
 		if (move) {
 			BOARD board_copy = *(sync->board);
-			//MOVE res;
-			board_copy.startMove(sync->plr->type);
+			board_copy.startMove(sync->plr->color);
 			board_copy.move(move->from, move->to);
 			
 			// half-move continuing
 			if (board_copy.moves(move->to)) {
 				// continue current half-move
-				move->mark = sync->plr->choose(board_copy, sync->plr->type, NULL, 0, sync->mark, false);
+				move->mark = sync->plr->choose(board_copy, sync->plr->color, NULL, 0, sync->mark, false);
 			}
 			// half-move is finished
 			else {
 				// start enemy half-move
-				move->mark = sync->plr->choose(board_copy, sync->plr->type == WHITE ? BLACK : WHITE, NULL, 1, sync->mark, true);
+				move->mark = sync->plr->choose(board_copy, sync->plr->color == WHITE ? BLACK : WHITE, NULL, 1, sync->mark, true);
 			}
 			
 			// remember mark
@@ -111,7 +107,7 @@ void *ai_prl_first_choose(void *ptr) {
 
 
 // choose the best partial half-move
-int AI_PLAYER::choose(BOARD board, COLOR _type, MOVE *res, int step, int last, bool smflag) {
+int AI_PLAYER::choose(BOARD board, COLOR _color, MOVE *res, int step, int last, bool smflag) {
 	// not last partial half-move
 	if (step < max_step) {
 		bool minimax = (step % 2 == 0 ? 1 : 0); // max or min we must calculate (1 - max, 0 - min)
@@ -122,7 +118,7 @@ int AI_PLAYER::choose(BOARD board, COLOR _type, MOVE *res, int step, int last, b
 				int m;
 				CELL d(i, j), arr[16];
 				// first partial half-move
-				if (smflag) board.startMove(_type);
+				if (smflag) board.startMove(_color);
 				// array of the possible partial half-moves for current figure
 				m = board.moves(d, arr);
 				// go round array of the possible partial half-moves for current figure
@@ -131,22 +127,15 @@ int AI_PLAYER::choose(BOARD board, COLOR _type, MOVE *res, int step, int last, b
 					BOARD board_copy = board;
 					// exec current partial half-move
 					board_copy.move(d, arr[k]);
-					// for debugging
-					if (step < 0) {
-						for (int q = 0; q < step; q++) {
-							std::cout << "  ";
-						}
-						std::cout << d.x << ", " << d.y << " -> " << arr[k].x << ", " << arr[k].y << std::endl;
-					}
 					// half-move continuing
 					if (board_copy.moves(arr[k])) {
 						// continue current half-move
-						s = choose(board_copy, _type, NULL, step, (minimax ? max : min), false);
+						s = choose(board_copy, _color, NULL, step, (minimax ? max : min), false);
 					}
 					// half-move is finished
 					else {
 						// start enemy half-move
-						s = choose(board_copy, _type == WHITE ? BLACK : WHITE, NULL, step + 1, (minimax ? max : min), true);
+						s = choose(board_copy, _color == WHITE ? BLACK : WHITE, NULL, step + 1, (minimax ? max : min), true);
 					}
 					// calculate max of SRF values
 					if (minimax) {
@@ -159,7 +148,6 @@ int AI_PLAYER::choose(BOARD board, COLOR _type, MOVE *res, int step, int last, b
 						}
 						// alpha-beta pruning
 						if (ab && s > last && last > -MINMAX_END && last < MINMAX_END) {
-							//if (step <= 2) std::cout << "================ ab1 pruning detected! ================\n"; // for debugging
 							return s;
 						}
 					}
@@ -174,14 +162,8 @@ int AI_PLAYER::choose(BOARD board, COLOR _type, MOVE *res, int step, int last, b
 						}
 						// alpha-beta pruning
 						if (ab && s < last && last > -MINMAX_END && last < MINMAX_END) {
-							//if (step <= 1) std::cout << "================ ab2 pruning detected! ================\n"; // for debugging
 							return s;
 						}
-					}
-					// for debugging
-					if (step < 0) {
-						std::cout << "> [" << s << "] " <<
-							"(" << d.x << ", " << d.y << ") -> (" << arr[k].x << ", " << arr[k].y << ")" << std::endl;
 					}
 				}
 			}
@@ -199,10 +181,10 @@ int AI_PLAYER::choose(BOARD board, COLOR _type, MOVE *res, int step, int last, b
 
 // statistiс rating function
 int AI_PLAYER::srf(BOARD board) {
-	if (type == WHITE) {
+	if (color == WHITE) {
 		return (board.white() - board.black()) + 2*(board.whiteKing() - board.blackKing());
 	}
-	else if (type == BLACK) {
+	else if (color == BLACK) {
 		return (board.black() - board.white()) + 2*(board.blackKing() - board.whiteKing());
 	}
 	

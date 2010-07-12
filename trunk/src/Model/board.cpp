@@ -1,4 +1,3 @@
-#include <iostream>
 #include "Model/board.h"
 
 // FIGURE -> COLOR
@@ -73,42 +72,6 @@ bool operator== (MOVE m1, MOVE m2) {
 }
 bool operator!= (MOVE m1, MOVE m2) {
 	return !(m1 == m2);
-}
-
-// print the board on the screen
-std::ostream& operator<< (std::ostream &cout, BOARD &board) {
-	std::cout << "------ Доска ------" << std::endl;
-	std::cout << "   0 1 2 3 4 5 6 7 " << std::endl << std::endl;
-	for (int y = 0; y < board.size; y++) {
-		std::cout << y << "  ";
-		for (int x = 0; x < board.size; x++) {
-			if (board.cells[x][y] == WHITE_PAWN)
-				std::cout << "x ";
-			else if (board.cells[x][y] == BLACK_PAWN)
-				std::cout << "o ";
-			else if (board.cells[x][y] == WHITE_KING)
-				std::cout << "W ";
-			else if (board.cells[x][y] == BLACK_KING)
-				std::cout << "B ";
-			else
-				std::cout << "  ";
-		}
-		std::cout << std::endl;
-	}
-	std::cout << "-------------------";
-	return std::cout;
-}
-
-// print the move on the screen
-std::ostream& operator<< (std::ostream &cout, MOVE &move) {
-	std::cout << move.from << " -> " << move.to;
-	return std::cout;
-}
-
-// print the cell on the screen
-std::ostream& operator<< (std::ostream &cout, CELL &cell) {
-	std::cout << cell.x << "," << cell.y;
-	return std::cout;
 }
 
 // starts the half-move

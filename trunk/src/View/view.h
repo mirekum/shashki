@@ -2,6 +2,7 @@
 	#define _VIEW_H_
 	
 	#include "Model/game.h"
+	#include "View/view_input.h"
 	
 	class VIEW {
 	protected:

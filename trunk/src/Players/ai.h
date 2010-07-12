@@ -1,10 +1,8 @@
 #ifndef _AI_H_
 	#define _AI_H_
 	
-	#include <iostream>
 	#include <pthread.h>
 	#include <vector>
-	#include "Model/board.h"
 	#include "Players/player.h"
 	
 	// chosen move
@@ -20,7 +18,7 @@
 		};
 	};
 	
-	// new type: array of chosen moves
+	// array of chosen moves
 	typedef std::vector<CHOOSEN_MOVE> CHOOSEN_MOVE_ARRAY;
 	
 	// first call of choose function
@@ -41,14 +39,17 @@
 		unsigned int thr_num;
 	public:
 		// initialization
-		AI_PLAYER() {max_step = 4; ab = true; thr_num = 1;}
+		AI_PLAYER() {
+			type = AI;
+			max_step = 4; ab = true; thr_num = 1;
+		}
 		// choose partial half-move
 		virtual MOVE getMove(BOARD board);
 		// set ai level
 		virtual void setLevel(int level) {max_step = level;};
 	protected:
 		// choose the best partial half-move
-		virtual int choose(BOARD board, COLOR _type, MOVE *res, int step = 0, int last = -MINMAX_END, bool smflag = true);
+		virtual int choose(BOARD board, COLOR _color, MOVE *res, int step = 0, int last = -MINMAX_END, bool smflag = true);
 	
 	friend void *ai_prl_first_choose(void *ptr);
 	};
