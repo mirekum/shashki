@@ -1,7 +1,6 @@
 #ifndef _NETWORK_H_
 	#define _NETWORK_H_
 	#include <iostream>
-	#include "Model/board.h"
 	#include "Players/player.h"
 	#include <unistd.h>
 	#include <sys/ioctl.h>

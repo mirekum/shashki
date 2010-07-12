@@ -1,4 +1,3 @@
-#include "Model/board.h"
 #include "Players/network.h"
 
 /* methods of class of the network player */
@@ -37,6 +36,7 @@ while(i<maxFiguresNumber){
 
 // chooses partial half-move
 MOVE NETWORK_PLAYER::getMove(BOARD board) {
+MOVE result; // chosen move
 
 do{
 		recv(sock, &result, sizeof(result), 0);	
@@ -107,7 +107,8 @@ bool NETWORK_PLAYER::sendServerOrClient(){
 		}		
 }
 NETWORK_PLAYER::NETWORK_PLAYER(){
-     		type = NONE;
+		type = NETWORK;
+     	color = NONE;
   		if(sendServerOrClient())createServer();
 		else createLine();
 		};

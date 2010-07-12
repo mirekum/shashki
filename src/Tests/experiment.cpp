@@ -1,27 +1,24 @@
 #include <iostream>
 #include <time.h>
 #include <math.h>
-#include "Model/board.h"
-#include "Players/player.h"
 #include "Model/game.h"
-#include "Players/ai.h"
 #include "Tests/experiment.h"
 
 /* methods of the experiment class */
 
 // class constructor
-EXPERIMENT::EXPERIMENT(const BOARD &_board, COLOR _ptype, int _minExp, int _maxExp, double _Covar, int _minLvl, int _maxLvl):
+EXPERIMENT::EXPERIMENT(const BOARD &_board, COLOR _color, int _minExp, int _maxExp, double _Covar, int _minLvl, int _maxLvl):
 	minExp(_minExp), maxExp(_maxExp), Covar(_Covar), minLvl(_minLvl), maxLvl(_maxLvl)
 {
 	board = _board;
-	ptype = _ptype;
+	color = _color;
 };
 
-void EXPERIMENT::run(GAMER plr) {
+void EXPERIMENT::run(PLAYER_TYPE plr) {
 	if (plr == 0) exit(1);
-	board.startMove(ptype);
+	board.startMove(color);
 	PLAYER *player = GAME::createPlayer(plr);
-	player->setType(ptype);
+	player->setType(color);
 	std::cout << "Player: " << PLAYER::getPlrText(plr) << std::endl;
 	time_t start_time, end_time;
 	// go round need levels

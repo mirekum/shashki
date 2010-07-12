@@ -1,7 +1,6 @@
 #ifndef _BOARD_H_
 	#define _BOARD_H_
 	
-	#include <iostream>
 	#include <stdlib.h>
 	
 	// colors
@@ -45,7 +44,6 @@
 	class CELL {
 		public: int x, y;
 		explicit CELL(int _x = 0, int _y = 0): x(_x), y(_y) {};
-		friend std::ostream& operator<< (std::ostream &cout, CELL &cell);
 		friend bool operator== (CELL a, CELL b);
 		friend bool operator!= (CELL a, CELL b);
 	};
@@ -55,7 +53,6 @@
 		public: CELL from, to;
 		MOVE() {};
 		MOVE(CELL _from, CELL _to) {from = _from; to = _to;};
-		friend std::ostream& operator<< (std::ostream &cout, MOVE &move);
 		friend bool operator== (MOVE m1, MOVE m2);
 		friend bool operator!= (MOVE m1, MOVE m2);
 	};
@@ -81,8 +78,6 @@
 		CELL ublocked;             // blocked for current half-move figure
 	public:
 		BOARD();
-		// print the board on the screen
-		friend std::ostream& operator<< (std::ostream &cout, BOARD &board);
 		// starts the half-move
 		void startMove(COLOR type);
 		// check if game is continuing or finished

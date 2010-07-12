@@ -12,6 +12,13 @@
 		virtual int gameProcess();
 		// show results of the game
 		virtual void gameResults(GAMESTATE res_flag);
+	public:
+		// input data class
+		class Input: public VIEW_INPUT {
+		public:
+			// get move from human player
+			virtual MOVE humanGetmove();
+		};
 	};
 	
 #endif
