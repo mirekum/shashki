@@ -35,7 +35,7 @@ unix {
 	# variables
 	isEmpty(PREFIX) {
 		PREFIX = /usr
-    }
+	}
 	BINDIR = $$PREFIX/bin
 	DATADIR =$$PREFIX/share
 	DEFINES += DATADIR=\"$$DATADIR\" PKGDATADIR=\"$$PKGDATADIR\"
