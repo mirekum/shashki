@@ -14,6 +14,7 @@
 		// show results of the game
 		virtual void gameResults(GAMESTATE res_flag);
 	public:
+		VIEW_CUI(int _argc, char** _argv) {argc = _argc; argv = _argv;}
 		// input data class
 		class Input: public VIEW_INPUT {
 		public:

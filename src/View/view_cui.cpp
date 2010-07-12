@@ -1,4 +1,3 @@
-#include <QApplication>
 #include "View/view_cui.h"
 
 /* methods of the CUI view class */
@@ -47,22 +46,6 @@ int VIEW_CUI::gameProcess() {
 	return 0;
 }
 
-// get move from human player
-MOVE VIEW_CUI::Input::humanGetmove(BOARD board) {
-	MOVE result;
-	
-	do {
-		std::cout << "x1 = "; std::cin >> result.from.x;
-		std::cout << "y1 = "; std::cin >> result.from.y;
-		std::cout << "x2 = "; std::cin >> result.to.x;
-		std::cout << "y2 = "; std::cin >> result.to.y;
-		if (board.move(result)) break;
-		else std::cout << "Ошибка! Повторите ввод!" << std::endl;
-	} while (1);
-	
-	return result;
-}
-
 // show results of the game
 void VIEW_CUI::gameResults(GAMESTATE res_flag) {
 	std::cout << game->getBoard() << std::endl;
@@ -77,6 +60,22 @@ void VIEW_CUI::gameResults(GAMESTATE res_flag) {
 			std::cout << "\n\n***** НИЧЬЯ *****\n\n" << std::endl;
 		break;
 	}
+}
+
+// get move from human player
+MOVE VIEW_CUI::Input::humanGetmove(BOARD board) {
+	MOVE result;
+	
+	do {
+		std::cout << "x1 = "; std::cin >> result.from.x;
+		std::cout << "y1 = "; std::cin >> result.from.y;
+		std::cout << "x2 = "; std::cin >> result.to.x;
+		std::cout << "y2 = "; std::cin >> result.to.y;
+		if (board.move(result)) break;
+		else std::cout << "Ошибка! Повторите ввод!" << std::endl;
+	} while (1);
+	
+	return result;
 }
 
 // print the board on the screen
