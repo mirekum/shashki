@@ -3,25 +3,20 @@
 	
 	#include "Model/board.h"
 	#include "Players/player.h"
-	#include "View/view_input.h"
 	
-	class GAME {
+	struct InitGameData {
+		Player *wp, *bp;
+	};
+	
+	class Game {
 	protected:
 		BOARD board;
-		PLAYER *wp, *bp, *plr;
+		Player *wp, *bp;
 		int moveNum;
-		MOVE lastMove[PLAYER::maxFiguresNumber];
-		VIEW_INPUT *gameInput;
+		MOVE lastMove[Player::maxFiguresNumber];
 	public:
-		explicit GAME(PLAYER_TYPE w, PLAYER_TYPE b);
-		static PLAYER* createPlayer(PLAYER_TYPE _type);
-		~GAME();
-		void start(VIEW_INPUT &_gameInput);
-		void startMove(COLOR type);
-		void execMove();
-		bool canMove();
-		void finish();
-		GAMESTATE checkResult();
+		Game();
+		~Game();
 		BOARD& getBoard();
 	};
 	

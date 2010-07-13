@@ -14,8 +14,6 @@ COLOR getColor(FIGURE type) {
 	}
 }
 
-/* methods of class of the board for playing draughts */
-
 // class constructor
 // set firstly figures positions and the board state
 BOARD::BOARD() {

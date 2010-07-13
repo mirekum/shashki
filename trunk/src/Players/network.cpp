@@ -1,7 +1,6 @@
 #include "Players/network.h"
 
-/* methods of class of the network player */
-void NETWORK_PLAYER::sendToError(char send){
+void Network_Player::sendToError(char send){
 
 	switch (send) {
 		case 1:
@@ -18,7 +17,7 @@ void NETWORK_PLAYER::sendToError(char send){
 };
 
 
-void NETWORK_PLAYER::giveLastMoves(MOVE lastMove[maxFiguresNumber]) {
+void Network_Player::giveLastMoves(MOVE lastMove[maxFiguresNumber]) {
 int i=0;
 while(i<maxFiguresNumber){
 	send(sock, &lastMove[i], sizeof(lastMove[i]), 0);
@@ -35,7 +34,7 @@ while(i<maxFiguresNumber){
 
 
 // chooses partial half-move
-MOVE NETWORK_PLAYER::getMove(BOARD board) {
+MOVE Network_Player::getMove(BOARD board) {
 MOVE result; // chosen move
 
 do{
@@ -46,7 +45,7 @@ return result;
 };
 
 
-bool NETWORK_PLAYER::createServer(){
+bool Network_Player::createServer(){
     struct ifreq ifr;
     memset(&ifr, 0, sizeof(ifr));
     strcpy(ifr.ifr_name, "eth0");
@@ -93,7 +92,7 @@ bool NETWORK_PLAYER::createServer(){
 
 
 };
-bool NETWORK_PLAYER::sendServerOrClient(){
+bool Network_Player::sendServerOrClient(){
 		char res[2];
                 std::cout << "do you wont create server game [y/n]:"; std::cin >>res;
 		if(res[0]=='y'){
@@ -106,23 +105,22 @@ bool NETWORK_PLAYER::sendServerOrClient(){
 		exit(1);
 		}		
 }
-NETWORK_PLAYER::NETWORK_PLAYER(){
-		type = NETWORK;
+Network_Player::Network_Player(){
      	color = NONE;
   		if(sendServerOrClient())createServer();
 		else createLine();
 		};
 
-NETWORK_PLAYER::~NETWORK_PLAYER(){
+Network_Player::~Network_Player(){
 		close(sock);
 		};
 
-bool NETWORK_PLAYER::giveAdres(std::string&adr){
+bool Network_Player::giveAdres(std::string&adr){
 
     std::cout << "select inet adr:"; std::cin >>adr;
     return true;
 }
-bool NETWORK_PLAYER::createLine(){
+bool Network_Player::createLine(){
     std::string inetServAdr="0.0.0.0";
     giveAdres(inetServAdr);
     sock = socket(AF_INET, SOCK_STREAM, 0);

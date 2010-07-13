@@ -3,12 +3,13 @@
 	
 	#include <vector>
 	#include "Players/player.h"
+	#include "Players/player_factory.h"
 	
 	typedef std::vector<double> times_array;
 	
 	enum READY_STATE {EXP_NOREADY, EXP_READY_COVAR, EXP_READY_MAXEXP};
 	
-	class EXPERIMENT {
+	class Experiment {
 	protected:
 		BOARD board;
 		COLOR color;
@@ -16,7 +17,7 @@
 		double Covar;
 		int minLvl, maxLvl;
 	public:
-		EXPERIMENT(const BOARD &_board, COLOR _color, int _minExp, int _maxExp, double _Covar, int minLvl, int maxLvl);
+		Experiment(const BOARD &_board, COLOR _color, int _minExp, int _maxExp, double _Covar, int minLvl, int maxLvl);
 		void run(PLAYER_TYPE plr);
 	protected:
 		READY_STATE isReady(const times_array &times, double &M, double &covar);
