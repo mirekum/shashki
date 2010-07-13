@@ -1,25 +1,22 @@
 #include <iostream>
 #include <time.h>
 #include <math.h>
-#include "Model/game.h"
 #include "Tests/experiment.h"
 
-/* methods of the experiment class */
-
 // class constructor
-EXPERIMENT::EXPERIMENT(const BOARD &_board, COLOR _color, int _minExp, int _maxExp, double _Covar, int _minLvl, int _maxLvl):
+Experiment::Experiment(const BOARD &_board, COLOR _color, int _minExp, int _maxExp, double _Covar, int _minLvl, int _maxLvl):
 	minExp(_minExp), maxExp(_maxExp), Covar(_Covar), minLvl(_minLvl), maxLvl(_maxLvl)
 {
 	board = _board;
 	color = _color;
 };
 
-void EXPERIMENT::run(PLAYER_TYPE plr) {
+void Experiment::run(PLAYER_TYPE plr) {
 	if (plr == 0) exit(1);
 	board.startMove(color);
-	PLAYER *player = GAME::createPlayer(plr);
-	player->setType(color);
-	std::cout << "Player: " << PLAYER::getPlrText(plr) << std::endl;
+	Player *player = Player_Factory::create(plr);
+	player->setColor(color);
+	std::cout << "Player: " << Player_Factory::getPlrText(plr) << std::endl;
 	time_t start_time, end_time;
 	// go round need levels
 	for (int n = minLvl; n <= maxLvl; n++) {
@@ -49,7 +46,7 @@ void EXPERIMENT::run(PLAYER_TYPE plr) {
 	delete player;
 }
 
-READY_STATE EXPERIMENT::isReady(const times_array &times, double &M, double &covar) {
+READY_STATE Experiment::isReady(const times_array &times, double &M, double &covar) {
 	// detect minExp
 	if (times.size() < minExp) return EXP_NOREADY;
 	

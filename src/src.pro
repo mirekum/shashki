@@ -10,23 +10,23 @@ DEFINES += DATADIR=\\\"$$DATADIR\\\"
 HEADERS += Model/board.h \
            Model/game.h \
            Players/player.h \
+           Players/player_factory.h \
            Players/ai.h \
-           Players/human.h \
+           Players/bluetooth.h \
            Players/network.h \
            View/view.h \
-           View/view_input.h \
-           View/view_gui.h \
-           View/view_cui.h \
+           View/view_board.h \
+           View/view_startgame.h \
            Tests/test_board.h \
            Tests/experiment.h
 
 SOURCES += Model/board.cpp \
            Model/game.cpp \
            Players/ai.cpp \
-           Players/human.cpp \
+           Players/bluetooth.cpp \
            Players/network.cpp \
-           View/view_gui.cpp \
-           View/view_cui.cpp \
+           View/view_board.cpp \
+           View/view_startgame.cpp \
            Tests/test_board.cpp \
            Tests/experiment.cpp \
            main.cpp

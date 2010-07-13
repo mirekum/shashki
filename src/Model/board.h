@@ -1,7 +1,7 @@
 #ifndef _BOARD_H_
 	#define _BOARD_H_
 	
-	#include <stdlib.h>
+	#include <cstdlib>
 	
 	// colors
 	enum COLOR {

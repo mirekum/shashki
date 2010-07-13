@@ -24,8 +24,7 @@
 	// first call of choose function
 	void *ai_prl_first_choose(void *ptr);
 	
-	// player's class
-	class AI_PLAYER: public PLAYER {
+	class Ai_Player: public Player {
 	protected:
 		// minimax limit
 		const static int MINMAX_END = 2000000;
@@ -39,10 +38,9 @@
 		unsigned int thr_num;
 	public:
 		// initialization
-		AI_PLAYER() {
-			type = AI;
-			max_step = 4; ab = true; thr_num = 1;
-		}
+		Ai_Player() {max_step = 4; ab = true; thr_num = 1;}
+		// get player type
+		virtual PLAYER_TYPE type() {return AI;};
 		// choose partial half-move
 		virtual MOVE getMove(BOARD board);
 		// set ai level
@@ -57,7 +55,7 @@
 	// moves synchronization between threads
 	struct MOVES_SYNC {
 	public:
-		AI_PLAYER *plr;
+		Ai_Player *plr;
 		BOARD *board;
 		int next_move_num;
 		CHOOSEN_MOVE_ARRAY *moves_queue;

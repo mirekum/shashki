@@ -1,9 +1,7 @@
 #include "Players/ai.h"
 
-/* methods of class of the ai player */
-
 // choose partial half-move
-MOVE AI_PLAYER::getMove(BOARD board) {
+MOVE Ai_Player::getMove(BOARD board) {
 	MOVE result; // chosen move
 	
 	CHOOSEN_MOVE_ARRAY moves_queue; // first level moves queue
@@ -107,7 +105,7 @@ void *ai_prl_first_choose(void *ptr) {
 
 
 // choose the best partial half-move
-int AI_PLAYER::choose(BOARD board, COLOR _color, MOVE *res, int step, int last, bool smflag) {
+int Ai_Player::choose(BOARD board, COLOR _color, MOVE *res, int step, int last, bool smflag) {
 	// not last partial half-move
 	if (step < max_step) {
 		bool minimax = (step % 2 == 0 ? 1 : 0); // max or min we must calculate (1 - max, 0 - min)
@@ -180,7 +178,7 @@ int AI_PLAYER::choose(BOARD board, COLOR _color, MOVE *res, int step, int last, 
 }
 
 // statistiс rating function
-int AI_PLAYER::srf(BOARD board) {
+int Ai_Player::srf(BOARD board) {
 	if (color == WHITE) {
 		return (board.white() - board.black()) + 2*(board.whiteKing() - board.blackKing());
 	}

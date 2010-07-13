@@ -1,14 +1,16 @@
 #ifndef _NETWORK_H_
 	#define _NETWORK_H_
+	
 	#include <iostream>
-	#include "Players/player.h"
 	#include <unistd.h>
 	#include <sys/ioctl.h>
 	#include <net/if.h>
 	#include <arpa/inet.h>
 	#include <stdio.h>
 	#include <string.h>
-	class NETWORK_PLAYER: public PLAYER {
+	#include "Players/player.h"
+	
+	class Network_Player: public Player {
 	private:
 		bool createServer();
 		bool createLine();
@@ -19,12 +21,13 @@
 	public:
 		bool getServerOrClient(){return isitServer;};
 		void giveLastMoves(MOVE lastMove[maxFiguresNumber]) ;
-		NETWORK_PLAYER();
-		~NETWORK_PLAYER();
+		Network_Player();
+		~Network_Player();
 		void sendToError(char send);
 		// chooses partial half-move
 		virtual MOVE getMove(BOARD board);
-		
+		// get player type
+		virtual PLAYER_TYPE type() {return NETWORK;};
 	};
 	
 #endif
