@@ -5,7 +5,6 @@
 	#include "Players/ai.h"
 	#include "Players/bluetooth.h"
 	#include "Players/network.h"
-	#include "View/view_board.h"
 	
 	class Player_Factory {
 	private:
@@ -14,7 +13,7 @@
 		static Player* create(PLAYER_TYPE _type) {
 			switch (_type) {
 				case HUMAN:
-					return new View_Board();
+					return NULL;
 				case AI:
 					return new Ai_Player();
 				case NETWORK:
