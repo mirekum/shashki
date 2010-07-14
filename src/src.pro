@@ -5,6 +5,8 @@ DEPENDPATH += .
 INCLUDEPATH += .
 QT += testlib
 CONFIG += qt debug warn_off qtestlib
+OBJECTS_DIR = ../bin
+MOC_DIR = ../bin
 DEFINES += DATADIR=\\\"$$DATADIR\\\"
 
 HEADERS += Model/board.h \
