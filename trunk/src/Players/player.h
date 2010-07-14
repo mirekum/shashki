@@ -5,6 +5,10 @@
 	
 	enum PLAYER_TYPE {HUMAN, AI, NETWORK, BLUETOOTH};
 	
+	struct PLAYER_SETTINGS {
+		int aiLevel;
+	};
+	
 	class Player {
 	public:
 		const static unsigned int maxFiguresNumber = BOARD::size*2;

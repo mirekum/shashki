@@ -19,9 +19,11 @@ HEADERS += Model/board.h \
            View/view_startgame.h \
            View/view_board.h \
            Tests/test_board.h \
-           Tests/experiment.h
+           Tests/experiment.h \
+           control.h
 
-SOURCES += Model/board.cpp \
+SOURCES += main.cpp \
+           Model/board.cpp \
            Model/game.cpp \
            Players/ai.cpp \
            Players/bluetooth.cpp \
@@ -31,7 +33,7 @@ SOURCES += Model/board.cpp \
            View/view_board.cpp \
            Tests/test_board.cpp \
            Tests/experiment.cpp \
-           main.cpp
+           control.cpp
 
 unix {
 	# variables
