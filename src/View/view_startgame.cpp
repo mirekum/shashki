@@ -1,7 +1,7 @@
 #include "View/view_startgame.h"
 
 View_StartGame::View_StartGame(View_Main &_main_ui) {
-	main_ui = _main_ui;
+	main_ui = &_main_ui;
 	window = main_ui->getWindow();
 }
 
