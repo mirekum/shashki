@@ -1,7 +1,7 @@
 #include <iostream>
 #include <time.h>
 #include <math.h>
-#include "Tests/experiment.h"
+#include "experiment.h"
 
 // class constructor
 Experiment::Experiment(const BOARD &_board, COLOR _color, int _minExp, int _maxExp, double _Covar, int _minLvl, int _maxLvl):

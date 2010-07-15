@@ -1,4 +1,4 @@
-#include "Tests/test_board.h"
+#include "test_board.h"
 
 // moves function
 void Test_Board::test_moves_func() {

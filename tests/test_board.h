@@ -1,5 +1,6 @@
 #ifndef _TEST_BOARD_H_
 	#define _TEST_BOARD_H_
+	
 	#include <QObject>
 	#include <QtTest/QtTest>
 	#include "Model/board.h"
