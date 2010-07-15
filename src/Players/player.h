@@ -6,7 +6,12 @@
 	enum PLAYER_TYPE {HUMAN, AI, NETWORK, BLUETOOTH};
 	
 	struct PLAYER_SETTINGS {
-		int aiLevel;
+		// AI
+			int aiLevel;
+		// NETWORK
+			bool nwIsServer;
+		// BLUETOOTH
+			
 	};
 	
 	class Player {

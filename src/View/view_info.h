@@ -10,6 +10,7 @@
 	protected:
 		Game *game;
 		QWidget *window;
+		QFrame *infowrap;
 	public:
 		View_Info(View_Main &main_ui);
 		// view initialization
