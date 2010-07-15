@@ -1,12 +1,11 @@
-# base settings
 TEMPLATE = app
 TARGET = ../shashki
 DEPENDPATH += .
 INCLUDEPATH += .
-QT += testlib
-CONFIG += qt debug warn_off qtestlib
-OBJECTS_DIR = ../bin
-MOC_DIR = ../bin
+QT += network
+CONFIG += qt debug warn_off
+OBJECTS_DIR = ../bin/src
+MOC_DIR = ../bin/src
 DEFINES += DATADIR=\\\"$$DATADIR\\\"
 
 HEADERS += Model/board.h \
@@ -20,8 +19,6 @@ HEADERS += Model/board.h \
            View/view_startgame.h \
            View/view_board.h \
            View/view_info.h \
-           Tests/test_board.h \
-           Tests/experiment.h \
            control.h
 
 SOURCES += main.cpp \
@@ -34,8 +31,6 @@ SOURCES += main.cpp \
            View/view_startgame.cpp \
            View/view_board.cpp \
            View/view_info.cpp \
-           Tests/test_board.cpp \
-           Tests/experiment.cpp \
            control.cpp
 
 unix {
