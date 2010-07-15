@@ -12,12 +12,19 @@ Experiment::Experiment(const BOARD &_board, COLOR _color, int _minExp, int _maxE
 };
 
 void Experiment::run(PLAYER_TYPE plr) {
-	if (plr == 0) exit(1);
-	board.startMove(color);
-	Player *player = Player_Factory::create(plr);
-	player->setColor(color);
-	std::cout << "Player: " << Player_Factory::getPlrText(plr) << std::endl;
+	Player *player;
 	time_t start_time, end_time;
+	switch (plr) {
+		case AI:
+			player = new Ai_Player();
+			std::cout << "=== Ai_Player ===" << std::endl;
+		break;
+		default:
+			exit(1);
+		break;
+	}
+	player->setColor(color);
+	board.startMove(color);
 	// go round need levels
 	for (int n = minLvl; n <= maxLvl; n++) {
 		player->setLevel(n);

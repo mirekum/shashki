@@ -38,7 +38,7 @@
 		unsigned int thr_num;
 	public:
 		// initialization
-		Ai_Player() {max_step = 4; ab = true; thr_num = 1;}
+		Ai_Player(int level = 4) {max_step = level; ab = true; thr_num = 1;}
 		// get player type
 		virtual PLAYER_TYPE type() {return AI;};
 		// choose partial half-move

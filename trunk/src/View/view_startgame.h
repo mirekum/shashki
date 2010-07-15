@@ -1,9 +1,9 @@
 #ifndef _VIEW_STARTGAME_H_
 	#define _VIEW_STARTGAME_H_
 	
+	#include "Players/player.h"
 	#include "View/view.h"
 	#include "View/view_main.h"
-	#include "Players/player.h"
 	
 	class View_StartGame: public View {
 		Q_OBJECT
@@ -22,9 +22,11 @@
 		void playersSettings(COLOR color = WHITE);
 		// send data for game creation
 		void sendPlayersData();
+	signals:
+		void createGame(PLAYER_TYPE wPlr, PLAYER_SETTINGS wSet, PLAYER_TYPE bPlr, PLAYER_SETTINGS bSet);
 	protected slots:
 		// set up players dialog
-		void start_game();
+		void startGame();
 		// remember player settings
 		void getPlrSettings();
 	};
