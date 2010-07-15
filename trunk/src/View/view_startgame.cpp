@@ -10,14 +10,14 @@ void View_StartGame::startGame() {
 	QList<QRadioButton*> wLst = greeting->findChild<QGroupBox*>("White player")->findChildren<QRadioButton*>();
 	if (wLst.at(0)->isChecked()) wPlr = HUMAN;
 	else if (wLst.at(1)->isChecked()) wPlr = AI;
-	//else if (wLst.at(2)->isChecked()) wPlr = NETWORK;
+	else if (wLst.at(2)->isChecked()) wPlr = NETWORK;
 	//else if (wLst.at(3)->isChecked()) wPlr = BLUETOOTH;
 	
 	// set black player type
 	QList<QRadioButton*> bLst = greeting->findChild<QGroupBox*>("Black player")->findChildren<QRadioButton*>();
 	if (bLst.at(0)->isChecked()) bPlr = HUMAN;
 	else if (bLst.at(1)->isChecked()) bPlr = AI;
-	//else if (bLst.at(2)->isChecked()) bPlr = NETWORK;
+	else if (bLst.at(2)->isChecked()) bPlr = NETWORK;
 	//else if (bLst.at(3)->isChecked()) bPlr = BLUETOOTH;
 	
 	greeting->hide();
@@ -47,7 +47,7 @@ void View_StartGame::playersSettings(COLOR color) {
 			return;
 		break;
 		case AI:
-			// AI level
+			// AI lcolor == WHITEevel
 			QGroupBox *ai_level = new QGroupBox(settings);
 			ai_level->setObjectName("Ai level");
 			ai_level->setGeometry(180, 40, 360, 240);
@@ -64,6 +64,28 @@ void View_StartGame::playersSettings(COLOR color) {
 			ai_level->setLayout(ai_level_Layout);
 			ai_level->show();
 		break;
+		/*case NETWORK:
+			// client or server
+			QGroupBox *nw_isserver = new QGroupBox(settings);
+			nw_isserver->setObjectName("Network isServer");
+			nw_isserver->setGeometry(10, 10, 720, 100);
+			QLabel *nw_isserver_Label = new QLabel("You are:");
+			QRadioButton *nw_isserver_true = new QRadioButton("Server");
+			QRadioButton *nw_isserver_false = new QRadioButton("Client");
+			nw_isserver_true->setChecked(color == WHITE);
+			QHBoxLayout *nw_isserver_Layout = new QHBoxLayout;
+			nw_isserver_Layout->addWidget(nw_isserver_Label);
+			nw_isserver_Layout->addWidget(nw_isserver_true);
+			nw_isserver_Layout->addWidget(nw_isserver_false);
+			nw_isserver->setLayout(nw_isserver_Layout);
+			nw_isserver->show();
+		break;*/
+		/*case BLUETOOTH:
+			
+		break;*/
+		/*default:
+			exit(1);
+		break;*/
 	}
 	
 	// ok button
@@ -85,6 +107,15 @@ void View_StartGame::getPlrSettings() {
 			else if (ai_level.at(1)->isChecked()) set->aiLevel = 4;
 			else if (ai_level.at(2)->isChecked()) set->aiLevel = 8;
 		break;
+		/*case NETWORK:
+			
+		break;*/
+		/*case BLUETOOTH:
+			
+		break;*/
+		/*default:
+			exit(1);
+		break;*/
 	}
 	
 	settingsBox->hide();
@@ -115,14 +146,14 @@ void View_StartGame::show() {
 	QLabel *plr1_Label = new QLabel("White player");
 	QRadioButton *plr1_Human = new QRadioButton("Human");
 	QRadioButton *plr1_Ai = new QRadioButton("Computer");
-	//QRadioButton *plr1_Network = new QRadioButton("Network");
+	QRadioButton *plr1_Network = new QRadioButton("Network");
 	//QRadioButton *plr1_Bluetooth = new QRadioButton("Bluetooth");
 	plr1_Human->setChecked(true);
 	QVBoxLayout *plr1_Layout = new QVBoxLayout;
 	plr1_Layout->addWidget(plr1_Label);
 	plr1_Layout->addWidget(plr1_Human);
 	plr1_Layout->addWidget(plr1_Ai);
-	//plr1_Layout->addWidget(plr1_Network);
+	plr1_Layout->addWidget(plr1_Network);
 	//plr1_Layout->addWidget(plr1_Bluetooth);
 	plr1->setLayout(plr1_Layout);
 	plr1->show();
@@ -134,14 +165,14 @@ void View_StartGame::show() {
 	QLabel *plr2_Label = new QLabel("Black player", plr2);
 	QRadioButton *plr2_Human = new QRadioButton("Human", plr2);
 	QRadioButton *plr2_Ai = new QRadioButton("Computer", plr2);
-	//QRadioButton *plr2_Network = new QRadioButton("Network", plr2);
+	QRadioButton *plr2_Network = new QRadioButton("Network", plr2);
 	//QRadioButton *plr2_Bluetooth = new QRadioButton("Bluetooth", plr2);
 	plr2_Ai->setChecked(true);
 	QVBoxLayout *plr2_Layout = new QVBoxLayout;
 	plr2_Layout->addWidget(plr2_Label);
 	plr2_Layout->addWidget(plr2_Human);
 	plr2_Layout->addWidget(plr2_Ai);
-	//plr2_Layout->addWidget(plr2_Network);
+	plr2_Layout->addWidget(plr2_Network);
 	//plr2_Layout->addWidget(plr2_Bluetooth);
 	plr2->setLayout(plr2_Layout);
 	plr2->show();
