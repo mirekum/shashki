@@ -5,7 +5,7 @@ View_StartGame::View_StartGame(View_Main &main_ui) {
 }
 
 // set up players dialog
-void View_StartGame::start_game() {
+void View_StartGame::startGame() {
 	// set white player type
 	QList<QRadioButton*> wLst = greeting->findChild<QGroupBox*>("White player")->findChildren<QRadioButton*>();
 	if (wLst.at(0)->isChecked()) wPlr = HUMAN;
@@ -96,9 +96,7 @@ void View_StartGame::getPlrSettings() {
 
 // send data for game creation
 void View_StartGame::sendPlayersData() {
-	qDebug() << "View_StartGame::sendPlayersData";
-	qDebug() << wSet.aiLevel;
-	qDebug() << bSet.aiLevel;
+	emit createGame(wPlr, wSet, bPlr, bSet);
 }
 
 // show first screen
@@ -152,6 +150,6 @@ void View_StartGame::show() {
 	QPushButton *start_btn = new QPushButton("Start game!", greeting);
 	start_btn->setGeometry(260, 280, 200, 45);
 	start_btn->show();
-	connect(start_btn, SIGNAL(clicked()), SLOT(start_game()));
+	connect(start_btn, SIGNAL(clicked()), SLOT(startGame()));
 }
 

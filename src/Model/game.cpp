@@ -9,9 +9,10 @@ Game::Game() {
 	bp = NULL;
 }
 
-Game::~Game() {
-	delete wp;
-	delete bp;
+void Game::init(Player *_wp, Player *_bp) {
+	if (!_wp || !_bp) exit(1);
+	wp = _wp;
+	bp = _bp;
 }
 
 BOARD& Game::getBoard() {

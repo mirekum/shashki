@@ -12,7 +12,6 @@ DEFINES += DATADIR=\\\"$$DATADIR\\\"
 HEADERS += Model/board.h \
            Model/game.h \
            Players/player.h \
-           Players/player_factory.h \
            Players/ai.h \
            Players/bluetooth.h \
            Players/network.h \
@@ -20,6 +19,7 @@ HEADERS += Model/board.h \
            View/view_main.h \
            View/view_startgame.h \
            View/view_board.h \
+           View/view_info.h \
            Tests/test_board.h \
            Tests/experiment.h \
            control.h
@@ -33,6 +33,7 @@ SOURCES += main.cpp \
            View/view_main.cpp \
            View/view_startgame.cpp \
            View/view_board.cpp \
+           View/view_info.cpp \
            Tests/test_board.cpp \
            Tests/experiment.cpp \
            control.cpp

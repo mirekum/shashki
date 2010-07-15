@@ -1,14 +1,11 @@
 #ifndef _GAME_H_
 	#define _GAME_H_
 	
+	#include <QtCore>
 	#include "Model/board.h"
 	#include "Players/player.h"
 	
-	struct InitGameData {
-		Player *wp, *bp;
-	};
-	
-	class Game {
+	class Game: public QObject {
 	protected:
 		BOARD board;
 		Player *wp, *bp;
@@ -16,7 +13,7 @@
 		MOVE lastMove[Player::maxFiguresNumber];
 	public:
 		Game();
-		~Game();
+		void init(Player *wp, Player *bp);
 		BOARD& getBoard();
 	};
 	

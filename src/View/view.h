@@ -6,9 +6,6 @@
 	class View: public QObject {
 		Q_OBJECT
 		
-	public slots:
-		// updating signal from the model
-		//void update();
 	};
 	
 #endif
