@@ -10,12 +10,12 @@ DEFINES += DATADIR=\\\"$$DATADIR\\\"
 
 HEADERS += test_board.h \
            experiment.h \
-           Players/ai.h \
+           Players/ai_player.h \
            Model/board.h
 
 SOURCES += main.cpp \
            test_board.cpp \
            experiment.cpp \
-           Players/ai.cpp \
+           Players/ai_player.cpp \
            Model/board.cpp
 

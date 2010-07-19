@@ -1,4 +1,4 @@
-#include "Players/ai.h"
+#include "Players/ai_player.h"
 
 // choose partial half-move
 MOVE Ai_Player::getMove(BOARD board) {

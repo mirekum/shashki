@@ -1,7 +1,7 @@
 #include "control.h"
-#include "Players/ai.h"
-#include "Players/bluetooth.h"
-#include "Players/network.h"
+#include "Players/ai_player.h"
+#include "Players/bluetooth_player.h"
+#include "Players/network_player.h"
 
 Control::Control(Game &_game, View_Main &_main_ui, View_StartGame &_start_ui, View_Board &_board_ui, View_Info &_info_ui) {
 	// model

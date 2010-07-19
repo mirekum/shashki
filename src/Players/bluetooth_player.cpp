@@ -1,4 +1,4 @@
-#include "Players/bluetooth.h"
+#include "Players/bluetooth_player.h"
 
 // choose partial half-move
 MOVE Bluetooth_Player::getMove(BOARD board) {
