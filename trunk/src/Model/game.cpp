@@ -1,7 +1,7 @@
 #include "Model/game.h"
-#include "Players/ai.h"
-#include "Players/network.h"
-#include "Players/bluetooth.h"
+#include "Players/ai_player.h"
+#include "Players/network_player.h"
+#include "Players/bluetooth_player.h"
 #include "View/view_board.h"
 
 Game::Game() {

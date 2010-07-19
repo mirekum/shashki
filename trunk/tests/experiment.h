@@ -2,7 +2,7 @@
 	#define _EXPERIMENT_H_
 	
 	#include <vector>
-	#include "Players/ai.h"
+	#include "Players/ai_player.h"
 	
 	typedef std::vector<double> times_array;
 	
