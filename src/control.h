@@ -20,11 +20,8 @@
 	public:
 		Control(Game &_game, View_Main &_main_ui, View_StartGame &_start_ui, View_Board &_board_ui, View_Info &_info_ui);
 		~Control();
-	protected:
-		Player *createPlayer(PLAYER_TYPE plr, PLAYER_SETTINGS set);
-		void destroyPlayer(Player *p);
 	public slots:
-		void createGame(PLAYER_TYPE wPlr, PLAYER_SETTINGS wSet, PLAYER_TYPE bPlr, PLAYER_SETTINGS bSet);
+		void createGame(Player *wp, Player *bp);
 	};
 	
 #endif
