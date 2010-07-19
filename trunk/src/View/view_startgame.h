@@ -23,6 +23,7 @@
 		COLOR curColor;
 	public:
 		View_StartGame(View_Main &main_ui);
+		~View_StartGame();
 		// show first screen
 		void show();
 		// setting up players

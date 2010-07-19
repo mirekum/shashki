@@ -26,11 +26,3 @@ void Control::createGame(Player *wp, Player *bp) {
 	info_ui->init(game);
 }
 
-Control::~Control() {
-	qDebug() << "1";
-	if (wp->type() != HUMAN) delete wp;
-	qDebug() << "2";
-	if (bp->type() != HUMAN) delete bp;
-	qDebug() << "3";
-}
-
