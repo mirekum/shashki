@@ -2,6 +2,8 @@
 
 View_StartGame::View_StartGame(View_Main &main_ui) {
 	window = main_ui.getWindow();
+	wp = NULL;
+	bp = NULL;
 }
 
 void View_StartGame::startGame() {
@@ -23,6 +25,11 @@ void View_StartGame::startGame() {
 	
 	// set up players
 	setupPlayerBegin(WHITE);
+}
+
+View_StartGame::~View_StartGame() {
+	delete wp;
+	delete bp;
 }
 
 void View_StartGame::setupPlayerBegin(COLOR color) {
