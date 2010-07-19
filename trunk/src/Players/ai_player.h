@@ -45,6 +45,8 @@
 		virtual MOVE getMove(BOARD board);
 		// set ai level
 		virtual void setLevel(int level) {max_step = level;};
+		// set threads number
+		virtual void setThrNum(int num) {thr_num = num;};
 	protected:
 		// choose the best partial half-move
 		virtual int choose(BOARD board, COLOR _color, MOVE *res, int step = 0, int last = -MINMAX_END, bool smflag = true);

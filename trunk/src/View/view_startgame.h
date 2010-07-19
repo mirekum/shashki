@@ -1,9 +1,12 @@
 #ifndef _VIEW_STARTGAME_H_
 	#define _VIEW_STARTGAME_H_
 	
-	#include "Players/player.h"
 	#include "View/view.h"
 	#include "View/view_main.h"
+	#include "Players/player.h"
+	#include "Players/ai_player.h"
+	#include "Players/bluetooth_player.h"
+	#include "Players/network_player.h"
 	
 	class View_StartGame: public View {
 		Q_OBJECT
@@ -11,24 +14,42 @@
 		QWidget *window;
 		QFrame *greeting;
 		QFrame *settingsBox;
+		QPushButton *next_btn;
+		Ai_Player *AiPlr;
+		Network_Player *NetworkPlr;
+		Bluetooth_Player *BluetoothPlr;
 		PLAYER_TYPE wPlr, bPlr;
-		PLAYER_SETTINGS wSet, bSet;
+		Player *wp, *bp;
 		COLOR curColor;
 	public:
 		View_StartGame(View_Main &main_ui);
 		// show first screen
 		void show();
-		// ask settings for players
-		void playersSettings(COLOR color = WHITE);
+		// setting up players
+		void setupPlayerBegin(COLOR color);
+		// set up ai
+		void setupAi();
+		void setupAiShowLevel();
+		void setupAiShowThrnum();
+		void setupAiEnd();
+		// set up network
+		void setupNetwork();
+		// set up bluetooth
+		void setupBluetooth();
 		// send data for game creation
 		void sendPlayersData();
 	signals:
-		void createGame(PLAYER_TYPE wPlr, PLAYER_SETTINGS wSet, PLAYER_TYPE bPlr, PLAYER_SETTINGS bSet);
+		void createGame(Player *wp, Player *bp);
+		void setupPlayerEndSignal(Player *p);
 	protected slots:
-		// set up players dialog
 		void startGame();
-		// remember player settings
-		void getPlrSettings();
+		// setting up players
+		void setupPlayerEndSlot(Player *p);
+		// set up ai
+		void setupAiGetLevel();
+		void setupAiGetThrnum();
+		// set up network
+		// set up bluetooth
 	};
 	
 #endif
