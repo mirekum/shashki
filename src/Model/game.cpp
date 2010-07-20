@@ -33,16 +33,23 @@ void Game::setCurrentPlayer(COLOR color) {
 
 void Game::move() {
 	// request move from current player
-	// TODO: new thread
-	current->getMove(board);
+	thread = new getMoveThread();
+	thread->setData(current, board);
+	thread->start(QThread::LowPriority);
+}
+
+void getMoveThread::run() {
+	qDebug() << "run thread" << this;
+	plr->getMove(*board);
 }
 
 void Game::finish(GAMESTATE res_flag) {
-	
+	qDebug() << "game finished:" << res_flag;
 }
 
 void Game::recieveMove(MOVE mv) {
 	GAMESTATE res_flag;
+	delete thread;
 	// check move
 	if (!board.move(mv)) {
 		// wrong move - request move again

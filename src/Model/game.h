@@ -5,6 +5,19 @@
 	#include "Model/board.h"
 	#include "Players/player.h"
 	
+	class getMoveThread: public QThread {
+	protected:
+		Player *plr;
+		BOARD *board;
+	public:
+		void setData(Player *_plr, BOARD &_board) {
+			plr = _plr;
+			board = &_board;
+		}
+	protected:
+		void run();
+	};
+	
 	class Game: public QObject {
 		Q_OBJECT
 	protected:
@@ -13,6 +26,7 @@
 		int moveNum;
 		MOVE lastMove[Player::maxFiguresNumber];
 		Player *current;
+		getMoveThread *thread;
 	public:
 		Game();
 		void init(Player *wp, Player *bp);
