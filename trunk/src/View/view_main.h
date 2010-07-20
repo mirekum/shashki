@@ -3,7 +3,7 @@
 	
 	#include "View/view.h"
 	
-	class View_Main: public View {
+	class View_Main: public QObject, public View {
 		Q_OBJECT
 	protected:
 		QWidget *window;

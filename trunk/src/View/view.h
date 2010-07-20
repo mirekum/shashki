@@ -3,8 +3,7 @@
 	
 	#include <QtGui>
 	
-	class View: public QObject {
-		Q_OBJECT
+	class View {
 		
 	};
 	

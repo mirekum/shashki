@@ -5,7 +5,7 @@
 	#include "View/view.h"
 	#include "View/view_main.h"
 	
-	class View_Info: public View {
+	class View_Info: public QObject, public View {
 		Q_OBJECT
 	protected:
 		Game *game;

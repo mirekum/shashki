@@ -1,11 +1,13 @@
 #ifndef _PLAYER_H_
 	#define _PLAYER_H_
 	
+	#include <QtCore>
 	#include "Model/board.h"
 	
 	enum PLAYER_TYPE {HUMAN, AI, NETWORK, BLUETOOTH};
 	
-	class Player {
+	class Player: public QObject {
+		Q_OBJECT
 	public:
 		const static unsigned int maxFiguresNumber = BOARD::size*2;
 	protected:
