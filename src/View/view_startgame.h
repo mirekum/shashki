@@ -8,7 +8,7 @@
 	#include "Players/bluetooth_player.h"
 	#include "Players/network_player.h"
 	
-	class View_StartGame: public View {
+	class View_StartGame: public QObject, public View {
 		Q_OBJECT
 	protected:
 		QWidget *window;
