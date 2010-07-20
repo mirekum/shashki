@@ -10,6 +10,7 @@ DEFINES += DATADIR=\\\"$$DATADIR\\\"
 
 HEADERS += test_board.h \
            experiment.h \
+           Players/player.h \
            Players/ai_player.h \
            Model/board.h
 
