@@ -43,7 +43,7 @@
 		// get player type
 		virtual PLAYER_TYPE type() {return AI;};
 		// choose partial half-move
-		virtual MOVE getMove(BOARD board);
+		virtual void getMove(BOARD board);
 		// set ai level
 		void setLevel(int level) {max_step = level;};
 		// set threads number
@@ -54,7 +54,6 @@
 	protected:
 		// choose the best partial half-move
 		virtual int choose(BOARD board, COLOR _color, MOVE *res, int step = 0, int last = -MINMAX_END, bool smflag = true);
-	
 	friend void *ai_prl_first_choose(void *ptr);
 	};
 	

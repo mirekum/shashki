@@ -118,8 +118,8 @@ void Network_Player::giveLastMoves(MOVE lastMove[maxFiguresNumber]) {
 	}
 
 };
-MOVE Network_Player::getMove(BOARD board) {
-	return thisMuve;
+void Network_Player::getMove(BOARD board) {
+	emit getMoveResult(thisMuve);
 };
 void Network_Player::setSelfIp(QString Ip){
 	selfIp=Ip;

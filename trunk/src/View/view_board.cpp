@@ -69,12 +69,10 @@ void View_Board::init(Game *_game) {
 			figures[i][j]->show();
 		}
 	}
-	
-	
 }
 
 // get move from human
-MOVE View_Board::getMove(BOARD board) {
+void View_Board::getMove(BOARD board) {
 	
 }
 
