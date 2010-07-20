@@ -25,6 +25,7 @@
 	void *ai_prl_first_choose(void *ptr);
 	
 	class Ai_Player: public Player {
+		Q_OBJECT
 	protected:
 		// minimax limit
 		const static int MINMAX_END = 2000000;
@@ -44,9 +45,12 @@
 		// choose partial half-move
 		virtual MOVE getMove(BOARD board);
 		// set ai level
-		virtual void setLevel(int level) {max_step = level;};
+		void setLevel(int level) {max_step = level;};
 		// set threads number
-		virtual void setThrNum(int num) {thr_num = num;};
+		void setThrNum(int num) {thr_num = num;};
+		// getters
+		int getLevel() {return max_step;};
+		int getThrNum() {return thr_num;};
 	protected:
 		// choose the best partial half-move
 		virtual int choose(BOARD board, COLOR _color, MOVE *res, int step = 0, int last = -MINMAX_END, bool smflag = true);

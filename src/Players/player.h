@@ -14,7 +14,7 @@
 		// player color
 		COLOR color;
 	public:
-		Player () {color = NONE;}
+		Player() {color = NONE;}
 		// sets player color (white or black)
 		void setColor(COLOR _color) {color = _color;};
 		// get player type
