@@ -108,7 +108,7 @@ void View_StartGame::setupAiGetLevel() {
 	QList<QRadioButton*> ai_level = settingsBox->findChild<QGroupBox*>("Ai level")->findChildren<QRadioButton*>();
 	if (ai_level.at(0)->isChecked()) AiPlr->setLevel(2);
 	else if (ai_level.at(1)->isChecked()) AiPlr->setLevel(4);
-	else if (ai_level.at(2)->isChecked()) AiPlr->setLevel(8);
+	else if (ai_level.at(2)->isChecked()) AiPlr->setLevel(6);
 	// next
 	setupAiShowThrnum();
 }

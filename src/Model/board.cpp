@@ -429,3 +429,27 @@ bool BOARD::move(CELL from, CELL to) {
 bool BOARD::move(MOVE _move) {return move(_move.from, _move.to);}
 bool BOARD::move(int x1, int y1, int x2, int y2) {return move(CELL(x1, y1), CELL(x2, y2));};
 
+// qDebug for the board
+QDebug operator<< (QDebug qdbg, BOARD &board) {
+	qdbg << " ------ BOARD ------\n";
+	qdbg << "    0 1 2 3 4 5 6 7 \n\n";
+	for (int y = 0; y < board.size; y++) {
+		qdbg << y << " ";
+		for (int x = 0; x < board.size; x++) {
+			if (board.cells[x][y] == WHITE_PAWN)
+				qdbg << "x";
+			else if (board.cells[x][y] == BLACK_PAWN)
+				qdbg << "o";
+			else if (board.cells[x][y] == WHITE_KING)
+				qdbg << "W";
+			else if (board.cells[x][y] == BLACK_KING)
+				qdbg << "B";
+			else
+				qdbg << " ";
+		}
+		qdbg << "\n";
+	}
+	qdbg << "-------------------";
+	return qdbg;
+}
+

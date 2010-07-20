@@ -21,7 +21,7 @@
 		virtual PLAYER_TYPE type() {return HUMAN;};
 	public slots:
 		// get move from human
-		virtual MOVE getMove(BOARD board);
+		virtual void getMove(BOARD board);
 	};
 	
 #endif

@@ -12,7 +12,6 @@
 		Q_OBJECT
 	protected:
 		Game *game;
-		Player *wp, *bp;
 		View_Main *main_ui;
 		View_StartGame *start_ui;
 		View_Board *board_ui;

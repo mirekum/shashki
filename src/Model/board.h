@@ -1,7 +1,7 @@
 #ifndef _BOARD_H_
 	#define _BOARD_H_
 	
-	#include <cstdlib>
+	#include <QtCore>
 	
 	// colors
 	enum COLOR {
@@ -78,6 +78,8 @@
 		CELL ublocked;             // blocked for current half-move figure
 	public:
 		BOARD();
+		// qDebug for the board
+		friend QDebug operator<< (QDebug qdbg, BOARD &board);
 		// starts the half-move
 		void startMove(COLOR type);
 		// check if game is continuing or finished

@@ -20,11 +20,13 @@
 		// get player type
 		virtual PLAYER_TYPE type() = 0;
 		// choose partial half-move
-		virtual MOVE getMove(BOARD board) = 0;
+		virtual void getMove(BOARD board) = 0;
 		// set player level (for AI players)
 		virtual void setLevel(int level) {};
 		// give last moves array to player
 		virtual void giveLastMoves(MOVE lastMove[]) {};
+	signals:
+		void getMoveResult(MOVE);
 	};
 	
 #endif

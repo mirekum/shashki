@@ -22,5 +22,7 @@ void Control::createGame(Player *wp, Player *bp) {
 	// game views initialization
 	board_ui->init(game);
 	info_ui->init(game);
+	// start game :-)
+	game->start();
 }
 
