@@ -36,11 +36,12 @@ void Game::move() {
 	thread = new getMoveThread();
 	thread->setData(current, board);
 	thread->start(QThread::LowPriority);
+	current->getMove(board);
 }
 
 void getMoveThread::run() {
 	qDebug() << "run thread" << this;
-	plr->getMove(*board);
+	//plr->getMove(*board);
 }
 
 void Game::finish(GAMESTATE res_flag) {
