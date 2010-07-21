@@ -210,9 +210,13 @@ void Network_Player::slotReadyRead(){
 }
 QList<QString> Network_Player::getActivInterfase(){ 
 	QList<QString> listInterfase;
+	QString temp;
 	QList<QNetworkInterface> list = QNetworkInterface::allInterfaces();
 	foreach (QHostAddress IPtemp,QNetworkInterface::allAddresses ()){
-		if(IPtemp!=QHostAddress:: Null)listInterfase<<IPtemp.toString();
+		temp=IPtemp.toString();
+		if(temp.count(":")==0){
+			listInterfase<<temp;
+		}
 	}
 	return listInterfase;
 }
