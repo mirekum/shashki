@@ -21,7 +21,7 @@ int main(int argc, char *argv[])
 //	std::cin >>f;
 //	if(f==0)
 //	serv.giveLastMoves(lastMove);
-	printf("STOP");
+	qDebug()<<"STOP";
 
 	}
 
@@ -29,7 +29,7 @@ int main(int argc, char *argv[])
 	list=serv.getActivInterfase();
 //	list=serv.getList();
 	foreach (QString one, list)
-	printf((one+"\n").toStdString().c_str());
+	qDebug()<<one;
 	QLabel lbl("Hello, World !");
 	lbl.show();
 	return app.exec();

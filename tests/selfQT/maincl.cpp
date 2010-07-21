@@ -11,7 +11,7 @@ int main(int argc, char *argv[])
 
    
 	
-	printf("ehhe");
+	qDebug()<<"ehhe";
 	std::string inetServAdr="10.51.3.62";
 	Network_Player clie;
 	BOARD bord;
