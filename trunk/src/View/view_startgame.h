@@ -55,7 +55,8 @@
 		// set up network
 		void setupNetworkGetInterface();
 		void setupNetworkGetSearch();
-		void setupNetworkUpdateSearch();
+		void setupNetworkUpdateSearch1();
+		void setupNetworkUpdateSearch2();
 		// set up bluetooth
 	};
 	

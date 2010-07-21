@@ -191,25 +191,30 @@ void View_StartGame::setupNetworkShowSearch() {
 	listip_box->setObjectName("Network Search");
 	listip_box->setGeometry(180, 120, 360, 60);
 	listip_box->show();
-	
-	connect(NetworkPlr, SIGNAL(searchUpdate()), SLOT(setupNetworkUpdateSearch()));
+	connect(NetworkPlr, SIGNAL(searchUpdate()), SLOT(setupNetworkUpdateSearch1()));
+	connect(NetworkPlr, SIGNAL(conectComplite()), SLOT(setupNetworkUpdateSearch1()));
 	connect(next_btn, SIGNAL(clicked()), SLOT(setupNetworkGetSearch()));
 }
-void View_StartGame::setupNetworkUpdateSearch() {
+void View_StartGame::setupNetworkUpdateSearch1() {
 	QList<QString> listIP = NetworkPlr->getList();
 	settingsBox->findChild<QComboBox*>("Network Search")->clear();
 	foreach (QString ip, listIP) {
 		settingsBox->findChild<QComboBox*>("Network Search")->addItem(ip);
 	}
 }
+void View_StartGame::setupNetworkUpdateSearch2() {
+	// end
+	setupnetworkEnd();
+}
 void View_StartGame::setupNetworkGetSearch() {
 	if (!settingsBox->findChild<QComboBox*>("Network Search")->count()) return;
 	disconnect(next_btn, SIGNAL(clicked()), this, SLOT(setupNetworkGetSearch()));
 	settingsBox->findChild<QLabel*>("Network Search Label")->hide();
 	settingsBox->findChild<QComboBox*>("Network Search")->hide();
-	
-	// next
-	
+	QString choosedIP = settingsBox->findChild<QComboBox*>("Network Search")->currentText();
+	NetworkPlr->createClient(choosedIP);
+	// end
+	setupnetworkEnd();
 }
 
 // set up bluetooth
