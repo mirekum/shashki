@@ -12,7 +12,7 @@ void View_Info::init(Game *_game) {
 	infowrap = new QFrame(window);
 	infowrap->setGeometry(430, 10, 350, 250);
 	infowrap->setFrameStyle(QFrame::Box | QFrame::Plain);
-	infowrap->setLineWidth(3);
+	infowrap->setLineWidth(1);
 	infowrap->show();
 	
 }

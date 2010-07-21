@@ -13,7 +13,7 @@
 	public:
 		Board_Widget(QWidget * parent = 0): QFrame(parent) {}
 		void init(Game *_game);
-		virtual void paintEvent();
+		virtual void paintEvent(QPaintEvent *event);
 	};
 	
 	class View_Board: public Player, public View {

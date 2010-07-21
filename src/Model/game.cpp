@@ -8,6 +8,7 @@ Game::Game() {
 	wp = NULL;
 	bp = NULL;
 	thread = NULL;
+	moveNum = 0;
 }
 
 void Game::init(Player *_wp, Player *_bp) {
@@ -25,6 +26,8 @@ void Game::start() {
 
 void Game::setCurrentPlayer(COLOR color) {
 	current = color == WHITE ? wp : bp;
+	current->giveLastMoves(lastMove);
+	moveNum = 0;
 	emit currentPlayer(color);
 	board.startMove(color);
 }
@@ -43,6 +46,8 @@ void getMoveThread::run() {
 
 void Game::finish(GAMESTATE res_flag) {
 	qDebug() << "game finished:" << res_flag;
+	wp->giveLastMoves(lastMove);
+	bp->giveLastMoves(lastMove);
 	emit finishGame(res_flag);
 }
 
@@ -56,6 +61,7 @@ void Game::recieveMove() {
 		move();
 		return;
 	}
+	lastMove[moveNum++] = mv;
 	qDebug() << board;
 	emit updateBoard();
 	// check finish
