@@ -190,6 +190,7 @@ void View_StartGame::setupNetworkShowSearch() {
 	QComboBox *listip_box = new QComboBox(settingsBox);
 	listip_box->setObjectName("Network Search");
 	listip_box->setGeometry(180, 120, 360, 60);
+	listip_box->show();
 	
 	connect(NetworkPlr, SIGNAL(searchUpdate()), SLOT(setupNetworkUpdateSearch()));
 	connect(next_btn, SIGNAL(clicked()), SLOT(setupNetworkGetSearch()));
@@ -197,6 +198,7 @@ void View_StartGame::setupNetworkShowSearch() {
 void View_StartGame::setupNetworkUpdateSearch() {
 	QList<QString> listIP = NetworkPlr->getList();
 	settingsBox->findChild<QComboBox*>("Network Search")->clear();
+	qDebug() << settingsBox->findChild<QComboBox*>("Network Search");
 	foreach (QString ip, listIP) {
 		settingsBox->findChild<QComboBox*>("Network Search")->addItem(ip);
 	}
