@@ -88,9 +88,11 @@ GAMESTATE BOARD::isWin() {
 	// check move possibility of the figures
 	for (int i = 0; i < size; i++) {
 		for (int j = 0; j < size; j++) {
-			if (getSquareMoves(CELL(i, j), 1) || getSquareMoves(CELL(i, j), 2)) {
-				if (IS_WHITE(gcell(i, j))) tw++;
-				if (IS_BLACK(gcell(i, j))) tb++;
+			for (int k = 1; k < size; k++) {
+				if (getSquareMoves(CELL(i, j), k)) {
+					if (IS_WHITE(gcell(i, j))) tw++;
+					if (IS_BLACK(gcell(i, j))) tb++;
+				}
 			}
 		}
 	}

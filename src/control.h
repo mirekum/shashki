@@ -18,8 +18,11 @@
 		View_Info *info_ui;
 	public:
 		Control(Game &_game, View_Main &_main_ui, View_StartGame &_start_ui, View_Board &_board_ui, View_Info &_info_ui);
+	signals:
+		void startGameSignal();
 	public slots:
 		void createGame(Player *wp, Player *bp);
+		void startGameSlot();
 	};
 	
 #endif

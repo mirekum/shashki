@@ -1,9 +1,7 @@
 #include "Players/ai_player.h"
 
 // choose partial half-move
-void Ai_Player::getMove(BOARD board) {
-	MOVE result; // chosen move
-	
+void Ai_Player::execMove(BOARD board) {
 	CHOOSEN_MOVE_ARRAY moves_queue; // first level moves queue
 	// go round all figures on the board and make moves queue
 	for (int i = 0; i < board.size; i++) {
@@ -53,7 +51,7 @@ void Ai_Player::getMove(BOARD board) {
 	}
 	
 	// return the best move
-	emit getMoveResult(result);
+	emit moveExecuted();
 }
 
 // first call of choose functio

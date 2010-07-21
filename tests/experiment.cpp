@@ -35,7 +35,7 @@ void Experiment::run(PLAYER_TYPE plr) {
 		int k = 0;
 		while ((res = isReady(times, M, covar)) == EXP_NOREADY) {
 			time(&start_time);
-			player->getMove(board);
+			player->execMove(board);
 			time(&end_time);
 			// adds time difference to array
 			//std::cout << "[" << ++k << "] time: " << difftime(end_time, start_time) << " | " << covar << std::endl;

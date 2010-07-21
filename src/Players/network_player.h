@@ -23,7 +23,7 @@
 		void giveLastMoves(MOVE lastMove[maxFiguresNumber]) ;
 		Network_Player();
 		char createServer();
-		virtual void getMove(BOARD board);
+		virtual void execMove(BOARD board);
 		char createClient(QString strHost);//coedinenie c ukazannim Ip
 		~Network_Player();
 		// get player type
