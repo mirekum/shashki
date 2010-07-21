@@ -21,7 +21,7 @@
 		void startgame();
 		void relise();
 		QList<QString> getList();
-		QList<QString> getActivInterfase();//возвращает значения парами i-име i+1-IP
+		QList<QString> getActivInterfase();
 		void setSelfIp(QString Ip);//zadanie svoego Ip
 		void giveLastMoves(MOVE lastMove[maxFiguresNumber]) ;
 		Network_Player();
@@ -39,6 +39,7 @@
 		void processPendingDatagrams();
 		void processPendingDatagramsinput();
 	signals:
+		void searchUpdate();
 		void conectComplite();//signal o soedinenii
 		
 	};
