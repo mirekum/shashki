@@ -14,30 +14,24 @@ void View_Board::init(Game *_game) {
 	connect(game, SIGNAL(updateBoard()), SLOT(updateBoard()));
 	
 	// draw board wrapper
-	boardwrap = new QFrame(window);
-	boardwrap->setGeometry(10, 10, 396, 396);
-	boardwrap->setFrameStyle(QFrame::Box | QFrame::Plain);
-	boardwrap->setLineWidth(3);
-	boardwrap->show();
-	// draw figures wrapper
-	figures = new QFrame(boardwrap);
-	figures->setGeometry(44, 44, 352, 352);
-	figures->show();
-	// draw figures
-	drawCanvas();
-	drawFigures();
+	canvas = new Board_Widget(window);
+	canvas->init(game);
+	canvas->setGeometry(10, 10, 396, 396);
+	canvas->setFrameStyle(QFrame::Box | QFrame::Plain);
+	canvas->setLineWidth(3);
+	canvas->show();
 }
 
-void View_Board::drawCanvas() {
-	QPainter paint;
-	paint(boardwrap);
+void Board_Widget::init(Game *_game) {
+	game = _game;
+	board = &game->getBoard();
+}
+
+void Board_Widget::paintEvent() {
+	QPainter paint(this);
+	paint.setBrush(QBrush(Qt::blue));
 	paint.drawRect(QRect(10, 10, 44, 44));
-	paint.end();
-	qDebug() << "View_Board::drawCanvas";
-}
-
-void View_Board::drawFigures() {
-	qDebug() << "View_Board::drawFigures";
+	qDebug() << "Board_Widget::paintEvent";
 }
 
 // request move from human
@@ -49,8 +43,6 @@ void View_Board::execMove(BOARD board) {
 
 // updated model
 void View_Board::updateBoard() {
-	// draw figures
-	drawCanvas();
-	drawFigures();
+	canvas->update();
 }
 

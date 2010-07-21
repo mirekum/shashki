@@ -5,10 +5,15 @@
 	#include "View/view.h"
 	#include "View/view_main.h"
 	
-	class Board_Widget: public QWidget {
+	class Board_Widget: public QFrame {
 		Q_OBJECT
-		public:
-			paintEvent
+	protected:
+		Game *game;
+		BOARD *board;
+	public:
+		Board_Widget(QWidget * parent = 0): QFrame(parent) {}
+		void init(Game *_game);
+		virtual void paintEvent();
 	};
 	
 	class View_Board: public Player, public View {
@@ -17,7 +22,7 @@
 		Game *game;
 		BOARD *board;
 		QWidget *window;
-		QFrame *boardwrap, *figures;
+		Board_Widget *canvas;
 	public:
 		View_Board(View_Main &main_ui);
 		// view initialization
