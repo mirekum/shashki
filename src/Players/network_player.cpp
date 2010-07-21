@@ -72,6 +72,7 @@ void Network_Player::processPendingDatagramsinput(){
 		}
 		if((hostaddress!=QHostAddress:: Null)&&(!listServer.contains(sendIp)&&(selfIp!=sendIp))){
 			listServer<<sendIp;
+			searchUpdate();
 			qDebug()<<"input"<<sendIp;	
 		}
 	}
@@ -93,6 +94,7 @@ void Network_Player::processPendingDatagrams(){
 		}
 		if((hostaddress!=QHostAddress:: Null)&&(!listServer.contains(sendIp)&&(selfIp!=sendIp))){
 			listServer<<sendIp;
+			searchUpdate();
 			qDebug()<<"input"<<sendIp;	
 		}	
 		if((hostaddress!=QHostAddress:: Null)&&(selfIp!=sendIp)){
