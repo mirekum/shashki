@@ -198,7 +198,6 @@ void View_StartGame::setupNetworkShowSearch() {
 void View_StartGame::setupNetworkUpdateSearch() {
 	QList<QString> listIP = NetworkPlr->getList();
 	settingsBox->findChild<QComboBox*>("Network Search")->clear();
-	qDebug() << settingsBox->findChild<QComboBox*>("Network Search");
 	foreach (QString ip, listIP) {
 		settingsBox->findChild<QComboBox*>("Network Search")->addItem(ip);
 	}
