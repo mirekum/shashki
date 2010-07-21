@@ -15,7 +15,7 @@ int main(int argc, char *argv[])
 	std::string inetServAdr="10.51.3.62";
 	Network_Player clie;
 	BOARD bord;
-	clie.createClient("127.0.0.0");
+	clie.createClient("10.14.56.142");
 	MOVE result;
 	clie.setColor(WHITE);
 	clie.relise();
