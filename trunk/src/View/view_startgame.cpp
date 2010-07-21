@@ -204,7 +204,7 @@ void View_StartGame::setupNetworkUpdateSearch1() {
 }
 void View_StartGame::setupNetworkUpdateSearch2() {
 	// end
-	setupnetworkEnd();
+	setupNetworkEnd();
 }
 void View_StartGame::setupNetworkGetSearch() {
 	if (!settingsBox->findChild<QComboBox*>("Network Search")->count()) return;
@@ -214,7 +214,7 @@ void View_StartGame::setupNetworkGetSearch() {
 	QString choosedIP = settingsBox->findChild<QComboBox*>("Network Search")->currentText();
 	NetworkPlr->createClient(choosedIP);
 	// end
-	setupnetworkEnd();
+	setupNetworkEnd();
 }
 
 // set up bluetooth
