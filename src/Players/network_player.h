@@ -9,13 +9,16 @@
 	class Network_Player: public Player {
 		Q_OBJECT
 	private:
+		bool vaiting;
+		bool gethod;
+		bool gameInProgres;
 		QTcpServer*m_ptcpServer;
-		MOVE thisMuve;
 		QTcpSocket* m_pTcpSocket;
 		quint16     m_nNextBlockSize;
 		QString selfIp;
 		QList<QString> listServer;
 	public:
+		void startgame();
 		void relise();
 		QList<QString> getList();
 		QList<QString> getActivInterfase();//возвращает значения парами i-име i+1-IP
@@ -23,7 +26,8 @@
 		void giveLastMoves(MOVE lastMove[maxFiguresNumber]) ;
 		Network_Player();
 		char createServer();
-		virtual void execMove(BOARD board);
+		virtual MOVE getMove();
+		void execMove(BOARD board);
 		char createClient(QString strHost);//coedinenie c ukazannim Ip
 		~Network_Player();
 		// get player type
@@ -33,8 +37,8 @@
 		void slotConnected();
 		void slotNewConnection();
 		void processPendingDatagrams();
+		void processPendingDatagramsinput();
 	signals:
-		void giveMuve();//signal chto nado vzat hod
 		void conectComplite();//signal o soedinenii
 		
 	};
