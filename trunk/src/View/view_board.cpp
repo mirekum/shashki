@@ -17,8 +17,6 @@ void View_Board::init(Game *_game) {
 	canvas = new Board_Widget(window);
 	canvas->init(game);
 	canvas->setGeometry(10, 10, 396, 396);
-	canvas->setFrameStyle(QFrame::Box | QFrame::Plain);
-	canvas->setLineWidth(3);
 	canvas->show();
 }
 
@@ -27,7 +25,7 @@ void Board_Widget::init(Game *_game) {
 	board = &game->getBoard();
 }
 
-void Board_Widget::paintEvent() {
+void Board_Widget::paintEvent(QPaintEvent *event) {
 	QPainter paint(this);
 	paint.setBrush(QBrush(Qt::blue));
 	paint.drawRect(QRect(10, 10, 44, 44));
