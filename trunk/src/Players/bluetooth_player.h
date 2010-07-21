@@ -9,7 +9,7 @@
 		// get player type
 		virtual PLAYER_TYPE type() {return BLUETOOTH;};
 		// choose partial half-move
-		virtual void getMove(BOARD board);
+		virtual void execMove(BOARD board);
 	};
 	
 #endif

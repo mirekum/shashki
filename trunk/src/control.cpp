@@ -12,6 +12,8 @@ Control::Control(Game &_game, View_Main &_main_ui, View_StartGame &_start_ui, Vi
 	
 	// signal to create game
 	connect(start_ui, SIGNAL(createGame(Player*, Player*)), SLOT(createGame(Player*, Player*)));
+	// signal to start game
+	connect(this, SIGNAL(startGameSignal()), SLOT(startGameSlot()));
 }
 
 void Control::createGame(Player *wp, Player *bp) {
@@ -22,7 +24,11 @@ void Control::createGame(Player *wp, Player *bp) {
 	// game views initialization
 	board_ui->init(game);
 	info_ui->init(game);
-	// start game :-)
+	// start!
+	emit startGameSignal();
+}
+
+void Control::startGameSlot() {
 	game->start();
 }
 

@@ -39,11 +39,11 @@
 		unsigned int thr_num;
 	public:
 		// initialization
-		Ai_Player(int level = 4) {max_step = level; ab = true; thr_num = 1;}
+		Ai_Player(int level = 4) {max_step = level; ab = true; thr_num = 2;}
 		// get player type
 		virtual PLAYER_TYPE type() {return AI;};
 		// choose partial half-move
-		virtual void getMove(BOARD board);
+		virtual void execMove(BOARD board);
 		// set ai level
 		void setLevel(int level) {max_step = level;};
 		// set threads number

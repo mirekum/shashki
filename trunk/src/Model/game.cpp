@@ -7,6 +7,7 @@
 Game::Game() {
 	wp = NULL;
 	bp = NULL;
+	thread = NULL;
 }
 
 void Game::init(Player *_wp, Player *_bp) {
@@ -14,9 +15,6 @@ void Game::init(Player *_wp, Player *_bp) {
 	// players
 	wp = _wp;
 	bp = _bp;
-	// signals to recieve move from players
-	connect(wp, SIGNAL(getMoveResult(MOVE)), SLOT(recieveMove(MOVE)));
-	connect(bp, SIGNAL(getMoveResult(MOVE)), SLOT(recieveMove(MOVE)));
 }
 
 void Game::start() {
@@ -33,23 +31,24 @@ void Game::setCurrentPlayer(COLOR color) {
 
 void Game::move() {
 	// request move from current player
-	thread = new getMoveThread();
+	thread = new getMoveThread;
 	thread->setData(current, board);
-	thread->start(QThread::LowPriority);
-	current->getMove(board);
+	connect(thread, SIGNAL(finished()), SLOT(recieveMove()));
+	thread->start(QThread::NormalPriority);
 }
 
 void getMoveThread::run() {
-	qDebug() << "run thread" << this;
-	//plr->getMove(*board);
+	current->execMove(*board);
 }
 
 void Game::finish(GAMESTATE res_flag) {
 	qDebug() << "game finished:" << res_flag;
+	emit finishGame(res_flag);
 }
 
-void Game::recieveMove(MOVE mv) {
+void Game::recieveMove() {
 	GAMESTATE res_flag;
+	MOVE mv = current->getMove();
 	delete thread;
 	// check move
 	if (!board.move(mv)) {
@@ -58,6 +57,7 @@ void Game::recieveMove(MOVE mv) {
 		return;
 	}
 	qDebug() << board;
+	emit updateBoard();
 	// check finish
 	if (res_flag = board.isWin()) {
 		finish(res_flag);
@@ -69,9 +69,5 @@ void Game::recieveMove(MOVE mv) {
 		setCurrentPlayer(current == wp ? BLACK : WHITE);
 	}
 	move();
-}
-
-BOARD& Game::getBoard() {
-	return board;
 }
 

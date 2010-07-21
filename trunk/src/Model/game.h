@@ -7,11 +7,11 @@
 	
 	class getMoveThread: public QThread {
 	protected:
-		Player *plr;
+		Player *current;
 		BOARD *board;
 	public:
-		void setData(Player *_plr, BOARD &_board) {
-			plr = _plr;
+		void setData(Player *_current, BOARD &_board) {
+			current = _current;
 			board = &_board;
 		}
 	protected:
@@ -31,15 +31,18 @@
 		Game();
 		void init(Player *wp, Player *bp);
 		void start();
-		BOARD& getBoard();
+		// getters
+		BOARD& getBoard() {return board;}
 	protected:
 		void setCurrentPlayer(COLOR color);
 		void move();
 		void finish(GAMESTATE res_flag);
 	signals:
 		void currentPlayer(COLOR);
+		void updateBoard();
+		void finishGame(GAMESTATE);
 	protected slots:
-		void recieveMove(MOVE mv);
+		void recieveMove();
 	};
 	
 #endif

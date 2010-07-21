@@ -13,6 +13,8 @@
 	protected:
 		// player color
 		COLOR color;
+		// choosen move
+		MOVE result;
 	public:
 		Player() {color = NONE;}
 		// sets player color (white or black)
@@ -20,13 +22,15 @@
 		// get player type
 		virtual PLAYER_TYPE type() = 0;
 		// choose partial half-move
-		virtual void getMove(BOARD board) = 0;
+		virtual void execMove(BOARD board) = 0;
+		// get result of partial half-move
+		MOVE getMove() {return result;}
 		// set player level (for AI players)
 		virtual void setLevel(int level) {};
 		// give last moves array to player
 		virtual void giveLastMoves(MOVE lastMove[]) {};
 	signals:
-		void getMoveResult(MOVE);
+		void moveExecuted();
 	};
 	
 #endif
