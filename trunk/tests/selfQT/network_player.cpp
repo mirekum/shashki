@@ -220,6 +220,8 @@ QList<QString> Network_Player::getActivInterfase(){
 	}
 	return listInterfase;
 }
+void execMove(BOARD board){
+}
 void Network_Player::giveLastMoves(MOVE lastMove[maxFiguresNumber]) {
 	int i=0;
 
