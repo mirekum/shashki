@@ -35,6 +35,9 @@
 		void setupAiEnd();
 		// set up network
 		void setupNetwork();
+		void setupNetworkShowInterface();
+		void setupNetworkShowSearch();
+		void setupNetworkEnd();
 		// set up bluetooth
 		void setupBluetooth();
 		// send data for game creation
@@ -50,6 +53,9 @@
 		void setupAiGetLevel();
 		void setupAiGetThrnum();
 		// set up network
+		void setupNetworkGetInterface();
+		void setupNetworkGetSearch();
+		void setupNetworkUpdateSearch();
 		// set up bluetooth
 	};
 	
