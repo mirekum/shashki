@@ -34,6 +34,7 @@ void Game::setCurrentPlayer(COLOR color) {
 
 void Game::move() {
 	// request move from current player
+	sleep(1);
 	thread = new getMoveThread;
 	thread->setData(current, board);
 	connect(thread, SIGNAL(finished()), SLOT(recieveMove()));
