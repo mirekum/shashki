@@ -117,7 +117,7 @@ void View_Board::execMove(BOARD board) {
 			result = canvas->getMove();
 			break;
 		}
-		sleep(1);
+		usleep(300);
 	} while (true);
 	emit moveExecuted();
 }

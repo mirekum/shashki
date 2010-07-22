@@ -23,10 +23,11 @@ void Game::start() {
 void Game::setCurrentPlayer(COLOR color) {
 	current = color == WHITE ? wp : bp;
 	current->setColor(color);
+	qDebug() << "Game::setCurrentPlayer" << color << current;
 	current->giveLastMoves(lastMove);
+	board.startMove(color);
 	moveNum = 0;
 	emit currentPlayer(color);
-	board.startMove(color);
 }
 
 void Game::move() {
@@ -68,7 +69,7 @@ void Game::recieveMove() {
 	// continue game
 	if (!board.canMove()) {
 		// change current player
-		setCurrentPlayer(current == wp ? BLACK : WHITE);
+		setCurrentPlayer(current->getColor() == WHITE ? BLACK : WHITE);
 	}
 	move();
 }
