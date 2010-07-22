@@ -142,6 +142,7 @@ void Network_Player::slotNewConnection(){
 	}
 }	
 char Network_Player::createClient( QString strHost){
+	qDebug()<<"conect tuu hast:" <<strHost;
 	m_pTcpSocket = new QTcpSocket(this);
 	m_nNextBlockSize=0;
 	m_pTcpSocket->connectToHost(strHost, portConect);
