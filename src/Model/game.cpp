@@ -23,7 +23,6 @@ void Game::start() {
 void Game::setCurrentPlayer(COLOR color) {
 	current = color == WHITE ? wp : bp;
 	current->setColor(color);
-	qDebug() << "Game::setCurrentPlayer" << color << current;
 	current->giveLastMoves(lastMove);
 	board.startMove(color);
 	moveNum = 0;
@@ -43,6 +42,7 @@ void getMoveThread::run() {
 }
 
 void Game::finish(GAMESTATE res_flag) {
+	qDebug() << "game finished:" << res_flag;
 	wp->giveLastMoves(lastMove);
 	bp->giveLastMoves(lastMove);
 	emit finishGame(res_flag);
