@@ -66,15 +66,15 @@ void Network_Player::processPendingDatagramsinput(){
 
 		const char*colorin=datagram.data();
 		const char*sendIp=&colorin[1];
-		qDebug()<<colorin[0]<<"otlad"<<sendIp;
+		qDebug()<<colorin[0]<<"otlad read onli"<<sendIp;
 		QHostAddress hostaddress;
 		if(((colorin[0]=='B')&&(color==WHITE))||((colorin[0]=='W')&&(color==BLACK))){
-		hostaddress.setAddress(sendIp);qDebug()<<colorin<<"otlad";
+		hostaddress.setAddress(sendIp);qDebug()<<colorin<<"otlad read onli";
 		}
 		if((hostaddress!=QHostAddress:: Null)&&(!listServer.contains(sendIp)&&(selfIp!=sendIp))){
 			listServer<<sendIp;
 			searchUpdate();
-			qDebug()<<"input"<<sendIp;	
+			qDebug()<<"input readonli"<<sendIp;	
 		}
 	}
 }
@@ -88,21 +88,21 @@ void Network_Player::processPendingDatagrams(){
 		qDebug()<<datagram.data();
 		const char*colorin=datagram.data();
 		const char*sendIp=&colorin[1];
-		qDebug()<<colorin[0]<<"otlad"<<sendIp;
+		qDebug()<<colorin[0]<<"otlad rw"<<sendIp;
 		QHostAddress hostaddress;
 		if(((colorin[0]=='B')&&(color==WHITE))||((colorin[0]=='W')&&(color==BLACK))){
-		hostaddress.setAddress(sendIp);qDebug()<<colorin<<"otlad";
+		hostaddress.setAddress(sendIp);qDebug()<<colorin<<"otladrw";
 		}
 		if((hostaddress!=QHostAddress:: Null)&&(!listServer.contains(sendIp)&&(selfIp!=sendIp))){
 			listServer<<sendIp;
 			searchUpdate();
-			qDebug()<<"input"<<sendIp;	
+			qDebug()<<"input rw"<<sendIp;	
 		}	
 		if((hostaddress!=QHostAddress:: Null)&&(selfIp!=sendIp)){
 			QUdpSocket udpSocketReturn;
 			QByteArray datagramReturn = selfIp.toStdString().c_str() ;
-			udpSocketReturn.writeDatagram(datagram.data(), datagram.size(),hostaddress, portConectreliseinput);
-			qDebug()<<"Unser"<<datagramReturn.data()<<sendIp;
+			udpSocketReturn.writeDatagram(datagram.data(), datagram.size(),QHostAddress::Broadcast,portConectreliseinput);
+			qDebug()<<"Unser rw"<<datagramReturn.data()<<sendIp;
 		}
 	}
 }
