@@ -107,7 +107,7 @@ void Network_Player::processPendingDatagrams(){
 				tipe="W";
 			}
 			QByteArray datagramReturn = (tipe+selfIp).toStdString().c_str() ;
-			udpSocketReturn.writeDatagram(datagram.data(), datagram.size(),QHostAddress::Broadcast,portConectreliseinput);
+			udpSocketReturn.writeDatagram(datagramReturn.data(), datagramReturn.size(),QHostAddress::Broadcast,portConectreliseinput);
 			qDebug()<<"Unser rw"<<datagramReturn.data()<<sendIp;
 		}
 	}
