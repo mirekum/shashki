@@ -198,18 +198,18 @@ void Network_Player::slotReadyRead(){
 			qDebug()<<"vait read";
 			QDataStream in(m_pTcpSocket);
 			in.setVersion(QDataStream::Qt_4_0);
-				for (;;) {
+				//for (;;) {
 					if (!m_nNextBlockSize) {
 						if (m_pTcpSocket->bytesAvailable() < sizeof(quint16)) {
-							qDebug()<<"read lern";
-							break;
+							qDebug()<<"read lern";return;
+							//break;
 						}
 						in >> m_nNextBlockSize;
 						qDebug()<<m_nNextBlockSize;
 					}
 					if (m_pTcpSocket->bytesAvailable() < m_nNextBlockSize) {
-						qDebug()<<"reed";
-						break;
+						qDebug()<<"reed";return;
+						//break;
 					}
 					result.from.x=0;
 					result.from.y=0;
@@ -223,7 +223,7 @@ void Network_Player::slotReadyRead(){
 					qDebug()<<result.to.y;
 					m_nNextBlockSize = 0;
 					moveExecuted();
-				}
+				//}
 		}
 	}
 
