@@ -99,7 +99,14 @@ void Network_Player::processPendingDatagrams(){
 		}	
 		if((hostaddress!=QHostAddress:: Null)&&(selfIp!=sendIp)){
 			QUdpSocket udpSocketReturn;
-			QByteArray datagramReturn = selfIp.toStdString().c_str() ;
+			QString tipe;
+			if(color==BLACK){
+				tipe="B";
+			}
+			if(color==WHITE){
+				tipe="W";
+			}
+			QByteArray datagramReturn = (tipe+selfIp).toStdString().c_str() ;
 			udpSocketReturn.writeDatagram(datagram.data(), datagram.size(),QHostAddress::Broadcast,portConectreliseinput);
 			qDebug()<<"Unser rw"<<datagramReturn.data()<<sendIp;
 		}
