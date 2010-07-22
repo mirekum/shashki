@@ -51,6 +51,7 @@ void Ai_Player::execMove(BOARD board) {
 	}
 	
 	// return the best move
+	sleep(1);
 	emit moveExecuted();
 }
 

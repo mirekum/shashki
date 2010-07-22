@@ -22,6 +22,7 @@ void Game::start() {
 
 void Game::setCurrentPlayer(COLOR color) {
 	current = color == WHITE ? wp : bp;
+	current->setColor(color);
 	current->giveLastMoves(lastMove);
 	moveNum = 0;
 	emit currentPlayer(color);
@@ -30,7 +31,6 @@ void Game::setCurrentPlayer(COLOR color) {
 
 void Game::move() {
 	// request move from current player
-	//sleep(1);
 	thread = new getMoveThread;
 	thread->setData(current, board);
 	connect(thread, SIGNAL(finished()), SLOT(recieveMove()));
