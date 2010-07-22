@@ -26,7 +26,7 @@ Network_Player::Network_Player(){
 	m_ptcpServer=NULL;
 	m_nNextBlockSize=0;
 	selfIp="0.0.0.0";
-//	gethod=true;
+	gethod=true;
 }
 void Network_Player::startgame(){
 	gameInProgres=true;	
@@ -165,7 +165,7 @@ void Network_Player::slotConnected(){
 */
 }
 void Network_Player::slotReadyRead(){
-//	if(gethod){
+	if(gethod){
 		if(gameInProgres==false){
 			qDebug()<<"vait read signal";
 			QDataStream in(m_pTcpSocket);
@@ -216,7 +216,7 @@ void Network_Player::slotReadyRead(){
 					result.to.x=0;
 					result.to.y=0;
 					in >>result.from.x>>result.from.y>>result.to.x>>result.to.y;
-					//gethod=false;
+					gethod=false;
 					qDebug()<<result.from.x;
 					qDebug()<<result.from.y;
 					qDebug()<<result.to.x;
@@ -225,7 +225,7 @@ void Network_Player::slotReadyRead(){
 					moveExecuted();
 				}
 		}
-//	}
+	}
 
 }
 QList<QString> Network_Player::getActivInterfase(){ 
@@ -269,9 +269,9 @@ void Network_Player::execMove(BOARD board){
 
 }
 MOVE Network_Player::getMove() {
-
+gethod=true;
 	return result;
-//	gethod=true;
+//	
 };
 void Network_Player::setSelfIp(QString Ip){
 	selfIp=Ip;
