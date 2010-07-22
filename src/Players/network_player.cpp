@@ -241,6 +241,8 @@ void Network_Player::giveLastMoves(MOVE lastMove[maxFiguresNumber]) {
 			out << quint16(arrBlock.size() - sizeof(quint16));
 			if(m_pTcpSocket==NULL)qDebug()<<"NULL";
 			m_pTcpSocket->write(arrBlock);
+			qDebug()<<"out";
+			qDebug()<<lastMove[i].from.x<<lastMove[i].from.y<<lastMove[i].to.x<<lastMove[i].to.y;
 			lastMove[i].from.x=0;
 			lastMove[i].from.y=0;
 			lastMove[i].to.x=0;
