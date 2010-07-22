@@ -25,6 +25,10 @@ void Board_Widget::init(Game *_game) {
 	board = &game->getBoard();
 }
 
+Board_Widget::Board_Widget(QWidget * parent): QWidget(parent) {
+	installEventFilter(this);
+}
+
 void Board_Widget::paintEvent(QPaintEvent *event) {
 	QPainter paint(this);
 	// draw coordinate lines
@@ -60,10 +64,61 @@ void Board_Widget::paintEvent(QPaintEvent *event) {
 	}
 }
 
+bool Board_Widget::eventFilter(QObject *target, QEvent *event) {         
+	if (event->type() == QEvent::MouseButtonPress && read_flag) {
+		QMouseEvent *mouseEvent = (QMouseEvent*)event;
+		int x = (mouseEvent->pos().x() - 44) / 44, y = (mouseEvent->pos().y() - 44) / 44;
+		if (ready == 0) {
+			FIGURE f = board->gcell(x, y);
+			result.from.x = x;
+			result.from.y = y;
+			if (0
+				|| (currentColor == WHITE && !IS_WHITE(f))
+				|| (currentColor == BLACK && !IS_BLACK(f))
+			) return true;
+			ready = 1;
+			return true;
+		}
+		else if (ready == 1) {
+			result.to.x = x;
+			result.to.y = y;
+			if (!board->canMove(result)) {
+				ready = 0;
+				return true;
+			}
+			ready = 2;
+			return true;
+		}
+		return true;
+	}
+	return false;
+};
+
+void Board_Widget::startMove(COLOR color) {
+	read_flag = true;
+	ready = 0;
+	currentColor = color;
+}
+
+MOVE Board_Widget::getMove() {
+	read_flag = false;
+	return result;
+}
+
+bool Board_Widget::isReady() {
+	return ready == 2;
+}
+
 // request move from human
 void View_Board::execMove(BOARD board) {
-	qDebug() << "View_Board::execMove";
-	
+	canvas->startMove(color);
+	do {
+		if (canvas->isReady()) {
+			result = canvas->getMove();
+			break;
+		}
+		sleep(1);
+	} while (true);
 	emit moveExecuted();
 }
 

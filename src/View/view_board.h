@@ -5,14 +5,22 @@
 	#include "View/view.h"
 	#include "View/view_main.h"
 	
-	class Board_Widget: public QFrame {
+	class Board_Widget: public QWidget {
 		Q_OBJECT
 	protected:
 		Game *game;
 		BOARD *board;
+		int ready;
+		bool read_flag;
+		MOVE result;
+		COLOR currentColor;
 	public:
-		Board_Widget(QWidget * parent = 0): QFrame(parent) {}
+		Board_Widget(QWidget * parent = 0);
 		void init(Game *_game);
+		void startMove(COLOR color);
+		MOVE getMove();
+		bool isReady();
+		bool eventFilter(QObject *target, QEvent *event);
 		virtual void paintEvent(QPaintEvent *event);
 	};
 	
