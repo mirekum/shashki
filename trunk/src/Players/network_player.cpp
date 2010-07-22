@@ -18,6 +18,7 @@ Network_Player::Network_Player(){
 	QUdpSocket*udpSocket = new QUdpSocket(this);
 	udpSocket->bind(portConectrelise);
 	connect(udpSocket, SIGNAL(readyRead()),this, SLOT(processPendingDatagrams()));
+
 	QUdpSocket*udpSocketinput = new QUdpSocket(this);
 	udpSocketinput->bind(portConectreliseinput);
 	connect(udpSocketinput, SIGNAL(readyRead()),this, SLOT(processPendingDatagramsinput()));
@@ -25,7 +26,7 @@ Network_Player::Network_Player(){
 	m_ptcpServer=NULL;
 	m_nNextBlockSize=0;
 	selfIp="0.0.0.0";
-	gethod=true;
+//	gethod=true;
 }
 void Network_Player::startgame(){
 	gameInProgres=true;	
@@ -150,13 +151,14 @@ char Network_Player::createClient( QString strHost){
 }
 void Network_Player::slotConnected(){
 	qDebug()<<"Received the connected() signal";
+
 /*	MOVE lastMove[maxFiguresNumber];
 	lastMove[4].from.x=1;
 	giveLastMoves(lastMove);
 */
 }
 void Network_Player::slotReadyRead(){
-	if(gethod){
+//	if(gethod){
 		if(gameInProgres==false){
 			qDebug()<<"vait read";
 			QDataStream in(m_pTcpSocket);
@@ -204,13 +206,13 @@ void Network_Player::slotReadyRead(){
 					in >>result.from.y;
 					in >>result.to.x;
 					in >>result.to.y;
-					gethod=false;
+					//gethod=false;
 					qDebug()<<result.from.x;
 					m_nNextBlockSize = 0;
 					moveExecuted();
 				}
 		}
-	}
+//	}
 
 }
 QList<QString> Network_Player::getActivInterfase(){ 
@@ -255,10 +257,10 @@ MOVE Network_Player::getMove() {
 	result.from.y=0;
 	result.to.x=0;
 	result.to.y=0;
-	gethod=true;
+//	gethod=true;
 };
 void Network_Player::setSelfIp(QString Ip){
 	selfIp=Ip;
 }
 Network_Player::~Network_Player(){
-};
+}

@@ -176,7 +176,7 @@ void View_StartGame::setupNetworkGetInterface() {
 	settingsBox->findChild<QComboBox*>("Network Interface")->hide();
 	QString choosedIP = settingsBox->findChild<QComboBox*>("Network Interface")->currentText();
 	NetworkPlr->setSelfIp(choosedIP);
-	if (NetworkPlr->createServer()) exit(1);
+	NetworkPlr->createServer();
 	// next
 	setupNetworkShowSearch();
 }
@@ -191,6 +191,10 @@ void View_StartGame::setupNetworkShowSearch() {
 	listip_box->setObjectName("Network Search");
 	listip_box->setGeometry(180, 120, 360, 60);
 	listip_box->show();
+	QLineEdit* textIP = new QLineEdit(settingsBox);
+	textIP->setObjectName("Network IP");
+	textIP->setGeometry(180, 180, 360, 90);
+	textIP->show();
 	connect(NetworkPlr, SIGNAL(searchUpdate()), SLOT(setupNetworkUpdateSearch1()));
 	connect(NetworkPlr, SIGNAL(conectComplite()), SLOT(setupNetworkUpdateSearch1()));
 	connect(next_btn, SIGNAL(clicked()), SLOT(setupNetworkGetSearch()));
