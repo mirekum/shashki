@@ -266,10 +266,9 @@ void Network_Player::giveLastMoves(MOVE lastMove[maxFiguresNumber]) {
 
 }
 void Network_Player::execMove(BOARD board){
-
+	gethod=true;
 }
 MOVE Network_Player::getMove() {
-gethod=true;
 	return result;
 //	
 };
