@@ -43,7 +43,6 @@ void getMoveThread::run() {
 }
 
 void Game::finish(GAMESTATE res_flag) {
-	qDebug() << "game finished:" << res_flag;
 	wp->giveLastMoves(lastMove);
 	bp->giveLastMoves(lastMove);
 	emit finishGame(res_flag);
