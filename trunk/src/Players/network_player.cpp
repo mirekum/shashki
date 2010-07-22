@@ -84,7 +84,6 @@ void Network_Player::processPendingDatagrams(){
 		QByteArray datagram;
 		datagram.resize(udpSocket->pendingDatagramSize());
 		udpSocket->readDatagram(datagram.data(), datagram.size());
-		
 		qDebug()<<datagram.data();
 		const char*colorin=datagram.data();
 		const char*sendIp=&colorin[1];
@@ -203,6 +202,10 @@ void Network_Player::slotReadyRead(){
 						qDebug()<<"reed";
 						break;
 					}
+					result.from.x=0;
+					result.from.y=0;
+					result.to.x=0;
+					result.to.y=0;
 					in >>result.from.x>>result.from.y>>result.to.x>>result.to.y;
 					//gethod=false;
 					qDebug()<<result.from.x;
@@ -255,11 +258,8 @@ void Network_Player::giveLastMoves(MOVE lastMove[maxFiguresNumber]) {
 void Network_Player::execMove(BOARD board){
 }
 MOVE Network_Player::getMove() {
+
 	return result;
-	result.from.x=0;
-	result.from.y=0;
-	result.to.x=0;
-	result.to.y=0;
 //	gethod=true;
 };
 void Network_Player::setSelfIp(QString Ip){
