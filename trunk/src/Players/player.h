@@ -28,7 +28,16 @@
 		// set player level (for AI players)
 		virtual void setLevel(int level) {};
 		// give last moves array to player
-		virtual void giveLastMoves(MOVE lastMove[]) {};
+		virtual void giveLastMoves(MOVE lastMove[maxFiguresNumber]) {
+			int i=0;
+			while(i<maxFiguresNumber){
+				lastMove[i].from.x=0;
+				lastMove[i].from.y=0;
+				lastMove[i].to.x=0;
+				lastMove[i].to.y=0;
+				i++;
+			}
+		};
 	signals:
 		void moveExecuted();
 	};

@@ -5,7 +5,6 @@ View_StartGame::View_StartGame(View_Main &main_ui) {
 	wp = NULL;
 	bp = NULL;
 }
-
 void View_StartGame::startGame() {
 	greeting->hide();
 	
@@ -24,12 +23,10 @@ void View_StartGame::startGame() {
 	// set up players
 	setupPlayerBegin(WHITE);
 }
-
 View_StartGame::~View_StartGame() {
 	delete wp;
 	delete bp;
 }
-
 void View_StartGame::setupPlayerBegin(COLOR color) {
 	curColor = color;
 	PLAYER_TYPE plr = (color == WHITE ? wPlr : bPlr);
@@ -70,7 +67,6 @@ void View_StartGame::setupPlayerBegin(COLOR color) {
 		exit(1);
 	}
 }
-
 // set up ai
 void View_StartGame::setupAi() {
 	// begin
