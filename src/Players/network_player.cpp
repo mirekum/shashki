@@ -19,7 +19,7 @@ Network_Player::Network_Player(){
 	udpSocket->bind(portConectrelise);
 	connect(udpSocket, SIGNAL(readyRead()),this, SLOT(processPendingDatagrams()));
 	QUdpSocket*udpSocketinput = new QUdpSocket(this);
-	udpSocket->bind(portConectreliseinput);
+	udpSocketinput->bind(portConectreliseinput);
 	connect(udpSocketinput, SIGNAL(readyRead()),this, SLOT(processPendingDatagramsinput()));
 	gameInProgres=false;
 	m_ptcpServer=NULL;
