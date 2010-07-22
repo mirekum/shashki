@@ -164,7 +164,7 @@ void View_StartGame::setupNetworkShowSearch() {
 	textIP->setGeometry(180, 200, 360, 60);
 	textIP->show();
 	connect(NetworkPlr, SIGNAL(searchUpdate()), SLOT(setupNetworkUpdateSearch1()));
-	connect(NetworkPlr, SIGNAL(conectComplite()), SLOT(setupNetworkUpdateSearch1()));
+	connect(NetworkPlr, SIGNAL(conectComplite()), SLOT(setupNetworkUpdateSearch2()));
 	connect(next_btn, SIGNAL(clicked()), SLOT(setupNetworkGetSearch()));
 }
 void View_StartGame::setupNetworkUpdateSearch1() {
