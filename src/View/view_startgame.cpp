@@ -89,12 +89,14 @@ void View_StartGame::setupAiShowLevel() {
 	QRadioButton *ai_level_1 = new QRadioButton("Easy");
 	QRadioButton *ai_level_2 = new QRadioButton("Medium");
 	QRadioButton *ai_level_3 = new QRadioButton("Hard");
+	QRadioButton *ai_level_4 = new QRadioButton("Very hard");
 	ai_level_2->setChecked(true);
 	QVBoxLayout *ai_level_Layout = new QVBoxLayout;
 	ai_level_Layout->addWidget(ai_level_Label);
 	ai_level_Layout->addWidget(ai_level_1);
 	ai_level_Layout->addWidget(ai_level_2);
 	ai_level_Layout->addWidget(ai_level_3);
+	ai_level_Layout->addWidget(ai_level_4);
 	ai_level->setLayout(ai_level_Layout);
 	ai_level->show();
 	connect(next_btn, SIGNAL(clicked()), SLOT(setupAiGetLevel()));
@@ -106,6 +108,7 @@ void View_StartGame::setupAiGetLevel() {
 	if (ai_level.at(0)->isChecked()) AiPlr->setLevel(2);
 	else if (ai_level.at(1)->isChecked()) AiPlr->setLevel(4);
 	else if (ai_level.at(2)->isChecked()) AiPlr->setLevel(6);
+	else if (ai_level.at(3)->isChecked()) AiPlr->setLevel(8);
 	// end
 	setupAiEnd();
 }
@@ -158,7 +161,7 @@ void View_StartGame::setupNetworkShowSearch() {
 	listip_box->show();
 	QLineEdit* textIP = new QLineEdit(settingsBox);
 	textIP->setObjectName("Network IP");
-	textIP->setGeometry(180, 180, 360, 90);
+	textIP->setGeometry(180, 200, 360, 60);
 	textIP->show();
 	connect(NetworkPlr, SIGNAL(searchUpdate()), SLOT(setupNetworkUpdateSearch1()));
 	connect(NetworkPlr, SIGNAL(conectComplite()), SLOT(setupNetworkUpdateSearch1()));
