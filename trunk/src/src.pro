@@ -12,7 +12,6 @@ HEADERS += Model/board.h \
            Model/game.h \
            Players/player.h \
            Players/ai_player.h \
-           Players/bluetooth_player.h \
            Players/network_player.h \
            View/view.h \
            View/view_main.h \
@@ -25,7 +24,6 @@ SOURCES += main.cpp \
            Model/board.cpp \
            Model/game.cpp \
            Players/ai_player.cpp \
-           Players/bluetooth_player.cpp \
            Players/network_player.cpp \
            View/view_main.cpp \
            View/view_startgame.cpp \

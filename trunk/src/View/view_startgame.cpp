@@ -14,14 +14,12 @@ void View_StartGame::startGame() {
 	if (wLst.at(0)->isChecked()) wPlr = HUMAN;
 	else if (wLst.at(1)->isChecked()) wPlr = AI;
 	else if (wLst.at(2)->isChecked()) wPlr = NETWORK;
-	else if (wLst.at(3)->isChecked()) wPlr = BLUETOOTH;
 	
 	// set black player type
 	QList<QRadioButton*> bLst = greeting->findChild<QGroupBox*>("Black player")->findChildren<QRadioButton*>();
 	if (bLst.at(0)->isChecked()) bPlr = HUMAN;
 	else if (bLst.at(1)->isChecked()) bPlr = AI;
 	else if (bLst.at(2)->isChecked()) bPlr = NETWORK;
-	else if (bLst.at(3)->isChecked()) bPlr = BLUETOOTH;
 	
 	// set up players
 	setupPlayerBegin(WHITE);
@@ -68,10 +66,6 @@ void View_StartGame::setupPlayerBegin(COLOR color) {
 		NetworkPlr = new Network_Player();
 		NetworkPlr->setColor(color);
 		setupNetwork();
-	} else if (plr == BLUETOOTH) {
-		BluetoothPlr = new Bluetooth_Player();
-		BluetoothPlr->setColor(color);
-		setupBluetooth();
 	} else {
 		exit(1);
 	}
@@ -112,35 +106,6 @@ void View_StartGame::setupAiGetLevel() {
 	if (ai_level.at(0)->isChecked()) AiPlr->setLevel(2);
 	else if (ai_level.at(1)->isChecked()) AiPlr->setLevel(4);
 	else if (ai_level.at(2)->isChecked()) AiPlr->setLevel(6);
-	// next
-	setupAiShowThrnum();
-}
-// ai thrnum
-void View_StartGame::setupAiShowThrnum() {
-	QGroupBox *ai_thrnum = new QGroupBox(settingsBox);
-	ai_thrnum->setObjectName("Ai Thrnum");
-	ai_thrnum->setGeometry(180, 40, 360, 240);
-	QLabel *ai_thrnum_Label = new QLabel("Threads num:");
-	QRadioButton *ai_thrnum_1 = new QRadioButton("One");
-	QRadioButton *ai_thrnum_2 = new QRadioButton("Two");
-	QRadioButton *ai_thrnum_3 = new QRadioButton("Four");
-	ai_thrnum_2->setChecked(true);
-	QVBoxLayout *ai_thrnum_Layout = new QVBoxLayout;
-	ai_thrnum_Layout->addWidget(ai_thrnum_Label);
-	ai_thrnum_Layout->addWidget(ai_thrnum_1);
-	ai_thrnum_Layout->addWidget(ai_thrnum_2);
-	ai_thrnum_Layout->addWidget(ai_thrnum_3);
-	ai_thrnum->setLayout(ai_thrnum_Layout);
-	ai_thrnum->show();
-	connect(next_btn, SIGNAL(clicked()), SLOT(setupAiGetThrnum()));
-}
-void View_StartGame::setupAiGetThrnum() {
-	disconnect(next_btn, SIGNAL(clicked()), this, SLOT(setupAiGetThrnum()));
-	settingsBox->findChild<QGroupBox*>("Ai Thrnum")->hide();
-	QList<QRadioButton*> ai_thrnum = settingsBox->findChild<QGroupBox*>("Ai Thrnum")->findChildren<QRadioButton*>();
-	if (ai_thrnum.at(0)->isChecked()) AiPlr->setThrNum(1);
-	else if (ai_thrnum.at(1)->isChecked()) AiPlr->setThrNum(2);
-	else if (ai_thrnum.at(2)->isChecked()) AiPlr->setThrNum(4);
 	// end
 	setupAiEnd();
 }
@@ -221,12 +186,6 @@ void View_StartGame::setupNetworkGetSearch() {
 	setupNetworkEnd();
 }
 
-// set up bluetooth
-void View_StartGame::setupBluetooth() {
-	
-	
-}
-
 void View_StartGame::setupPlayerEndSlot(Player *p) {
 	settingsBox->hide();
 	disconnect(this, SIGNAL(setupPlayerEndSignal(Player*)), this, SLOT(setupPlayerEndSlot(Player*)));
@@ -263,14 +222,12 @@ void View_StartGame::show() {
 	QRadioButton *plr1_Human = new QRadioButton("Human");
 	QRadioButton *plr1_Ai = new QRadioButton("Computer");
 	QRadioButton *plr1_Network = new QRadioButton("Network");
-	QRadioButton *plr1_Bluetooth = new QRadioButton("Bluetooth");
 	plr1_Human->setChecked(true);
 	QVBoxLayout *plr1_Layout = new QVBoxLayout;
 	plr1_Layout->addWidget(plr1_Label);
 	plr1_Layout->addWidget(plr1_Human);
 	plr1_Layout->addWidget(plr1_Ai);
 	plr1_Layout->addWidget(plr1_Network);
-	plr1_Layout->addWidget(plr1_Bluetooth);
 	plr1->setLayout(plr1_Layout);
 	plr1->show();
 	
@@ -282,14 +239,12 @@ void View_StartGame::show() {
 	QRadioButton *plr2_Human = new QRadioButton("Human", plr2);
 	QRadioButton *plr2_Ai = new QRadioButton("Computer", plr2);
 	QRadioButton *plr2_Network = new QRadioButton("Network", plr2);
-	QRadioButton *plr2_Bluetooth = new QRadioButton("Bluetooth", plr2);
 	plr2_Ai->setChecked(true);
 	QVBoxLayout *plr2_Layout = new QVBoxLayout;
 	plr2_Layout->addWidget(plr2_Label);
 	plr2_Layout->addWidget(plr2_Human);
 	plr2_Layout->addWidget(plr2_Ai);
 	plr2_Layout->addWidget(plr2_Network);
-	plr2_Layout->addWidget(plr2_Bluetooth);
 	plr2->setLayout(plr2_Layout);
 	plr2->show();
 	
