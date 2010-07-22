@@ -161,25 +161,25 @@ void Network_Player::slotConnected(){
 void Network_Player::slotReadyRead(){
 //	if(gethod){
 		if(gameInProgres==false){
-			qDebug()<<"vait read";
+			qDebug()<<"vait read signal";
 			QDataStream in(m_pTcpSocket);
 			in.setVersion(QDataStream::Qt_4_0);
 				for (;;) {
 					if (!m_nNextBlockSize) {
 						if (m_pTcpSocket->bytesAvailable() < sizeof(quint16)) {
-							qDebug()<<"read lern";
+							qDebug()<<"read signal";
 							break;
 						}
 						in >> m_nNextBlockSize;
 					}
 					if (m_pTcpSocket->bytesAvailable() < m_nNextBlockSize) {
-						qDebug()<<"reed";
+						qDebug()<<"reed signal";
 						break;
 					}
 					in >>gameInProgres;
-					qDebug()<<gameInProgres<<"iterator";
+					qDebug()<<gameInProgres<<"iterator signal";
 					if(gameInProgres==true){
-						qDebug()<<gameInProgres<<"iterator";
+						qDebug()<<gameInProgres<<"iterator signal";
 						startgame();
 					}
 					else{
@@ -209,6 +209,9 @@ void Network_Player::slotReadyRead(){
 					in >>result.to.y;
 					//gethod=false;
 					qDebug()<<result.from.x;
+					qDebug()<<result.from.y;
+					qDebug()<<result.to.x;
+					qDebug()<<result.to.y;
 					m_nNextBlockSize = 0;
 					moveExecuted();
 				}
