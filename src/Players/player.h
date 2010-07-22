@@ -38,6 +38,8 @@
 				i++;
 			}
 		};
+		// getters
+		COLOR getColor() {return color;};
 	signals:
 		void moveExecuted();
 	};
