@@ -203,10 +203,7 @@ void Network_Player::slotReadyRead(){
 						qDebug()<<"reed";
 						break;
 					}
-					in >>result.from.x;
-					in >>result.from.y;
-					in >>result.to.x;
-					in >>result.to.y;
+					in >>result.from.x>>result.from.y>>result.to.x>>result.to.y;
 					//gethod=false;
 					qDebug()<<result.from.x;
 					qDebug()<<result.from.y;
