@@ -191,6 +191,7 @@ void Network_Player::slotReadyRead(){
 					else{
 						m_pTcpSocket->close();
 					}
+					m_nNextBlockSize = 0;
 				}
 		}
 		else{	
@@ -204,6 +205,7 @@ void Network_Player::slotReadyRead(){
 							break;
 						}
 						in >> m_nNextBlockSize;
+						qDebug()<<m_nNextBlockSize;
 					}
 					if (m_pTcpSocket->bytesAvailable() < m_nNextBlockSize) {
 						qDebug()<<"reed";
@@ -249,6 +251,7 @@ void Network_Player::giveLastMoves(MOVE lastMove[maxFiguresNumber]) {
 			out << quint16(0) <<lastMove[i].from.x << lastMove[i].from.y << lastMove[i].to.x <<lastMove[i].to.y;
 			out.device()->seek(0);
 			out << quint16(arrBlock.size() - sizeof(quint16));
+			qDebug()<<quint16(arrBlock.size() - sizeof(quint16));
 			if(m_pTcpSocket==NULL)qDebug()<<"NULL";
 			m_pTcpSocket->write(arrBlock);
 			qDebug()<<"out";
@@ -263,6 +266,7 @@ void Network_Player::giveLastMoves(MOVE lastMove[maxFiguresNumber]) {
 
 }
 void Network_Player::execMove(BOARD board){
+
 }
 MOVE Network_Player::getMove() {
 
@@ -273,4 +277,5 @@ void Network_Player::setSelfIp(QString Ip){
 	selfIp=Ip;
 }
 Network_Player::~Network_Player(){
+
 }
