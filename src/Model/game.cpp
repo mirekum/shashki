@@ -1,8 +1,4 @@
 #include "Model/game.h"
-#include "Players/ai_player.h"
-#include "Players/network_player.h"
-#include "Players/bluetooth_player.h"
-#include "View/view_board.h"
 
 Game::Game() {
 	wp = NULL;
@@ -34,7 +30,7 @@ void Game::setCurrentPlayer(COLOR color) {
 
 void Game::move() {
 	// request move from current player
-	sleep(1);
+	//sleep(1);
 	thread = new getMoveThread;
 	thread->setData(current, board);
 	connect(thread, SIGNAL(finished()), SLOT(recieveMove()));
@@ -63,7 +59,6 @@ void Game::recieveMove() {
 		return;
 	}
 	lastMove[moveNum++] = mv;
-	qDebug() << board;
 	emit updateBoard();
 	// check finish
 	if (res_flag = board.isWin()) {
