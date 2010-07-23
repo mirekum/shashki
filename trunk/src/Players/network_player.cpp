@@ -266,13 +266,14 @@ void Network_Player::giveLastMoves(MOVE lastMove[maxFiguresNumber]) {
 			lastMove[i].from.y=0;
 			lastMove[i].to.x=0;
 			lastMove[i].to.y=0;
-			sleep(3);
+			sleep(1);
 		}
 		i++;
 	}
 
 }
 void Network_Player::execMove(BOARD board){
+	qDebug()<<"execMuve";
 	gethod=true;
 }
 MOVE Network_Player::getMove() {
