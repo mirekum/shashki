@@ -109,12 +109,10 @@ void View_StartGame::setupAiGetLevel() {
 // set up network
 void View_StartGame::setupNetwork() {
 	// begin
-	qDebug() << "setup network begin";
 	setupNetworkShowInterface();
 }
 void View_StartGame::setupNetworkEnd() {
 	Player *p = (Player*)NetworkPlr;
-	qDebug() << "setup network end";
 	emit setupPlayerEndSignal(p);
 }
 // network interface
@@ -208,10 +206,8 @@ void View_StartGame::setupPlayerEndSlot(Player *p) {
 	disconnect(this, SIGNAL(setupPlayerEndSignal(Player*)), this, SLOT(setupPlayerEndSlot(Player*)));
 	if (curColor == WHITE) {
 		wp = p;
-		qDebug() << wp << curColor;
 		setupPlayerBegin(BLACK);
 	} else if (curColor == BLACK) {
-		qDebug() << bp << curColor;
 		bp = p;
 		sendPlayersData();
 	} else {
