@@ -329,6 +329,7 @@ char Network_Player::setSelfIp(QString Ip){
 	return 1;
 }
 Network_Player::~Network_Player(){
+/*
 		if(m_ptcpServer!=NULL){
 		m_pTcpSocket->close();
 		delete m_ptcpServer;
@@ -339,5 +340,6 @@ Network_Player::~Network_Player(){
 		delete m_pTcpSocket;
 		m_pTcpSocket=NULL;
 	}
+*/
 	qDebug()<<"delited";
 }
