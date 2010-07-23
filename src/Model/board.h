@@ -104,6 +104,7 @@
 		int black() {return b;}
 		int whiteKing() {return wk;}
 		int blackKing() {return bk;}
+		int getCurrentColor() {return utype;}
 		// checks the possibility of continuing the half-move by current player
 		bool canMove();
 		// checks the physical possibility of the move from one cell to the other one
