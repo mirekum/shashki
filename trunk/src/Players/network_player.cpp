@@ -148,10 +148,28 @@ void Network_Player::slotNewConnection(){
 		delete temp_pTcpSocket;
 	}
 }	
-void Network_Player::slotError(QAbstractSocket::SocketError){
-qDebug()<<"ERRROR";
-
-
+void Network_Player::slotError(QAbstractSocket::SocketError err){
+	if(err==QAbstractSocket::HostNotFoundError){
+		m_pTcpSocket->close();
+		delete m_pTcpSocket;
+		m_pTcpSocket=NULL;
+		error("HostNotFoundError");
+		qDebug()<<"HostNotFoundError";
+	}	
+	else if(err == QAbstractSocket::ConnectionRefusedError){
+		m_pTcpSocket->close();
+		delete m_pTcpSocket;
+		m_pTcpSocket=NULL;
+		error("ConnectionRefusedError");
+		qDebug()<<"ConnectionRefusedError";
+	}
+	else if(err == QAbstractSocket::RemoteHostClosedError){
+		m_pTcpSocket->close();
+		delete m_pTcpSocket;
+		m_pTcpSocket=NULL;
+		error("RemoteHostClosedError");
+		qDebug()<<"RemoteHostClosedError";
+	}
 }
 char Network_Player::createClient( QString strHost){
 	if(m_pTcpSocket!=NULL){

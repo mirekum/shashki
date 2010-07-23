@@ -41,7 +41,7 @@
 		void processPendingDatagramsinput();
 		void slotError(QAbstractSocket::SocketError);
 	signals:
-		void error();
+		void error(QString errorNetworc);
 		void inputSoed();
 		void searchUpdate();
 		void conectComplite();//signal o soedinenii
