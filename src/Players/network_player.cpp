@@ -148,6 +148,11 @@ void Network_Player::slotNewConnection(){
 		delete temp_pTcpSocket;
 	}
 }	
+void Network_Player::slotError(QAbstractSocket::SocketError){
+qDebug()<<"ERRROR";
+
+
+}
 char Network_Player::createClient( QString strHost){
 	if(m_pTcpSocket!=NULL){
 		m_pTcpSocket->close();
@@ -160,6 +165,7 @@ char Network_Player::createClient( QString strHost){
 	m_pTcpSocket->connectToHost(strHost, portConect);
 	connect(m_pTcpSocket, SIGNAL(connected()), SLOT(slotConnected()));
 	connect(m_pTcpSocket, SIGNAL(readyRead()), SLOT(slotReadyRead()));
+	connect(m_pTcpSocket, SIGNAL(error(QAbstractSocket::SocketError)),SLOT(slotError(QAbstractSocket::SocketError)));
 
 }
 void Network_Player::slotConnected(){
