@@ -273,8 +273,8 @@ void Network_Player::giveLastMoves(MOVE lastMove[maxFiguresNumber]) {
 
 }
 void Network_Player::execMove(BOARD board){
-	qDebug()<<"execMuve";
 	gethod=true;
+	slotReadyRead();
 }
 MOVE Network_Player::getMove() {
 	return result;
