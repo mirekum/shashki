@@ -40,6 +40,22 @@ void Board_Widget::paintEvent(QPaintEvent *event) {
 	for (int j = 1; j <= 8; j++) {
 		paint.drawRect(QRect(0, j * 44, 44, 44));
 	}
+	paint.drawText(60 + 44*0, 30, "A");
+	paint.drawText(60 + 44*1, 30, "B");
+	paint.drawText(60 + 44*2, 30, "C");
+	paint.drawText(60 + 44*3, 30, "D");
+	paint.drawText(60 + 44*4, 30, "E");
+	paint.drawText(60 + 44*5, 30, "F");
+	paint.drawText(60 + 44*6, 30, "G");
+	paint.drawText(60 + 44*7, 30, "H");
+	paint.drawText(15, 75 + 44*0, "1");
+	paint.drawText(15, 75 + 44*1, "2");
+	paint.drawText(15, 75 + 44*2, "3");
+	paint.drawText(15, 75 + 44*3, "4");
+	paint.drawText(15, 75 + 44*4, "5");
+	paint.drawText(15, 75 + 44*5, "6");
+	paint.drawText(15, 75 + 44*6, "7");
+	paint.drawText(15, 75 + 44*7, "8");
 	// draw cells
 	paint.setPen(QPen(Qt::white, 1));
 	for (int i = 0, x0 = 44; i < 8; i++) {
