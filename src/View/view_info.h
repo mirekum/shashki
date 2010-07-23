@@ -15,6 +15,8 @@
 		View_Info(View_Main &main_ui);
 		// view initialization
 		void init(Game *_game);
+		// view hiding
+		void hide();
 	};
 	
 #endif

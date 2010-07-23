@@ -13,16 +13,29 @@ void View_Board::init(Game *_game) {
 	// signal to update model
 	connect(game, SIGNAL(updateBoard()), SLOT(updateBoard()));
 	
+	// signal to finish game
+	connect(game, SIGNAL(finishGame(GAMESTATE)), SLOT(finishGame(GAMESTATE)));
+	
 	// draw board wrapper
 	canvas = new Board_Widget(window);
 	canvas->init(game);
-	canvas->setGeometry(10, 10, 400, 400);
+	canvas->setGeometry(10, 10, 450, 400);
 	canvas->show();
+}
+
+// view hiding
+void View_Board::hide() {
+	canvas->hide();
 }
 
 void Board_Widget::init(Game *_game) {
 	game = _game;
 	board = &game->getBoard();
+	end_flag = END_NONE;
+}
+
+void Board_Widget::status(GAMESTATE res_flag) {
+	end_flag = res_flag;
 }
 
 Board_Widget::Board_Widget(QWidget * parent): QWidget(parent) {
@@ -77,6 +90,10 @@ void Board_Widget::paintEvent(QPaintEvent *event) {
 				paint.drawEllipse(QRect(x0 + i * 44 + 10, y0 + j * 44 + 10, 24, 24));
 			}
 		}
+	}
+	// move indication
+	if (!end_flag) {
+		
 	}
 }
 
@@ -138,8 +155,11 @@ void View_Board::execMove(BOARD board) {
 	emit moveExecuted();
 }
 
-// updated model
 void View_Board::updateBoard() {
 	canvas->update();
 }
 
+void View_Board::finishGame(GAMESTATE res_flag) {
+	canvas->status(res_flag);
+	canvas->update();
+}
