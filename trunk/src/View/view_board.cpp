@@ -93,7 +93,13 @@ void Board_Widget::paintEvent(QPaintEvent *event) {
 	}
 	// move indication
 	if (!end_flag) {
-		
+		paint.setBrush(QBrush(Qt::yellow));
+		paint.setPen(QPen(Qt::white, 2));
+		if (board->getCurrentColor() != WHITE) {
+			paint.drawEllipse(QRect(410, 60, 20, 20));
+		} else {
+			paint.drawEllipse(QRect(410, 360, 20, 20));
+		}
 	}
 }
 
