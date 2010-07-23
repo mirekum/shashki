@@ -274,7 +274,7 @@ void Network_Player::giveLastMoves(MOVE lastMove[maxFiguresNumber]) {
 void Network_Player::execMove(BOARD board){
 	slotReadyRead();
 	do {
-		if (gethod=false) {
+		if (gethod==false) {
 			break;
 		}
 		usleep(300);
