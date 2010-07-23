@@ -145,11 +145,13 @@ void Network_Player::slotNewConnection(){
 		if(temp_pTcpSocket==NULL)qDebug()<<"NULL";
 		temp_pTcpSocket->write(arrBlock);
 		temp_pTcpSocket->close();
+		delete temp_pTcpSocket;
 	}
 }	
 char Network_Player::createClient( QString strHost){
 	if(m_pTcpSocket!=NULL){
 		m_pTcpSocket->close();
+		delete m_pTcpSocket;
 		m_pTcpSocket=NULL;
 	};
 	qDebug()<<"conect tuu hast:" <<strHost;
@@ -265,13 +267,13 @@ void Network_Player::giveLastMoves(MOVE lastMove[maxFiguresNumber]) {
 			lastMove[i].from.y=0;
 			lastMove[i].to.x=0;
 			lastMove[i].to.y=0;
-			sleep(1);
 		}
 		i++;
 	}
 
 }
 void Network_Player::execMove(BOARD board){
+	sleep(1);	
 	slotReadyRead();
 	do {
 		if (gethod==false) {
@@ -303,13 +305,15 @@ char Network_Player::setSelfIp(QString Ip){
 	return 1;
 }
 Network_Player::~Network_Player(){
-	if(m_pTcpSocket!=NULL){
+		if(m_ptcpServer!=NULL){
 		m_pTcpSocket->close();
-		m_pTcpSocket=NULL;
-	}
-	if(m_ptcpServer!=NULL){
-		m_pTcpSocket->close();
+		delete m_ptcpServer;
 		m_ptcpServer=NULL;
 	}
-	
+	if(m_pTcpSocket!=NULL){
+		m_pTcpSocket->close();
+		delete m_pTcpSocket;
+		m_pTcpSocket=NULL;
+	}
+	qDebug()<<"delited";
 }
