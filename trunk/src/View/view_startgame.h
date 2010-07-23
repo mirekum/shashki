@@ -51,6 +51,7 @@
 		void setupNetworkGetSearch();
 		void setupNetworkUpdateSearch1();
 		void setupNetworkUpdateSearch2();
+		void setupNetworkIP();
 	};
 	
 #endif

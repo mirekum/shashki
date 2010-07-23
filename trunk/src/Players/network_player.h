@@ -18,11 +18,12 @@
 		QString selfIp;
 		QList<QString> listServer;
 	public:
+		bool itThisIP(QString Ip);
 		void startgame();
 		void relise();
 		QList<QString> getList();
 		QList<QString> getActivInterfase();
-		void setSelfIp(QString Ip);//zadanie svoego Ip
+		char setSelfIp(QString Ip);//zadanie svoego Ip
 		void giveLastMoves(MOVE lastMove[maxFiguresNumber]) ;
 		Network_Player();
 		char createServer();
@@ -39,6 +40,7 @@
 		void processPendingDatagrams();
 		void processPendingDatagramsinput();
 	signals:
+		void inputSoed();
 		void searchUpdate();
 		void conectComplite();//signal o soedinenii
 		

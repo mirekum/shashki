@@ -158,7 +158,22 @@ void View_StartGame::setupNetworkShowSearch() {
 	textIP->show();
 	connect(NetworkPlr, SIGNAL(searchUpdate()), SLOT(setupNetworkUpdateSearch1()));
 	connect(NetworkPlr, SIGNAL(conectComplite()), SLOT(setupNetworkUpdateSearch2()));
-	connect(next_btn, SIGNAL(clicked()), SLOT(setupNetworkGetSearch()));
+	connect(next_btn, SIGNAL(clicked()), SLOT(setupNetworkIP()));
+	connect(textIP, SIGNAL(returnPressed()), SLOT(setupNetworkIP()));
+}
+
+void View_StartGame::setupNetworkIP(){
+	QString IP=settingsBox->findChild<QLineEdit*>("Network IP")->text();
+	if(NetworkPlr->itThisIP(IP)==1){
+	qDebug()<<"ipSets"<<IP;
+	setupNetworkGetSearch();
+	return;
+	}
+	disconnect(next_btn, SIGNAL(clicked()), this, SLOT(setupNetworkGetSearch()));
+	settingsBox->findChild<QLabel*>("Network Search Label")->hide();
+	settingsBox->findChild<QComboBox*>("Network Search")->hide();
+	QString choosedIP = settingsBox->findChild<QComboBox*>("Network Search")->currentText();
+	NetworkPlr->createClient(IP);
 }
 void View_StartGame::setupNetworkUpdateSearch1() {
 	QList<QString> listIP = NetworkPlr->getList();
