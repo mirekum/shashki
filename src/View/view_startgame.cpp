@@ -191,7 +191,10 @@ void View_StartGame::setupNetworkUpdateSearch2() {
 }
 void View_StartGame::setupNetworkGetSearch() {
 	if (!settingsBox->findChild<QComboBox*>("Network Search")->count()) return;
+	disconnect(NetworkPlr, SIGNAL(searchUpdate()), this, SLOT(setupNetworkUpdateSearch1()));
+	disconnect(NetworkPlr, SIGNAL(conectComplite()), this, SLOT(setupNetworkUpdateSearch2()));
 	disconnect(next_btn, SIGNAL(clicked()), this, SLOT(setupNetworkGetSearch()));
+	disconnect(textIP, SIGNAL(returnPressed()), this, SLOT(setupNetworkIP()));
 	settingsBox->findChild<QLabel*>("Network Search Label")->hide();
 	settingsBox->findChild<QComboBox*>("Network Search")->hide();
 	QString choosedIP = settingsBox->findChild<QComboBox*>("Network Search")->currentText();
