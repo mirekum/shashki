@@ -266,7 +266,7 @@ void Network_Player::giveLastMoves(MOVE lastMove[maxFiguresNumber]) {
 			lastMove[i].from.y=0;
 			lastMove[i].to.x=0;
 			lastMove[i].to.y=0;
-			sleep(1);
+			sleep(3);
 		}
 		i++;
 	}
