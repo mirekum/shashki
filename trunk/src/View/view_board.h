@@ -12,6 +12,7 @@
 		BOARD *board;
 		int ready;
 		bool read_flag;
+		GAMESTATE end_flag;
 		MOVE result;
 		COLOR currentColor;
 	public:
@@ -22,6 +23,7 @@
 		bool isReady();
 		bool eventFilter(QObject *target, QEvent *event);
 		virtual void paintEvent(QPaintEvent *event);
+		void status(GAMESTATE res_flag);
 	};
 	
 	class View_Board: public Player, public View {
@@ -35,6 +37,8 @@
 		View_Board(View_Main &main_ui);
 		// view initialization
 		void init(Game *_game);
+		// view hiding
+		void hide();
 		// get player type
 		virtual PLAYER_TYPE type() {return HUMAN;};
 		// request move from human
@@ -43,8 +47,8 @@
 		void drawCanvas();
 		void drawFigures();
 	public slots:
-		// updated model
 		void updateBoard();
+		void finishGame(GAMESTATE res_flag);
 	};
 	
 #endif

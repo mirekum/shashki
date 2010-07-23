@@ -42,7 +42,6 @@ void getMoveThread::run() {
 }
 
 void Game::finish(GAMESTATE res_flag) {
-	qDebug() << "game finished:" << res_flag;
 	if (wp->type() == NETWORK) wp->giveLastMoves(lastMove);
 	if (bp->type() == NETWORK) bp->giveLastMoves(lastMove);
 	emit finishGame(res_flag);

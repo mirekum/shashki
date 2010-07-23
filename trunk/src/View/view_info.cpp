@@ -10,10 +10,15 @@ void View_Info::init(Game *_game) {
 	game = _game;
 	// draw info wrapper
 	infowrap = new QFrame(window);
-	infowrap->setGeometry(430, 10, 350, 250);
+	infowrap->setGeometry(480, 10, 300, 250);
 	infowrap->setFrameStyle(QFrame::Box | QFrame::Plain);
 	infowrap->setLineWidth(1);
 	infowrap->show();
 	
+}
+
+// view hiding
+void View_Info::hide() {
+	infowrap->hide();
 }
 

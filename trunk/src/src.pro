@@ -16,6 +16,7 @@ HEADERS += Model/board.h \
            View/view.h \
            View/view_main.h \
            View/view_startgame.h \
+           View/view_finishgame.h \
            View/view_board.h \
            View/view_info.h \
            control.h
@@ -27,6 +28,7 @@ SOURCES += main.cpp \
            Players/network_player.cpp \
            View/view_main.cpp \
            View/view_startgame.cpp \
+           View/view_finishgame.cpp \
            View/view_board.cpp \
            View/view_info.cpp \
            control.cpp
