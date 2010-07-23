@@ -197,6 +197,7 @@ void View_StartGame::setupNetworkGetSearch() {
 	QString choosedIP = settingsBox->findChild<QComboBox*>("Network Search")->currentText();
 	NetworkPlr->createClient(choosedIP);
 	// end
+	qDebug() << "get search";
 	setupNetworkEnd();
 }
 
@@ -208,7 +209,7 @@ void View_StartGame::setupPlayerEndSlot(Player *p) {
 		qDebug() << wp << curColor;
 		setupPlayerBegin(BLACK);
 	} else if (curColor == BLACK) {
-		qDebug() << wp << curColor;
+		qDebug() << bp << curColor;
 		bp = p;
 		sendPlayersData();
 	} else {
