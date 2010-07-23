@@ -148,6 +148,10 @@ void Network_Player::slotNewConnection(){
 	}
 }	
 char Network_Player::createClient( QString strHost){
+	if(m_pTcpSocket!=NULL){
+		m_pTcpSocket->close();
+		m_pTcpSocket=NULL;
+	};
 	qDebug()<<"conect tuu hast:" <<strHost;
 	m_pTcpSocket = new QTcpSocket(this);
 	m_nNextBlockSize=0;
@@ -164,6 +168,7 @@ void Network_Player::slotConnected(){
 	giveLastMoves(lastMove);
 */
 }
+
 void Network_Player::slotReadyRead(){
 	if(gethod){
 		if(gameInProgres==false){
@@ -198,18 +203,18 @@ void Network_Player::slotReadyRead(){
 			qDebug()<<"vait read";
 			QDataStream in(m_pTcpSocket);
 			in.setVersion(QDataStream::Qt_4_0);
-				//for (;;) {
+				for (;;) {
 					if (!m_nNextBlockSize) {
 						if (m_pTcpSocket->bytesAvailable() < sizeof(quint16)) {
-							qDebug()<<"read lern";return;
-							//break;
+							qDebug()<<"read lern";
+							break;
 						}
 						in >> m_nNextBlockSize;
 						qDebug()<<m_nNextBlockSize;
 					}
 					if (m_pTcpSocket->bytesAvailable() < m_nNextBlockSize) {
-						qDebug()<<"reed";return;
-						//break;
+						qDebug()<<"reed";
+						break;
 					}
 					result.from.x=0;
 					result.from.y=0;
@@ -223,7 +228,8 @@ void Network_Player::slotReadyRead(){
 					qDebug()<<result.to.y;
 					m_nNextBlockSize = 0;
 					moveExecuted();
-				//}
+					return;
+				}
 		}
 	}
 
@@ -260,6 +266,7 @@ void Network_Player::giveLastMoves(MOVE lastMove[maxFiguresNumber]) {
 			lastMove[i].from.y=0;
 			lastMove[i].to.x=0;
 			lastMove[i].to.y=0;
+			sleep(1);
 		}
 		i++;
 	}
@@ -272,9 +279,29 @@ MOVE Network_Player::getMove() {
 	return result;
 //	
 };
-void Network_Player::setSelfIp(QString Ip){
-	selfIp=Ip;
+bool Network_Player::itThisIP(QString Ip){
+	QHostAddress hostaddress;
+	hostaddress.setAddress(Ip);
+	if(hostaddress!=QHostAddress:: Null)return 0;
+	return 1;
+}
+char Network_Player::setSelfIp(QString Ip){
+	QHostAddress hostaddress;
+	hostaddress.setAddress(Ip);
+	if(hostaddress!=QHostAddress:: Null){
+		selfIp=Ip;
+		return 0;
+	}
+	return 1;
 }
 Network_Player::~Network_Player(){
-
+	if(m_pTcpSocket!=NULL){
+		m_pTcpSocket->close();
+		m_pTcpSocket=NULL;
+	}
+	if(m_ptcpServer!=NULL){
+		m_pTcpSocket->close();
+		m_ptcpServer=NULL;
+	}
+	
 }
