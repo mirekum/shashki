@@ -24,8 +24,8 @@ void View_StartGame::startGame() {
 	setupPlayerBegin(WHITE);
 }
 View_StartGame::~View_StartGame() {
-	delete wp;
-	delete bp;
+	if (wp) delete wp;
+	if (bp) delete bp;
 }
 void View_StartGame::setupPlayerBegin(COLOR color) {
 	curColor = color;
