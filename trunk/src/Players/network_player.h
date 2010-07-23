@@ -39,7 +39,9 @@
 		void slotNewConnection();
 		void processPendingDatagrams();
 		void processPendingDatagramsinput();
+		void slotError(QAbstractSocket::SocketError);
 	signals:
+		void error();
 		void inputSoed();
 		void searchUpdate();
 		void conectComplite();//signal o soedinenii
