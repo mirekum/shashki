@@ -39,6 +39,7 @@
 		// getters
 		COLOR getColor() {return color;};
 	signals:
+		void error(int errorID);
 		void moveExecuted();
 	};
 	
