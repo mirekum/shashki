@@ -163,6 +163,9 @@ bool BOARD::canMove(CELL from, CELL to, CANMOVE *flags, COLOR _type) {
 	// kings
 	if (IS_KNG(type)) {
 		bool can_eat = false;
+		
+		if (abs(to.x - from.x) != abs(to.y - from.y)) return false;
+		
 		/* check eating moves */
 		// loop to left top corner
 		for (int i = from.x - 1, j = from.y - 1, met_enemy = 0; i >= 0 && j >= 0; i--, j--) {

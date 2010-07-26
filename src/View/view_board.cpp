@@ -107,8 +107,8 @@ bool Board_Widget::eventFilter(QObject *target, QEvent *event) {
 	if (event->type() == QEvent::MouseButtonPress && read_flag) {
 		QMouseEvent *mouseEvent = (QMouseEvent*)event;
 		int x = (mouseEvent->pos().x() - 44) / 44, y = (mouseEvent->pos().y() - 44) / 44;
+		FIGURE f = board->gcell(x, y);
 		if (ready == 0) {
-			FIGURE f = board->gcell(x, y);
 			result.from.x = x;
 			result.from.y = y;
 			if (0
@@ -122,7 +122,16 @@ bool Board_Widget::eventFilter(QObject *target, QEvent *event) {
 			result.to.x = x;
 			result.to.y = y;
 			if (!board->canMove(result)) {
-				ready = 0;
+				result.from.x = x;
+				result.from.y = y;
+				if (0
+					|| (currentColor == WHITE && !IS_WHITE(f))
+					|| (currentColor == BLACK && !IS_BLACK(f))
+				) {
+					ready = 0;
+					return true;
+				}
+				ready = 1;
 				return true;
 			}
 			ready = 2;
