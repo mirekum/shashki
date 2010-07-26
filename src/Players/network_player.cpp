@@ -153,22 +153,22 @@ void Network_Player::slotNewConnection(){
 void Network_Player::slotError(QAbstractSocket::SocketError err){
 	if(err==QAbstractSocket::HostNotFoundError){
 		m_pTcpSocket->close();
-		delete m_pTcpSocket;
-		m_pTcpSocket=NULL;
+		//delete m_pTcpSocket;
+		//m_pTcpSocket=NULL;
 		error(Host_Not_Found_Error);
 		qDebug()<<"HostNotFoundError";
 	}	
 	else if(err == QAbstractSocket::ConnectionRefusedError){
 		m_pTcpSocket->close();
-		delete m_pTcpSocket;
-		m_pTcpSocket=NULL;
+		//delete m_pTcpSocket;
+		//m_pTcpSocket=NULL;
 		error(Connection_Refused_Error);
 		qDebug()<<"ConnectionRefusedError";
 	}
 	else if(err == QAbstractSocket::RemoteHostClosedError){
 		m_pTcpSocket->close();
-		delete m_pTcpSocket;
-		m_pTcpSocket=NULL;
+		//delete m_pTcpSocket;
+		//m_pTcpSocket=NULL;
 		error(Remote_Host_Closed_Error);
 		qDebug()<<"RemoteHostClosedError";
 	}
@@ -332,7 +332,7 @@ char Network_Player::setSelfIp(QString Ip){
 }
 Network_Player::~Network_Player(){
 /*
-		if(m_ptcpServer!=NULL){
+	if(m_ptcpServer!=NULL){
 		m_pTcpSocket->close();
 		delete m_ptcpServer;
 		m_ptcpServer=NULL;
