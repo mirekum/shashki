@@ -24,7 +24,9 @@ void View_StartGame::startGame() {
 	setupPlayerBegin(WHITE);
 }
 View_StartGame::~View_StartGame() {
+	qDebug()<<"wp dell";
 	if (wp) delete wp;
+	qDebug()<<"bp dell";
 	if (bp) delete bp;
 }
 void View_StartGame::setupPlayerBegin(COLOR color) {
