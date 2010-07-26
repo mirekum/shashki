@@ -12,11 +12,13 @@
 		bool vaiting;
 		bool gethod;
 		bool gameInProgres;
-		QTcpServer*m_ptcpServer;
 		QTcpSocket* m_pTcpSocket;
+		QTcpServer*m_ptcpServer;
 		quint16     m_nNextBlockSize;
 		QString selfIp;
 		QList<QString> listServer;
+		QUdpSocket*udpSocketrelise;
+		QUdpSocket*udpSocketinput;
 	public:
 		bool itThisIP(QString Ip);
 		void startgame();
