@@ -15,17 +15,17 @@
 /* methods of class of the network player */
 Network_Player::Network_Player(){
 	m_pTcpSocket=NULL;
-	QUdpSocket*udpSocket = new QUdpSocket(this);
-	udpSocket->bind(portConectrelise);
-	connect(udpSocket, SIGNAL(readyRead()),this, SLOT(processPendingDatagrams()));
+	udpSocketrelise = new QUdpSocket(this);
+	udpSocketrelise->bind(portConectrelise);
+	connect(udpSocketrelise, SIGNAL(readyRead()),this, SLOT(processPendingDatagrams()));
 
-	QUdpSocket*udpSocketinput = new QUdpSocket(this);
+	udpSocketinput = new QUdpSocket(this);
 	udpSocketinput->bind(portConectreliseinput);
 	connect(udpSocketinput, SIGNAL(readyRead()),this, SLOT(processPendingDatagramsinput()));
 	gameInProgres=false;
 	m_ptcpServer=NULL;
 	m_nNextBlockSize=0;
-	selfIp="0.0.0.0";
+	selfIp="127.0.0.1";
 	gethod=true;
 }
 void Network_Player::startgame(){
@@ -59,6 +59,7 @@ void Network_Player::relise(){
 }
 void Network_Player::processPendingDatagramsinput(){
 	QUdpSocket* udpSocket = (QUdpSocket*)sender();
+	QHostAddress IPtempDefine("127.0.0.1");
 	while (udpSocket->hasPendingDatagrams()){
 		QByteArray datagram;
 		datagram.resize(udpSocket->pendingDatagramSize());
@@ -71,7 +72,7 @@ void Network_Player::processPendingDatagramsinput(){
 		if(((colorin[0]=='B')&&(color==WHITE))||((colorin[0]=='W')&&(color==BLACK))){
 		hostaddress.setAddress(sendIp);qDebug()<<colorin<<"otlad read onli";
 		}
-		if((hostaddress!=QHostAddress:: Null)&&(!listServer.contains(sendIp)&&(selfIp!=sendIp))){
+		if((hostaddress!=QHostAddress:: Null)&&(!listServer.contains(sendIp)&&(selfIp!=sendIp))&&(hostaddress!=IPtempDefine)){
 			listServer<<sendIp;
 			searchUpdate();
 			qDebug()<<"input readonli"<<sendIp;	
@@ -80,6 +81,7 @@ void Network_Player::processPendingDatagramsinput(){
 }
 void Network_Player::processPendingDatagrams(){
 	QUdpSocket* udpSocket = (QUdpSocket*)sender();
+	QHostAddress IPtempDefine("127.0.0.1");
 	while (udpSocket->hasPendingDatagrams()){
 		QByteArray datagram;
 		datagram.resize(udpSocket->pendingDatagramSize());
@@ -92,12 +94,12 @@ void Network_Player::processPendingDatagrams(){
 		if(((colorin[0]=='B')&&(color==WHITE))||((colorin[0]=='W')&&(color==BLACK))){
 		hostaddress.setAddress(sendIp);qDebug()<<colorin<<"otladrw";
 		}
-		if((hostaddress!=QHostAddress:: Null)&&(!listServer.contains(sendIp)&&(selfIp!=sendIp))){
+		if((hostaddress!=QHostAddress:: Null)&&(!listServer.contains(sendIp)&&(selfIp!=sendIp))&&(hostaddress!=IPtempDefine)){
 			listServer<<sendIp;
 			searchUpdate();
 			qDebug()<<"input rw"<<sendIp;	
 		}	
-		if((hostaddress!=QHostAddress:: Null)&&(selfIp!=sendIp)){
+		if((hostaddress!=QHostAddress:: Null)&&(selfIp!=sendIp)&&(hostaddress!=IPtempDefine)){
 			QUdpSocket udpSocketReturn;
 			QString tipe;
 			if(color==BLACK){
@@ -263,9 +265,10 @@ QList<QString> Network_Player::getActivInterfase(){
 	QList<QString> listInterfase;
 	QString temp;
 	QList<QNetworkInterface> list = QNetworkInterface::allInterfaces();
+	QHostAddress IPtempDefine("127.0.0.1");
 	foreach (QHostAddress IPtemp,QNetworkInterface::allAddresses ()){
 		temp=IPtemp.toString();
-		if(temp.count(":")==0){
+		if((temp.count(":")==0)&&(IPtemp!=IPtempDefine)){
 			listInterfase<<temp;
 		}
 	}
@@ -307,7 +310,6 @@ void Network_Player::execMove(BOARD board){
 	} while (true);
 	moveExecuted();
 	gethod=true;
-
 }
 MOVE Network_Player::getMove() {
 	return result;

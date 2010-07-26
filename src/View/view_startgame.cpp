@@ -170,8 +170,6 @@ void View_StartGame::setupNetworkIP(){
 	return;
 	}
 	disconnect(next_btn, SIGNAL(clicked()), this, SLOT(setupNetworkGetSearch()));
-	settingsBox->findChild<QLabel*>("Network Search Label")->hide();
-	settingsBox->findChild<QComboBox*>("Network Search")->hide();
 	QString choosedIP = settingsBox->findChild<QComboBox*>("Network Search")->currentText();
 	NetworkPlr->createClient(IP);
 }
