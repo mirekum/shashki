@@ -5,11 +5,10 @@
 #define portConectrelise 47475
 #define portConectreliseinput 45455
 
-#define ERROR_SOCKET 1
-#define ERROR_BIND 2
-#define ERROR_ACCEPT 3
-#define ERROR_CONEKT 4
-#define ERROR_CRIATE_SERVER 5
+#define Host_Not_Found_Error 1
+#define Connection_Refused_Error 2
+#define Remote_Host_Closed_Error 3
+#define Error_Criate_Server 4
 
 
 /* methods of class of the network player */
@@ -38,7 +37,7 @@ char Network_Player::createServer(){
 	if (!m_ptcpServer->listen(adrr/*(selfIp)*/, portConect)) {
 		m_ptcpServer->close();
 		m_ptcpServer=NULL;
-		return ERROR_CRIATE_SERVER;
+		return Error_Criate_Server;
 	}
 	connect(m_ptcpServer, SIGNAL(newConnection()),this,SLOT(slotNewConnection()));
 	return 0;
@@ -133,6 +132,7 @@ void Network_Player::slotNewConnection(){
 		out << quint16(arrBlock.size() - sizeof(quint16));
 		if(m_pTcpSocket==NULL)qDebug()<<"NULL";
 		m_pTcpSocket->write(arrBlock);
+		connect(m_pTcpSocket, SIGNAL(error(QAbstractSocket::SocketError)),SLOT(slotError(QAbstractSocket::SocketError)));
 		startgame();
 
 	}
@@ -155,21 +155,21 @@ void Network_Player::slotError(QAbstractSocket::SocketError err){
 		m_pTcpSocket->close();
 		delete m_pTcpSocket;
 		m_pTcpSocket=NULL;
-		error("HostNotFoundError");
+		error(Host_Not_Found_Error);
 		qDebug()<<"HostNotFoundError";
 	}	
 	else if(err == QAbstractSocket::ConnectionRefusedError){
 		m_pTcpSocket->close();
 		delete m_pTcpSocket;
 		m_pTcpSocket=NULL;
-		error("ConnectionRefusedError");
+		error(Connection_Refused_Error);
 		qDebug()<<"ConnectionRefusedError";
 	}
 	else if(err == QAbstractSocket::RemoteHostClosedError){
 		m_pTcpSocket->close();
 		delete m_pTcpSocket;
 		m_pTcpSocket=NULL;
-		error("RemoteHostClosedError");
+		error(Remote_Host_Closed_Error);
 		qDebug()<<"RemoteHostClosedError";
 	}
 }
