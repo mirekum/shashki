@@ -6,7 +6,7 @@
 	class View_Main: public QObject, public View {
 		Q_OBJECT
 	protected:
-		QWidget *window;
+		QMainWindow *window;
 	public:
 		View_Main();
 		~View_Main();
@@ -14,6 +14,9 @@
 		void show();
 		// getters
 		QWidget* getWindow() {return window;};
+	protected slots:
+		void menuNewgame();
+		void menuExit();
 	};
 	
 #endif
