@@ -174,7 +174,6 @@ void Network_Player::slotReadyRead(){
 				for (;;) {
 					if (!NextBlockSize) {
 						if (TcpSocket->bytesAvailable() < sizeof(quint16)) {
-							qDebug()<<"read signal";
 							break;
 						}
 						in >> NextBlockSize;
@@ -184,9 +183,9 @@ void Network_Player::slotReadyRead(){
 						break;
 					}
 					in >>gameInProgres;
-					qDebug()<<gameInProgres<<"iterator signal";
+					qDebug()<<gameInProgres<<"-signal";
 					if(gameInProgres==true){
-						qDebug()<<gameInProgres<<"iterator signal";
+						qDebug()<<gameInProgres<<"signal";
 						startgame();
 					}
 					else{
