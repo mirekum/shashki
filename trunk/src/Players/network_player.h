@@ -16,24 +16,22 @@
 		QTcpServer* tcpServer;
 		quint16     NextBlockSize;
 		QString selfIp;
-		QList<QString> listServer;
+		QList<QString> ServerList;
 		QUdpSocket*udpSocketrelise;
-		QUdpSocket*udpSocketinput;
 	public:
 		bool itThisIP(QString Ip);
 		void startgame();
 		void relise();
 		QList<QString> getList();
 		QList<QString> getActivInterfase();
-		char setSelfIp(QString Ip);//zadanie svoego Ip
+		char setSelfIp(QString Ip);
 		void giveLastMoves(MOVE lastMove[maxFiguresNumber]) ;
 		Network_Player();
 		int createServer();
 		virtual MOVE getMove();
 		void execMove(BOARD board);
-		void createClient(QString strHost);//coedinenie c ukazannim Ip
+		void createClient(QString Host);
 		~Network_Player();
-		// get player type
 		virtual PLAYER_TYPE type() {return NETWORK;};
 	private slots:
 		void slotReadyRead();
