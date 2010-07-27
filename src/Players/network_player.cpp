@@ -1,13 +1,15 @@
 #include "Players/network_player.h"
 #include <QtNetwork>
 
-#define portConect 27015
-#define portConectrelise 47475
+static const int portConect=27015;
+static const int portConectrelise=47475;
 
-#define Host_Not_Found_Error 1 
-#define Connection_Refused_Error 2
-#define Remote_Host_Closed_Error 3
-#define Error_Criate_Server 4
+enum ERROR{
+	HOST_NOT_FOUND_ERROR = 1, 
+	CONNECTION_REFUSED_ERROR = 2,
+	REMOTE_HOST_CLOSED_ERROR = 3,
+	CREATE_SERVER_ERROR = 4,
+	};
 
 
 /* methods of class of the network player */
@@ -26,13 +28,13 @@ void Network_Player::startgame(){
 	gameInProgres=true;	
 	conectComplite();
 }
-char Network_Player::createServer(){
+int Network_Player::createServer(){
 	m_ptcpServer = new QTcpServer(this); 
 	QHostAddress adrr (selfIp);
 	if (!m_ptcpServer->listen(adrr/*(selfIp)*/, portConect)) {
 		m_ptcpServer->close();
 		m_ptcpServer=NULL;
-		return Error_Criate_Server;
+		return CREATE_SERVER_ERROR;
 	}
 	connect(m_ptcpServer, SIGNAL(newConnection()),this,SLOT(slotNewConnection()));
 	return 0;
@@ -125,29 +127,33 @@ void Network_Player::slotNewConnection(){
 	}
 }	
 void Network_Player::slotError(QAbstractSocket::SocketError err){
+	ERROR er;	
 	if(err==QAbstractSocket::HostNotFoundError){
+		er=HOST_NOT_FOUND_ERROR;
 		m_pTcpSocket->close();
 		//delete m_pTcpSocket;
 		//m_pTcpSocket=NULL;
-		error(Host_Not_Found_Error);
+		error(er);
 		qDebug()<<"HostNotFoundError";
 	}	
 	else if(err == QAbstractSocket::ConnectionRefusedError){
+		er=CONNECTION_REFUSED_ERROR;
 		m_pTcpSocket->close();
 		//delete m_pTcpSocket;
 		//m_pTcpSocket=NULL;
-		error(Connection_Refused_Error);
+		error(er);
 		qDebug()<<"ConnectionRefusedError";
 	}
 	else if(err == QAbstractSocket::RemoteHostClosedError){
+		er=REMOTE_HOST_CLOSED_ERROR;
 		m_pTcpSocket->close();
 		//delete m_pTcpSocket;
 		//m_pTcpSocket=NULL;
-		error(Remote_Host_Closed_Error);
+		error(er);
 		qDebug()<<"RemoteHostClosedError";
 	}
 }
-char Network_Player::createClient( QString strHost){
+void Network_Player::createClient( QString strHost){
 	if(m_pTcpSocket!=NULL){
 		m_pTcpSocket->close();
 		delete m_pTcpSocket;
