@@ -238,14 +238,14 @@ void Network_Player::giveLastMoves(MOVE lastMove[maxFiguresNumber]) {
 	int i=0;
 	while (i < maxFiguresNumber) {
 		if ((lastMove[i].from.x != 0)||(lastMove[i].from.y != 0)||(lastMove[i].to.x != 0)||(lastMove[i].to.y != 0)) {
-			QByteArray  arrBlock;
-			QDataStream out(&arrBlock, QIODevice::WriteOnly);
+			QByteArray  arr_block;
+			QDataStream out(&arr_block, QIODevice::WriteOnly);
 			out.setVersion(QDataStream::Qt_4_0);
 			out << quint16(0) <<lastMove[i].from.x << lastMove[i].from.y << lastMove[i].to.x <<lastMove[i].to.y;
 			out.device()->seek(0);
-			out << quint16(arrBlock.size() - sizeof(quint16));
-			qDebug()<<quint16(arrBlock.size() - sizeof(quint16));
-			tcp_socket->write(arrBlock);
+			out << quint16(arr_block.size() - sizeof(quint16));
+			qDebug()<<quint16(arr_block.size() - sizeof(quint16));
+			tcp_socket->write(arr_block);
 			qDebug()<<"out";
 			qDebug()<<lastMove[i].from.x<<lastMove[i].from.y<<lastMove[i].to.x<<lastMove[i].to.y;
 			lastMove[i].from.x = 0;
@@ -271,15 +271,15 @@ void Network_Player::execMove(BOARD board) {
 MOVE Network_Player::getMove() {
 	return result;
 }
-bool Network_Player::isIp(QString Ip) {
+bool Network_Player::isIp(QString ip) {
 	QHostAddress hostaddress;
-	hostaddress.setAddress(Ip);
-	if (hostaddress != QHostAddress::Null) return 0;
-	return 1;
+	hostaddress.setAddress(ip);
+	if (hostaddress != QHostAddress::Null) return 1;
+	return 0;
 }
-bool Network_Player::setSelfIp(QString Ip){
-	if (isIp(Ip)) {
-		self_ip = Ip;
+bool Network_Player::setSelfIp(QString ip){
+	if (isIp(ip)) {
+		self_ip = ip;
 		return true;
 	}
 	return false;

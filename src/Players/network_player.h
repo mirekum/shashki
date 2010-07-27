@@ -19,12 +19,12 @@
 		QList<QString> servers_list;
 		QUdpSocket *udp_listen_socket;
 	public:
-		bool isIp(QString Ip);
+		bool isIp(QString ip);
 		void startGame();
 		void sendAnnouncement(QString need_answer);
 		QList<QString> getEnemyIpAddresses();
 		QList<QString> getSelfIpAddresses();
-		bool setSelfIp(QString Ip);
+		bool setSelfIp(QString ip);
 		void giveLastMoves(MOVE lastMove[maxFiguresNumber]) ;
 		Network_Player();
 		int createServer();
