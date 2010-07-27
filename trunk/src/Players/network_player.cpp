@@ -14,80 +14,72 @@ enum ERROR{
 
 /* methods of class of the network player */
 Network_Player::Network_Player() {
-	TcpSocket = NULL;
-	udpSocketrelise = new QUdpSocket(this);
-	udpSocketrelise->bind(PORT_CONNECT_ANNOUNCE);
-	connect(udpSocketrelise, SIGNAL(readyRead()), this, SLOT(processPendingDatagrams()));
-	gameInProgress=false;
-	tcpServer=NULL;
-	NextBlockSize=0;
-	selfIp="127.0.0.1";
-	curMove=true;
+	tcp_socket = NULL;
+	udp_listen_socket = new QUdpSocket(this);
+	udp_listen_socket->bind(PORT_CONNECT_ANNOUNCE);
+	connect(udp_listen_socket, SIGNAL(readyRead()), this, SLOT(processAnnouncement()));
+	game_in_progress = false;
+	tcp_server = NULL;
+	next_block_size = 0;
+	self_ip = "127.0.0.1";
+	cur_move = true;
 }
 void Network_Player::startGame() {
-	gameInProgress=true;	
+	game_in_progress = true;	
 	connectComplete();
 }
 int Network_Player::createServer() {
-	tcpServer = new QTcpServer(this); 
-	QHostAddress adrr (selfIp);
-	if (!tcpServer->listen(adrr/*(selfIp)*/, PORT_CONNECT)) {
-		tcpServer->close();
-		tcpServer=NULL;
+	tcp_server = new QTcpServer(this); 
+	QHostAddress adrr (self_ip);
+	if (!tcp_server->listen(adrr/*(selfIp)*/, PORT_CONNECT)) {
+		tcp_server->close();
+		tcp_server = NULL;
 		return CREATE_SERVER_ERROR;
 	}
-	connect(tcpServer, SIGNAL(newConnection()),this,SLOT(slotNewConnection()));
+	connect(tcp_server, SIGNAL(newConnection()), this, SLOT(slotNewConnection()));
 	return 0;
 };
-void Network_Player::sendAnnouncement() {
-	QUdpSocket udpSocketReturn;
-	QString Return;
+void Network_Player::sendAnnouncement(QString need_answer) {
+	QUdpSocket udp_socket;
+	QString mess;
 	if (color == BLACK) {
-		Return =Return+"B";
+		mess = mess+"B";
 	}
 	else if (color == WHITE) {
-		Return =Return+"W";
+		mess = mess+"W";
 	}
-	Return =Return+"Y"+selfIp;
-	QByteArray datagramReturn = Return.toStdString().c_str() ;
-	udpSocketReturn.writeDatagram(datagramReturn.data(),datagramReturn.size(),QHostAddress::Broadcast,PORT_CONNECT_ANNOUNCE);
-	ServerList.clear();
+	mess = mess+need_answer+self_ip;
+	QByteArray datagram = mess.toStdString().c_str() ;
+	udp_socket.writeDatagram(datagram.data(), datagram.size(), QHostAddress::Broadcast, PORT_CONNECT_ANNOUNCE);
+	servers_list.clear();
 }
-void Network_Player::processPendingDatagrams() {
-	QUdpSocket* udpSocket = (QUdpSocket*)sender();
-	QHostAddress IPtempDefine("127.0.0.1");
-	while (udpSocket->hasPendingDatagrams()) {
+
+void Network_Player::processAnnouncement() {
+	QUdpSocket* udp_socket = (QUdpSocket*)sender();
+	QHostAddress localhost_address("127.0.0.1");
+	while (udp_socket->hasPendingDatagrams()) {
 		QByteArray datagram;
-		datagram.resize(udpSocket->pendingDatagramSize());
-		udpSocket->readDatagram(datagram.data(), datagram.size());
-		char* tmp=datagram.data();
-		const char* colorin = & tmp[0];
-		const char* answer = & tmp[1];
-		const char*sendIp = & tmp[2];
-		qDebug()<<colorin<<"INPUT DATA";
-		QHostAddress hostaddress;
-		if (((colorin[0] == 'B')&&(color == WHITE))||((colorin[0] == 'W')&&(color == BLACK))) {
-			hostaddress.setAddress(sendIp);
-			if ((hostaddress != QHostAddress:: Null)
-						&&(selfIp != sendIp)
-							&&(hostaddress != IPtempDefine)) {
-				if (answer[0] == 'Y') {
-					QUdpSocket udpSocketReturn;
-					QString Return;
-					if(color==BLACK){
-						Return =Return+"B";
-					}
-					else if(color==WHITE){
-						Return =Return+"W";
-					}
-					Return =Return+"N"+selfIp;
-					QByteArray datagramReturn = Return.toStdString().c_str() ;
-					udpSocketReturn.writeDatagram(datagramReturn.data(),datagramReturn.size(),QHostAddress::Broadcast,PORT_CONNECT_ANNOUNCE);
+		datagram.resize(udp_socket->pendingDatagramSize());
+		udp_socket->readDatagram(datagram.data(), datagram.size());
+		char* tmp = datagram.data();
+		const char *recv_color = & tmp[0];
+		const char *recv_need_answer = & tmp[1];
+		const char *recv_ip = & tmp[2];
+		qDebug()<<recv_color<<"INPUT DATA";
+		QHostAddress recv_address;
+		if (((recv_color[0] == 'B') && (color == WHITE)) ||
+		    ((recv_color[0] == 'W') && (color == BLACK))) {
+			recv_address.setAddress(recv_ip);
+			if ((recv_address != QHostAddress:: Null)  && 
+			    (recv_address != localhost_address) &&
+                            (recv_ip != self_ip)) {
+				if (recv_need_answer[0] == 'Y') {
+					sendAnnouncement("N");
 				}
-				if (!ServerList.contains(sendIp)) {
-					ServerList<<sendIp;
+				if (!servers_list.contains(recv_ip)) {
+					servers_list<<recv_ip;
 					searchUpdate();
-					qDebug()<<"ADD IN LIST SERVER"<<sendIp;	
+					qDebug()<<"ADD IN LIST SERVER"<<recv_ip;	
 				}
 			}
 			
@@ -96,14 +88,14 @@ void Network_Player::processPendingDatagrams() {
 }
 
 QList<QString> Network_Player::getEnemyIpAddresses() {
-	return ServerList;
+	return servers_list;
 }
 
 void Network_Player::slotNewConnection() {
-	if (gameInProgress == false) {
-		TcpSocket = tcpServer->nextPendingConnection();
-		connect(TcpSocket, SIGNAL(disconnected()), TcpSocket, SLOT(deleteLater()));
-		connect(TcpSocket, SIGNAL(readyRead()),SLOT(slotReadyRead()));
+	if (game_in_progress == false) {
+		tcp_socket = tcp_server->nextPendingConnection();
+		connect(tcp_socket, SIGNAL(disconnected()), tcp_socket, SLOT(deleteLater()));
+		connect(tcp_socket, SIGNAL(readyRead()),SLOT(slotReadyRead()));
 		slotConnected();
 		QByteArray  arrBlock;
 		QDataStream out(&arrBlock, QIODevice::WriteOnly);
@@ -113,58 +105,54 @@ void Network_Player::slotNewConnection() {
 		qDebug()<<true;
 		out.device()->seek(0);
 		out << quint16(arrBlock.size() - sizeof(quint16));
-		TcpSocket->write(arrBlock);
-		connect(TcpSocket, SIGNAL(error(QAbstractSocket::SocketError)),SLOT(slotError(QAbstractSocket::SocketError)));
+		tcp_socket->write(arrBlock);
+		connect(tcp_socket, SIGNAL(error(QAbstractSocket::SocketError)),SLOT(slotError(QAbstractSocket::SocketError)));
 		startGame();
 
 	}
 	else{
-		QTcpSocket*temp_TcpSocket = tcpServer->nextPendingConnection();
+		QTcpSocket*temp_tcp_socket = tcp_server->nextPendingConnection();
 		QByteArray  arrBlock;
 		QDataStream out(&arrBlock, QIODevice::WriteOnly);
 		out.setVersion(QDataStream::Qt_4_0);
 		out << quint16(0)<<false;
 		out.device()->seek(0);
 		out << quint16(arrBlock.size() - sizeof(quint16));
-		temp_TcpSocket->write(arrBlock);
-		temp_TcpSocket->close();
-		delete temp_TcpSocket;
+		temp_tcp_socket->write(arrBlock);
+		temp_tcp_socket->close();
+		delete temp_tcp_socket;
 	}
 }	
 void Network_Player::slotError(QAbstractSocket::SocketError err) {
-	ERROR er;	
 	if ( err == QAbstractSocket::HostNotFoundError) {
-		er=HOST_NOT_FOUND_ERROR;
-		TcpSocket->close();
-		error(er);
+		tcp_socket->close();
+		error(HOST_NOT_FOUND_ERROR);
 		qDebug()<<"HostNotFoundError";
 	}	
 	else if (err == QAbstractSocket::ConnectionRefusedError) {
-		er=CONNECTION_REFUSED_ERROR;
-		TcpSocket->close();
-		error(er);
+		tcp_socket->close();
+		error(CONNECTION_REFUSED_ERROR);
 		qDebug()<<"ConnectionRefusedError";
 	}
 	else if (err == QAbstractSocket::RemoteHostClosedError) {
-		er=REMOTE_HOST_CLOSED_ERROR;
-		TcpSocket->close();
-		error(er);
+		tcp_socket->close();
+		error(REMOTE_HOST_CLOSED_ERROR);
 		qDebug()<<"RemoteHostClosedError";
 	}
 }
 void Network_Player::createClient( QString Host) {
-	if (TcpSocket!=NULL) {
-		TcpSocket->close();
-		delete TcpSocket;
-		TcpSocket=NULL;
+	if (tcp_socket != NULL) {
+		tcp_socket->close();
+		delete tcp_socket;
+		tcp_socket = NULL;
 	};
 	qDebug()<<"conect too hast:" <<Host;
-	TcpSocket = new QTcpSocket(this);
-	NextBlockSize=0;
-	TcpSocket->connectToHost(Host, PORT_CONNECT);
-	connect(TcpSocket, SIGNAL(connected()), SLOT(slotConnected()));
-	connect(TcpSocket, SIGNAL(readyRead()), SLOT(slotReadyRead()));
-	connect(TcpSocket, SIGNAL(error(QAbstractSocket::SocketError)),SLOT(slotError(QAbstractSocket::SocketError)));
+	tcp_socket = new QTcpSocket(this);
+	next_block_size = 0;
+	tcp_socket->connectToHost(Host, PORT_CONNECT);
+	connect(tcp_socket, SIGNAL(connected()), SLOT(slotConnected()));
+	connect(tcp_socket, SIGNAL(readyRead()), SLOT(slotReadyRead()));
+	connect(tcp_socket, SIGNAL(error(QAbstractSocket::SocketError)), SLOT(slotError(QAbstractSocket::SocketError)));
 
 }
 void Network_Player::slotConnected() {
@@ -172,84 +160,84 @@ void Network_Player::slotConnected() {
 }
 
 void Network_Player::slotReadyRead() {
-	if (curMove) {
-		if (gameInProgress == false) {
+	if (cur_move) {
+		if (game_in_progress == false) {
 			qDebug()<<"vait read signal";
-			QDataStream in(TcpSocket);
+			QDataStream in(tcp_socket);
 			in.setVersion(QDataStream::Qt_4_0);
 				for (;;) {
-					if (!NextBlockSize) {
-						if (TcpSocket->bytesAvailable() < sizeof(quint16)) {
+					if (!next_block_size) {
+						if (tcp_socket->bytesAvailable() < sizeof(quint16)) {
 							break;
 						}
-						in >> NextBlockSize;
+						in >> next_block_size;
 					}
-					if (TcpSocket->bytesAvailable() < NextBlockSize) {
+					if (tcp_socket->bytesAvailable() < next_block_size) {
 						qDebug()<<"reed signal";
 						break;
 					}
-					in >>gameInProgress;
-					qDebug()<<gameInProgress<<"-signal";
-					if (gameInProgress == true) {
-						qDebug()<<gameInProgress<<"signal";
+					in >>game_in_progress;
+					qDebug()<<game_in_progress<<"-signal";
+					if (game_in_progress == true) {
+						qDebug()<<game_in_progress<<"signal";
 						startGame();
 					}
 					else{
-						TcpSocket->close();
+						tcp_socket->close();
 					}
-					NextBlockSize = 0;
+					next_block_size = 0;
 				}
 		}
 		else{	
 			qDebug()<<"vait read";
-			QDataStream in(TcpSocket);
+			QDataStream in(tcp_socket);
 			in.setVersion(QDataStream::Qt_4_0);
 				for (;;) {
-					if (!NextBlockSize) {
-						if (TcpSocket->bytesAvailable() < sizeof(quint16)) {
+					if (!next_block_size) {
+						if (tcp_socket->bytesAvailable() < sizeof(quint16)) {
 							qDebug()<<"read lern";
 							break;
 						}
-						in >> NextBlockSize;
-						qDebug()<<NextBlockSize;
+						in >> next_block_size;
+						qDebug()<<next_block_size;
 					}
-					if (TcpSocket->bytesAvailable() < NextBlockSize) {
+					if (tcp_socket->bytesAvailable() < next_block_size) {
 						qDebug()<<"reed";
 						break;
 					}
-					result.from.x=0;
-					result.from.y=0;
-					result.to.x=0;
-					result.to.y=0;
+					result.from.x = 0;
+					result.from.y = 0;
+					result.to.x = 0;
+					result.to.y = 0;
 					in >>result.from.x>>result.from.y>>result.to.x>>result.to.y;
-					curMove=false;
+					cur_move = false;
 					qDebug()<<result.from.x;
 					qDebug()<<result.from.y;
 					qDebug()<<result.to.x;
 					qDebug()<<result.to.y;
-					NextBlockSize = 0;
+					next_block_size = 0;
 					return;
 				}
 		}
 	}
 }
 QList<QString> Network_Player::getSelfIpAddresses() { 
-	QList<QString> listInterfase;
+	QList<QString> list_interfase;
 	QString temp;
 	QList<QNetworkInterface> list = QNetworkInterface::allInterfaces();
-	QHostAddress IPtempDefine("127.0.0.1");
-	foreach (QHostAddress IPtemp,QNetworkInterface::allAddresses ()){
-		temp=IPtemp.toString();
-		if ((temp.count(":")==0)&&(IPtemp!=IPtempDefine)) {
-			listInterfase<<temp;
+	QHostAddress localhost_address("127.0.0.1");
+	foreach (QHostAddress ip_temp,QNetworkInterface::allAddresses ()){
+		temp=ip_temp.toString();
+		if ((temp.count(":")==0)&&(ip_temp!=localhost_address)) {
+			list_interfase<<temp;
 		}
 	}
-	return listInterfase;
+	return list_interfase;
 }
 void Network_Player::giveLastMoves(MOVE lastMove[maxFiguresNumber]) {
 	int i=0;
-	while (i<maxFiguresNumber) {
-		if ((lastMove[i].from.x!=0)||(lastMove[i].from.y!=0)||(lastMove[i].to.x!=0)||(lastMove[i].to.y!=0)) {
+	while (i < maxFiguresNumber) {
+		if ((lastMove[i].from.x != 0)||(lastMove[i].from.y != 0)||(lastMove[i].to.x != 0)||(lastMove[i].to.y != 0)) {
 			QByteArray  arrBlock;
 			QDataStream out(&arrBlock, QIODevice::WriteOnly);
 			out.setVersion(QDataStream::Qt_4_0);
@@ -257,13 +245,13 @@ void Network_Player::giveLastMoves(MOVE lastMove[maxFiguresNumber]) {
 			out.device()->seek(0);
 			out << quint16(arrBlock.size() - sizeof(quint16));
 			qDebug()<<quint16(arrBlock.size() - sizeof(quint16));
-			TcpSocket->write(arrBlock);
+			tcp_socket->write(arrBlock);
 			qDebug()<<"out";
 			qDebug()<<lastMove[i].from.x<<lastMove[i].from.y<<lastMove[i].to.x<<lastMove[i].to.y;
-			lastMove[i].from.x=0;
-			lastMove[i].from.y=0;
-			lastMove[i].to.x=0;
-			lastMove[i].to.y=0;
+			lastMove[i].from.x = 0;
+			lastMove[i].from.y = 0;
+			lastMove[i].to.x = 0;
+			lastMove[i].to.y = 0;
 		}
 		i++;
 	}
@@ -272,13 +260,13 @@ void Network_Player::execMove(BOARD board) {
 	sleep(1);	
 	slotReadyRead();
 	do {
-		if (curMove == false) {
+		if (cur_move == false) {
 			break;
 		}
 		usleep(300);
 	} while (true);
 	moveExecuted();
-	curMove=true;
+	cur_move = true;
 }
 MOVE Network_Player::getMove() {
 	return result;
@@ -290,10 +278,8 @@ bool Network_Player::isIp(QString Ip) {
 	return 1;
 }
 bool Network_Player::setSelfIp(QString Ip){
-	QHostAddress hostaddress;
-	hostaddress.setAddress(Ip);
-	if (hostaddress != QHostAddress:: Null) {
-		selfIp=Ip;
+	if (isIp(Ip)) {
+		self_ip = Ip;
 		return true;
 	}
 	return false;

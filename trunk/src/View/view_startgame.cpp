@@ -145,7 +145,7 @@ void View_StartGame::setupNetworkGetInterface() {
 }
 // network search
 void View_StartGame::setupNetworkShowSearch() {
-	NetworkPlr->sendAnnouncement();
+	NetworkPlr->sendAnnouncement("Y");
 	QLabel *listip_box_label = new QLabel("Search enemies:", settingsBox);
 	listip_box_label->setObjectName("Network Search Label");
 	listip_box_label->setGeometry(180, 80, 360, 30);
