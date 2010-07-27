@@ -10,8 +10,8 @@
 		Q_OBJECT
 	private:
 		bool vaiting;
-		bool gethod;
-		bool gameInProgres;
+		bool curMove;
+		bool gameInProgress;
 		QTcpSocket* TcpSocket;
 		QTcpServer* tcpServer;
 		quint16     NextBlockSize;
@@ -19,11 +19,11 @@
 		QList<QString> ServerList;
 		QUdpSocket*udpSocketrelise;
 	public:
-		bool itThisIP(QString Ip);
-		void startgame();
-		void relise();
-		QList<QString> getList();
-		QList<QString> getActivInterfase();
+		bool isIp(QString Ip);
+		void startGame();
+		void sendAnnouncement();
+		QList<QString> getEnemyIpAddresses();
+		QList<QString> getSelfIpAddresses();
 		char setSelfIp(QString Ip);
 		void giveLastMoves(MOVE lastMove[maxFiguresNumber]) ;
 		Network_Player();
@@ -40,9 +40,8 @@
 		void processPendingDatagrams();
 		void slotError(QAbstractSocket::SocketError);
 	signals:
-		void inputSoed();
 		void searchUpdate();
-		void conectComplite();//signal o soedinenii
+		void connectComplete();//signal o soedinenii
 		
 	};
 	
