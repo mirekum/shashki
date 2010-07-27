@@ -28,10 +28,10 @@
 		char setSelfIp(QString Ip);//zadanie svoego Ip
 		void giveLastMoves(MOVE lastMove[maxFiguresNumber]) ;
 		Network_Player();
-		char createServer();
+		int createServer();
 		virtual MOVE getMove();
 		void execMove(BOARD board);
-		char createClient(QString strHost);//coedinenie c ukazannim Ip
+		void createClient(QString strHost);//coedinenie c ukazannim Ip
 		~Network_Player();
 		// get player type
 		virtual PLAYER_TYPE type() {return NETWORK;};
