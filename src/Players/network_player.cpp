@@ -51,7 +51,7 @@ void Network_Player::relise(){
 	Return =Return+"Y"+selfIp;
 	QByteArray datagramReturn = Return.toStdString().c_str() ;
 	udpSocketReturn.writeDatagram(datagramReturn.data(),datagramReturn.size(),QHostAddress::Broadcast,portConectRelise);
-	listServer.clear();
+	ServerList.clear();
 }
 void Network_Player::processPendingDatagrams(){
 	QUdpSocket* udpSocket = (QUdpSocket*)sender();
@@ -81,8 +81,8 @@ void Network_Player::processPendingDatagrams(){
 				QByteArray datagramReturn = Return.toStdString().c_str() ;
 				udpSocketReturn.writeDatagram(datagramReturn.data(),datagramReturn.size(),QHostAddress::Broadcast,portConectRelise);
 			}
-			if((hostaddress!=QHostAddress:: Null)&&(!listServer.contains(sendIp)&&(selfIp!=sendIp))	&&(hostaddress!=IPtempDefine)){
-			listServer<<sendIp;
+			if((hostaddress!=QHostAddress:: Null)&&(!ServerList.contains(sendIp)&&(selfIp!=sendIp))	&&(hostaddress!=IPtempDefine)){
+			ServerList<<sendIp;
 			searchUpdate();
 			qDebug()<<"ADD IN LIST SERVER"<<sendIp;	
 			}	
@@ -90,7 +90,7 @@ void Network_Player::processPendingDatagrams(){
 	}
 }
 QList<QString> Network_Player::getList(){
-	return listServer;
+	return ServerList;
 }
 void Network_Player::slotNewConnection(){
 	if(gameInProgres==false){
@@ -106,7 +106,6 @@ void Network_Player::slotNewConnection(){
 		qDebug()<<true;
 		out.device()->seek(0);
 		out << quint16(arrBlock.size() - sizeof(quint16));
-		if(TcpSocket==NULL)qDebug()<<"NULL";
 		TcpSocket->write(arrBlock);
 		connect(TcpSocket, SIGNAL(error(QAbstractSocket::SocketError)),SLOT(slotError(QAbstractSocket::SocketError)));
 		startgame();
@@ -147,16 +146,16 @@ void Network_Player::slotError(QAbstractSocket::SocketError err){
 		qDebug()<<"RemoteHostClosedError";
 	}
 }
-void Network_Player::createClient( QString strHost){
+void Network_Player::createClient( QString Host){
 	if(TcpSocket!=NULL){
 		TcpSocket->close();
 		delete TcpSocket;
 		TcpSocket=NULL;
 	};
-	qDebug()<<"conect tuu hast:" <<strHost;
+	qDebug()<<"conect tuu hast:" <<Host;
 	TcpSocket = new QTcpSocket(this);
 	NextBlockSize=0;
-	TcpSocket->connectToHost(strHost, portConect);
+	TcpSocket->connectToHost(Host, portConect);
 	connect(TcpSocket, SIGNAL(connected()), SLOT(slotConnected()));
 	connect(TcpSocket, SIGNAL(readyRead()), SLOT(slotReadyRead()));
 	connect(TcpSocket, SIGNAL(error(QAbstractSocket::SocketError)),SLOT(slotError(QAbstractSocket::SocketError)));
