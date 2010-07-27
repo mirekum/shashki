@@ -12,9 +12,9 @@
 		bool vaiting;
 		bool gethod;
 		bool gameInProgres;
-		QTcpSocket* m_pTcpSocket;
-		QTcpServer* m_ptcpServer;
-		quint16     m_nNextBlockSize;
+		QTcpSocket* TcpSocket;
+		QTcpServer* tcpServer;
+		quint16     NextBlockSize;
 		QString selfIp;
 		QList<QString> listServer;
 		QUdpSocket*udpSocketrelise;
