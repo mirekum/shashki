@@ -13,7 +13,7 @@
 		bool gethod;
 		bool gameInProgres;
 		QTcpSocket* m_pTcpSocket;
-		QTcpServer*m_ptcpServer;
+		QTcpServer* m_ptcpServer;
 		quint16     m_nNextBlockSize;
 		QString selfIp;
 		QList<QString> listServer;
@@ -40,7 +40,6 @@
 		void slotConnected();
 		void slotNewConnection();
 		void processPendingDatagrams();
-		void processPendingDatagramsinput();
 		void slotError(QAbstractSocket::SocketError);
 	signals:
 		void inputSoed();

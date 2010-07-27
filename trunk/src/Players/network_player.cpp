@@ -5,7 +5,7 @@
 #define portConectrelise 47475
 #define portConectreliseinput 45455
 
-#define Host_Not_Found_Error 1
+#define Host_Not_Found_Error 1 
 #define Connection_Refused_Error 2
 #define Remote_Host_Closed_Error 3
 #define Error_Criate_Server 4
@@ -13,14 +13,10 @@
 
 /* methods of class of the network player */
 Network_Player::Network_Player(){
-	m_pTcpSocket=NULL;
+	m_pTcpSocket = NULL;
 	udpSocketrelise = new QUdpSocket(this);
 	udpSocketrelise->bind(portConectrelise);
-	connect(udpSocketrelise, SIGNAL(readyRead()),this, SLOT(processPendingDatagrams()));
-
-	udpSocketinput = new QUdpSocket(this);
-	udpSocketinput->bind(portConectreliseinput);
-	connect(udpSocketinput, SIGNAL(readyRead()),this, SLOT(processPendingDatagramsinput()));
+	connect(udpSocketrelise, SIGNAL(readyRead()), this, SLOT(processPendingDatagrams()));
 	gameInProgres=false;
 	m_ptcpServer=NULL;
 	m_nNextBlockSize=0;
@@ -43,40 +39,18 @@ char Network_Player::createServer(){
 	return 0;
 };
 void Network_Player::relise(){
-	QUdpSocket udpSocket;
-	QString tipe;
+	QUdpSocket udpSocketReturn;
+	QString Return;
 	if(color==BLACK){
-		tipe="B";
+		Return =Return+"B";
 	}
-	if(color==WHITE){
-		tipe="W";
+	else if(color==WHITE){
+		Return =Return+"W";
 	}
-	qDebug()<<tipe+selfIp.toStdString().c_str();
-	QByteArray datagram = (tipe+selfIp).toStdString().c_str() ;
-	udpSocket.writeDatagram(datagram.data(), datagram.size(),QHostAddress::Broadcast, portConectrelise);
+	Return =Return+"Y"+selfIp;
+	QByteArray datagramReturn = Return.toStdString().c_str() ;
+	udpSocketReturn.writeDatagram(datagramReturn.data(),datagramReturn.size(),QHostAddress::Broadcast,portConectreliseinput);
 	listServer.clear();
-}
-void Network_Player::processPendingDatagramsinput(){
-	QUdpSocket* udpSocket = (QUdpSocket*)sender();
-	QHostAddress IPtempDefine("127.0.0.1");
-	while (udpSocket->hasPendingDatagrams()){
-		QByteArray datagram;
-		datagram.resize(udpSocket->pendingDatagramSize());
-		udpSocket->readDatagram(datagram.data(), datagram.size());
-
-		const char*colorin=datagram.data();
-		const char*sendIp=&colorin[1];
-		qDebug()<<colorin[0]<<"otlad read onli"<<sendIp;
-		QHostAddress hostaddress;
-		if(((colorin[0]=='B')&&(color==WHITE))||((colorin[0]=='W')&&(color==BLACK))){
-		hostaddress.setAddress(sendIp);qDebug()<<colorin<<"otlad read onli";
-		}
-		if((hostaddress!=QHostAddress:: Null)&&(!listServer.contains(sendIp)&&(selfIp!=sendIp))&&(hostaddress!=IPtempDefine)){
-			listServer<<sendIp;
-			searchUpdate();
-			qDebug()<<"input readonli"<<sendIp;	
-		}
-	}
 }
 void Network_Player::processPendingDatagrams(){
 	QUdpSocket* udpSocket = (QUdpSocket*)sender();
@@ -85,31 +59,32 @@ void Network_Player::processPendingDatagrams(){
 		QByteArray datagram;
 		datagram.resize(udpSocket->pendingDatagramSize());
 		udpSocket->readDatagram(datagram.data(), datagram.size());
-		qDebug()<<datagram.data();
-		const char*colorin=datagram.data();
-		const char*sendIp=&colorin[1];
-		qDebug()<<colorin[0]<<"otlad rw"<<sendIp;
+		char* tmp=datagram.data();
+		const char* colorin = & tmp[0];
+		const char* answer = & tmp[1];
+		const char*sendIp = & tmp[2];
+		qDebug()<<colorin<<"INPUT DATA";
 		QHostAddress hostaddress;
 		if(((colorin[0]=='B')&&(color==WHITE))||((colorin[0]=='W')&&(color==BLACK))){
-		hostaddress.setAddress(sendIp);qDebug()<<colorin<<"otladrw";
-		}
-		if((hostaddress!=QHostAddress:: Null)&&(!listServer.contains(sendIp)&&(selfIp!=sendIp))&&(hostaddress!=IPtempDefine)){
+			hostaddress.setAddress(sendIp);
+			if((hostaddress!=QHostAddress:: Null)&&(selfIp!=sendIp)&&(hostaddress!=IPtempDefine)&&(answer[0]=='Y')){
+				QUdpSocket udpSocketReturn;
+				QString Return;
+				if(color==BLACK){
+					Return =Return+"B";
+				}
+				else if(color==WHITE){
+					Return =Return+"W";
+				}
+				Return =Return+"N"+selfIp;
+				QByteArray datagramReturn = Return.toStdString().c_str() ;
+				udpSocketReturn.writeDatagram(datagramReturn.data(),datagramReturn.size(),QHostAddress::Broadcast,portConectreliseinput);
+			}
+			if((hostaddress!=QHostAddress:: Null)&&(!listServer.contains(sendIp)&&(selfIp!=sendIp))	&&(hostaddress!=IPtempDefine)){
 			listServer<<sendIp;
 			searchUpdate();
-			qDebug()<<"input rw"<<sendIp;	
-		}	
-		if((hostaddress!=QHostAddress:: Null)&&(selfIp!=sendIp)&&(hostaddress!=IPtempDefine)){
-			QUdpSocket udpSocketReturn;
-			QString tipe;
-			if(color==BLACK){
-				tipe="B";
-			}
-			if(color==WHITE){
-				tipe="W";
-			}
-			QByteArray datagramReturn = (tipe+selfIp).toStdString().c_str() ;
-			udpSocketReturn.writeDatagram(datagramReturn.data(), datagramReturn.size(),QHostAddress::Broadcast,portConectreliseinput);
-			qDebug()<<"Unser rw"<<datagramReturn.data()<<sendIp;
+			qDebug()<<"ADD IN LIST SERVER"<<sendIp;	
+			}	
 		}
 	}
 }
