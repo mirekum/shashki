@@ -119,7 +119,7 @@ void View_StartGame::setupNetworkEnd() {
 }
 // network interface
 void View_StartGame::setupNetworkShowInterface() {
-	QList<QString> listIP = NetworkPlr->getActivInterfase();
+	QList<QString> listIP = NetworkPlr->getSelfIpAddresses();
 	QLabel *listip_box_label = new QLabel("Network Interface:", settingsBox);
 	listip_box_label->setObjectName("Network Interface Label");
 	listip_box_label->setGeometry(180, 80, 360, 30);
@@ -145,7 +145,7 @@ void View_StartGame::setupNetworkGetInterface() {
 }
 // network search
 void View_StartGame::setupNetworkShowSearch() {
-	NetworkPlr->relise();
+	NetworkPlr->sendAnnouncement();
 	QLabel *listip_box_label = new QLabel("Search enemies:", settingsBox);
 	listip_box_label->setObjectName("Network Search Label");
 	listip_box_label->setGeometry(180, 80, 360, 30);
@@ -159,24 +159,24 @@ void View_StartGame::setupNetworkShowSearch() {
 	textIP->setGeometry(180, 200, 360, 60);
 	textIP->show();
 	connect(NetworkPlr, SIGNAL(searchUpdate()), SLOT(setupNetworkUpdateSearch1()));
-	connect(NetworkPlr, SIGNAL(conectComplite()), SLOT(setupNetworkUpdateSearch2()));
+	connect(NetworkPlr, SIGNAL(connectComplete()), SLOT(setupNetworkUpdateSearch2()));
 	connect(next_btn, SIGNAL(clicked()), SLOT(setupNetworkIP()));
 	connect(textIP, SIGNAL(returnPressed()), SLOT(setupNetworkIP()));
 }
 
 void View_StartGame::setupNetworkIP(){
 	QString IP=settingsBox->findChild<QLineEdit*>("Network IP")->text();
-	if(NetworkPlr->itThisIP(IP)==1){
-	qDebug()<<"ipSets"<<IP;
-	setupNetworkGetSearch();
-	return;
+	if(NetworkPlr->isIp(IP)==1){
+		qDebug()<<"ipSets"<<IP;
+		setupNetworkGetSearch();
+		return;
 	}
 	disconnect(next_btn, SIGNAL(clicked()), this, SLOT(setupNetworkGetSearch()));
 	QString choosedIP = settingsBox->findChild<QComboBox*>("Network Search")->currentText();
 	NetworkPlr->createClient(IP);
 }
 void View_StartGame::setupNetworkUpdateSearch1() {
-	QList<QString> listIP = NetworkPlr->getList();
+	QList<QString> listIP = NetworkPlr->getEnemyIpAddresses();
 	settingsBox->findChild<QComboBox*>("Network Search")->clear();
 	foreach (QString ip, listIP) {
 		settingsBox->findChild<QComboBox*>("Network Search")->addItem(ip);
@@ -190,7 +190,7 @@ void View_StartGame::setupNetworkUpdateSearch2() {
 void View_StartGame::setupNetworkGetSearch() {
 	if (!settingsBox->findChild<QComboBox*>("Network Search")->count()) return;
 	disconnect(NetworkPlr, SIGNAL(searchUpdate()), this, SLOT(setupNetworkUpdateSearch1()));
-	disconnect(NetworkPlr, SIGNAL(conectComplite()), this, SLOT(setupNetworkUpdateSearch2()));
+	disconnect(NetworkPlr, SIGNAL(connectComplete()), this, SLOT(setupNetworkUpdateSearch2()));
 	disconnect(next_btn, SIGNAL(clicked()), this, SLOT(setupNetworkGetSearch()));
 	settingsBox->findChild<QLabel*>("Network Search Label")->hide();
 	settingsBox->findChild<QComboBox*>("Network Search")->hide();
