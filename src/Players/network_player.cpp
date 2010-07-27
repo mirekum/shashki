@@ -286,14 +286,14 @@ bool Network_Player::isIp(QString Ip) {
 	if (hostaddress != QHostAddress::Null) return 0;
 	return 1;
 }
-char Network_Player::setSelfIp(QString Ip){
+bool Network_Player::setSelfIp(QString Ip){
 	QHostAddress hostaddress;
 	hostaddress.setAddress(Ip);
 	if (hostaddress != QHostAddress:: Null) {
 		selfIp=Ip;
-		return 0;
+		return true;
 	}
-	return 1;
+	return false;
 }
 Network_Player::~Network_Player() {
 	qDebug()<<"delited";
