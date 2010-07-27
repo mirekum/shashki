@@ -160,7 +160,7 @@ void View_StartGame::setupNetworkShowSearch() {
 	textIP->show();
 	QLabel *ERROR_box_label = new QLabel("", settingsBox);
 	ERROR_box_label->setObjectName("ERROR_IP");
-	ERROR_box_label->setGeometry(180, 280, 360, 30);
+	ERROR_box_label->setGeometry(180, 40, 360, 30);
 	ERROR_box_label->show();
 	connect(NetworkPlr, SIGNAL(searchUpdate()), SLOT(setupNetworkUpdateSearch1()));
 	connect(NetworkPlr, SIGNAL(connectComplete()), SLOT(setupNetworkUpdateSearch2()));
@@ -171,7 +171,7 @@ void View_StartGame::setupNetworkShowSearch() {
 void View_StartGame::setupNetworkIP(){
 	QString IP=settingsBox->findChild<QLineEdit*>("Network IP")->text();
 	if(NetworkPlr->isIp(IP)==1){
-		qDebug()<<"ipSets"<<IP;
+		qDebug()<<"is not ip"<<IP;
 		QString err="IS NOT IP:";		
 		settingsBox->findChild<QLabel*>("ERROR_IP")->setText(err+IP);
 		return;
