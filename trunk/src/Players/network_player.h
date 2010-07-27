@@ -24,7 +24,7 @@
 		void sendAnnouncement();
 		QList<QString> getEnemyIpAddresses();
 		QList<QString> getSelfIpAddresses();
-		char setSelfIp(QString Ip);
+		bool setSelfIp(QString Ip);
 		void giveLastMoves(MOVE lastMove[maxFiguresNumber]) ;
 		Network_Player();
 		int createServer();
