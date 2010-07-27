@@ -9,19 +9,19 @@
 	class Network_Player: public Player {
 		Q_OBJECT
 	private:
-		bool vaiting;
-		bool curMove;
-		bool gameInProgress;
-		QTcpSocket* TcpSocket;
-		QTcpServer* tcpServer;
-		quint16     NextBlockSize;
-		QString selfIp;
-		QList<QString> ServerList;
-		QUdpSocket*udpSocketrelise;
+		bool waiting;
+		bool cur_move;
+		bool game_in_progress;
+		QTcpSocket *tcp_socket;
+		QTcpServer *tcp_server;
+		quint16     next_block_size;
+		QString self_ip;
+		QList<QString> servers_list;
+		QUdpSocket *udp_listen_socket;
 	public:
 		bool isIp(QString Ip);
 		void startGame();
-		void sendAnnouncement();
+		void sendAnnouncement(QString need_answer);
 		QList<QString> getEnemyIpAddresses();
 		QList<QString> getSelfIpAddresses();
 		bool setSelfIp(QString Ip);
@@ -37,11 +37,11 @@
 		void slotReadyRead();
 		void slotConnected();
 		void slotNewConnection();
-		void processPendingDatagrams();
+		void processAnnouncement();
 		void slotError(QAbstractSocket::SocketError);
 	signals:
 		void searchUpdate();
-		void connectComplete();//signal o soedinenii
+		void connectComplete();
 		
 	};
 	
