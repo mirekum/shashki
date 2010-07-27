@@ -171,6 +171,9 @@ void View_StartGame::setupNetworkShowSearch() {
 void View_StartGame::setupNetworkIP(){
 	QString IP=settingsBox->findChild<QLineEdit*>("Network IP")->text();
 	if(NetworkPlr->isIp(IP)==1){
+		if (IP == "") {
+			setupNetworkGetSearch();
+		}
 		qDebug()<<"is not ip"<<IP;
 		QString err="IS NOT IP:";		
 		settingsBox->findChild<QLabel*>("ERROR_IP")->setText(err+IP);
