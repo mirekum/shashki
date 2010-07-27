@@ -173,13 +173,14 @@ void View_StartGame::setupNetworkIP(){
 	if(NetworkPlr->isIp(IP)==1){
 		if (IP == "") {
 			setupNetworkGetSearch();
+			return;
 		}
 		qDebug()<<"is not ip"<<IP;
 		QString err="IS NOT IP:";		
 		settingsBox->findChild<QLabel*>("ERROR_IP")->setText(err+IP);
 		return;
 	}
-	//disconnect(next_btn, SIGNAL(clicked()), this, SLOT(setupNetworkGetSearch()));
+	disconnect(next_btn, SIGNAL(clicked()), this, SLOT(setupNetworkGetSearch()));
 	QString choosedIP = settingsBox->findChild<QComboBox*>("Network Search")->currentText();
 	NetworkPlr->createClient(IP);
 }
