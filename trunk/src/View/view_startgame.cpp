@@ -170,7 +170,7 @@ void View_StartGame::setupNetworkShowSearch() {
 
 void View_StartGame::setupNetworkIP(){
 	QString IP=settingsBox->findChild<QLineEdit*>("Network IP")->text();
-	if(NetworkPlr->isIp(IP)==1){
+	if(NetworkPlr->isIp(IP) == false){
 		if (IP == "") {
 			setupNetworkGetSearch();
 			return;
