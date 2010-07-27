@@ -3,7 +3,6 @@
 
 #define portConect 27015
 #define portConectrelise 47475
-#define portConectreliseinput 45455
 
 #define Host_Not_Found_Error 1 
 #define Connection_Refused_Error 2
@@ -49,7 +48,7 @@ void Network_Player::relise(){
 	}
 	Return =Return+"Y"+selfIp;
 	QByteArray datagramReturn = Return.toStdString().c_str() ;
-	udpSocketReturn.writeDatagram(datagramReturn.data(),datagramReturn.size(),QHostAddress::Broadcast,portConectreliseinput);
+	udpSocketReturn.writeDatagram(datagramReturn.data(),datagramReturn.size(),QHostAddress::Broadcast,portConectrelise);
 	listServer.clear();
 }
 void Network_Player::processPendingDatagrams(){
@@ -78,7 +77,7 @@ void Network_Player::processPendingDatagrams(){
 				}
 				Return =Return+"N"+selfIp;
 				QByteArray datagramReturn = Return.toStdString().c_str() ;
-				udpSocketReturn.writeDatagram(datagramReturn.data(),datagramReturn.size(),QHostAddress::Broadcast,portConectreliseinput);
+				udpSocketReturn.writeDatagram(datagramReturn.data(),datagramReturn.size(),QHostAddress::Broadcast,portConectrelise);
 			}
 			if((hostaddress!=QHostAddress:: Null)&&(!listServer.contains(sendIp)&&(selfIp!=sendIp))	&&(hostaddress!=IPtempDefine)){
 			listServer<<sendIp;
