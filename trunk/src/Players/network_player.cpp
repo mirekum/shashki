@@ -13,7 +13,7 @@ enum ERROR{
 
 
 /* methods of class of the network player */
-Network_Player::Network_Player(){
+Network_Player::Network_Player() {
 	TcpSocket = NULL;
 	udpSocketrelise = new QUdpSocket(this);
 	udpSocketrelise->bind(portConectRelise);
@@ -24,11 +24,11 @@ Network_Player::Network_Player(){
 	selfIp="127.0.0.1";
 	gethod=true;
 }
-void Network_Player::startgame(){
+void Network_Player::startgame() {
 	gameInProgres=true;	
 	conectComplite();
 }
-int Network_Player::createServer(){
+int Network_Player::createServer() {
 	tcpServer = new QTcpServer(this); 
 	QHostAddress adrr (selfIp);
 	if (!tcpServer->listen(adrr/*(selfIp)*/, portConect)) {
@@ -39,13 +39,13 @@ int Network_Player::createServer(){
 	connect(tcpServer, SIGNAL(newConnection()),this,SLOT(slotNewConnection()));
 	return 0;
 };
-void Network_Player::relise(){
+void Network_Player::relise() {
 	QUdpSocket udpSocketReturn;
 	QString Return;
-	if(color==BLACK){
+	if (color == BLACK) {
 		Return =Return+"B";
 	}
-	else if(color==WHITE){
+	else if (color == WHITE) {
 		Return =Return+"W";
 	}
 	Return =Return+"Y"+selfIp;
@@ -53,10 +53,10 @@ void Network_Player::relise(){
 	udpSocketReturn.writeDatagram(datagramReturn.data(),datagramReturn.size(),QHostAddress::Broadcast,portConectRelise);
 	ServerList.clear();
 }
-void Network_Player::processPendingDatagrams(){
+void Network_Player::processPendingDatagrams() {
 	QUdpSocket* udpSocket = (QUdpSocket*)sender();
 	QHostAddress IPtempDefine("127.0.0.1");
-	while (udpSocket->hasPendingDatagrams()){
+	while (udpSocket->hasPendingDatagrams()) {
 		QByteArray datagram;
 		datagram.resize(udpSocket->pendingDatagramSize());
 		udpSocket->readDatagram(datagram.data(), datagram.size());
@@ -66,9 +66,9 @@ void Network_Player::processPendingDatagrams(){
 		const char*sendIp = & tmp[2];
 		qDebug()<<colorin<<"INPUT DATA";
 		QHostAddress hostaddress;
-		if(((colorin[0]=='B')&&(color==WHITE))||((colorin[0]=='W')&&(color==BLACK))){
+		if (((colorin[0] == 'B')&&(color == WHITE))||((colorin[0] == 'W')&&(color == BLACK))) {
 			hostaddress.setAddress(sendIp);
-			if((hostaddress!=QHostAddress:: Null)&&(selfIp!=sendIp)&&(hostaddress!=IPtempDefine)&&(answer[0]=='Y')){
+			if ((hostaddress != QHostAddress:: Null)&&(selfIp != sendIp)&&(hostaddress != IPtempDefine)&&(answer[0] == 'Y')) {
 				QUdpSocket udpSocketReturn;
 				QString Return;
 				if(color==BLACK){
@@ -81,7 +81,7 @@ void Network_Player::processPendingDatagrams(){
 				QByteArray datagramReturn = Return.toStdString().c_str() ;
 				udpSocketReturn.writeDatagram(datagramReturn.data(),datagramReturn.size(),QHostAddress::Broadcast,portConectRelise);
 			}
-			if((hostaddress!=QHostAddress:: Null)&&(!ServerList.contains(sendIp)&&(selfIp!=sendIp))	&&(hostaddress!=IPtempDefine)){
+			if ((hostaddress != QHostAddress:: Null)&&(!ServerList.contains(sendIp)&&(selfIp != sendIp))&&(hostaddress != IPtempDefine)) {
 			ServerList<<sendIp;
 			searchUpdate();
 			qDebug()<<"ADD IN LIST SERVER"<<sendIp;	
@@ -89,11 +89,11 @@ void Network_Player::processPendingDatagrams(){
 		}
 	}
 }
-QList<QString> Network_Player::getList(){
+QList<QString> Network_Player::getList() {
 	return ServerList;
 }
-void Network_Player::slotNewConnection(){
-	if(gameInProgres==false){
+void Network_Player::slotNewConnection() {
+	if (gameInProgres == false) {
 		TcpSocket = tcpServer->nextPendingConnection();
 		connect(TcpSocket, SIGNAL(disconnected()), TcpSocket, SLOT(deleteLater()));
 		connect(TcpSocket, SIGNAL(readyRead()),SLOT(slotReadyRead()));
@@ -119,35 +119,34 @@ void Network_Player::slotNewConnection(){
 		out << quint16(0)<<false;
 		out.device()->seek(0);
 		out << quint16(arrBlock.size() - sizeof(quint16));
-		if(temp_TcpSocket==NULL)qDebug()<<"NULL";
 		temp_TcpSocket->write(arrBlock);
 		temp_TcpSocket->close();
 		delete temp_TcpSocket;
 	}
 }	
-void Network_Player::slotError(QAbstractSocket::SocketError err){
+void Network_Player::slotError(QAbstractSocket::SocketError err) {
 	ERROR er;	
-	if(err==QAbstractSocket::HostNotFoundError){
+	if ( err == QAbstractSocket::HostNotFoundError) {
 		er=HOST_NOT_FOUND_ERROR;
 		TcpSocket->close();
 		error(er);
 		qDebug()<<"HostNotFoundError";
 	}	
-	else if(err == QAbstractSocket::ConnectionRefusedError){
+	else if (err == QAbstractSocket::ConnectionRefusedError) {
 		er=CONNECTION_REFUSED_ERROR;
 		TcpSocket->close();
 		error(er);
 		qDebug()<<"ConnectionRefusedError";
 	}
-	else if(err == QAbstractSocket::RemoteHostClosedError){
+	else if (err == QAbstractSocket::RemoteHostClosedError) {
 		er=REMOTE_HOST_CLOSED_ERROR;
 		TcpSocket->close();
 		error(er);
 		qDebug()<<"RemoteHostClosedError";
 	}
 }
-void Network_Player::createClient( QString Host){
-	if(TcpSocket!=NULL){
+void Network_Player::createClient( QString Host) {
+	if (TcpSocket!=NULL) {
 		TcpSocket->close();
 		delete TcpSocket;
 		TcpSocket=NULL;
@@ -161,13 +160,13 @@ void Network_Player::createClient( QString Host){
 	connect(TcpSocket, SIGNAL(error(QAbstractSocket::SocketError)),SLOT(slotError(QAbstractSocket::SocketError)));
 
 }
-void Network_Player::slotConnected(){
+void Network_Player::slotConnected() {
 	qDebug()<<"Received the connected() signal";
 }
 
-void Network_Player::slotReadyRead(){
-	if(gethod){
-		if(gameInProgres==false){
+void Network_Player::slotReadyRead() {
+	if (gethod) {
+		if (gameInProgres == false) {
 			qDebug()<<"vait read signal";
 			QDataStream in(TcpSocket);
 			in.setVersion(QDataStream::Qt_4_0);
@@ -184,7 +183,7 @@ void Network_Player::slotReadyRead(){
 					}
 					in >>gameInProgres;
 					qDebug()<<gameInProgres<<"-signal";
-					if(gameInProgres==true){
+					if (gameInProgres == true) {
 						qDebug()<<gameInProgres<<"signal";
 						startgame();
 					}
@@ -227,14 +226,14 @@ void Network_Player::slotReadyRead(){
 		}
 	}
 }
-QList<QString> Network_Player::getActivInterfase(){ 
+QList<QString> Network_Player::getActivInterfase() { 
 	QList<QString> listInterfase;
 	QString temp;
 	QList<QNetworkInterface> list = QNetworkInterface::allInterfaces();
 	QHostAddress IPtempDefine("127.0.0.1");
 	foreach (QHostAddress IPtemp,QNetworkInterface::allAddresses ()){
 		temp=IPtemp.toString();
-		if((temp.count(":")==0)&&(IPtemp!=IPtempDefine)){
+		if ((temp.count(":")==0)&&(IPtemp!=IPtempDefine)) {
 			listInterfase<<temp;
 		}
 	}
@@ -242,8 +241,8 @@ QList<QString> Network_Player::getActivInterfase(){
 }
 void Network_Player::giveLastMoves(MOVE lastMove[maxFiguresNumber]) {
 	int i=0;
-	while(i<maxFiguresNumber){
-		if((lastMove[i].from.x!=0)||(lastMove[i].from.y!=0)||(lastMove[i].to.x!=0)||(lastMove[i].to.y!=0)){
+	while (i<maxFiguresNumber) {
+		if ((lastMove[i].from.x!=0)||(lastMove[i].from.y!=0)||(lastMove[i].to.x!=0)||(lastMove[i].to.y!=0)) {
 			QByteArray  arrBlock;
 			QDataStream out(&arrBlock, QIODevice::WriteOnly);
 			out.setVersion(QDataStream::Qt_4_0);
@@ -251,7 +250,6 @@ void Network_Player::giveLastMoves(MOVE lastMove[maxFiguresNumber]) {
 			out.device()->seek(0);
 			out << quint16(arrBlock.size() - sizeof(quint16));
 			qDebug()<<quint16(arrBlock.size() - sizeof(quint16));
-			if(TcpSocket==NULL)qDebug()<<"NULL";
 			TcpSocket->write(arrBlock);
 			qDebug()<<"out";
 			qDebug()<<lastMove[i].from.x<<lastMove[i].from.y<<lastMove[i].to.x<<lastMove[i].to.y;
@@ -263,11 +261,11 @@ void Network_Player::giveLastMoves(MOVE lastMove[maxFiguresNumber]) {
 		i++;
 	}
 }
-void Network_Player::execMove(BOARD board){
+void Network_Player::execMove(BOARD board) {
 	sleep(1);	
 	slotReadyRead();
 	do {
-		if (gethod==false) {
+		if (gethod == false) {
 			break;
 		}
 		usleep(300);
@@ -277,22 +275,22 @@ void Network_Player::execMove(BOARD board){
 }
 MOVE Network_Player::getMove() {
 	return result;
-};
-bool Network_Player::itThisIP(QString Ip){
+}
+bool Network_Player::itThisIP(QString Ip) {
 	QHostAddress hostaddress;
 	hostaddress.setAddress(Ip);
-	if(hostaddress!=QHostAddress:: Null)return 0;
+	if (hostaddress != QHostAddress::Null) return 0;
 	return 1;
 }
 char Network_Player::setSelfIp(QString Ip){
 	QHostAddress hostaddress;
 	hostaddress.setAddress(Ip);
-	if(hostaddress!=QHostAddress:: Null){
+	if (hostaddress != QHostAddress:: Null) {
 		selfIp=Ip;
 		return 0;
 	}
 	return 1;
 }
-Network_Player::~Network_Player(){
+Network_Player::~Network_Player() {
 	qDebug()<<"delited";
 }
