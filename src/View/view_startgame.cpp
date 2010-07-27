@@ -179,7 +179,7 @@ void View_StartGame::setupNetworkIP(){
 		settingsBox->findChild<QLabel*>("ERROR_IP")->setText(err+IP);
 		return;
 	}
-	disconnect(next_btn, SIGNAL(clicked()), this, SLOT(setupNetworkGetSearch()));
+	//disconnect(next_btn, SIGNAL(clicked()), this, SLOT(setupNetworkGetSearch()));
 	QString choosedIP = settingsBox->findChild<QComboBox*>("Network Search")->currentText();
 	NetworkPlr->createClient(IP);
 }
