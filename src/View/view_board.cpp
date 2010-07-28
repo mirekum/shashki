@@ -42,7 +42,7 @@ Board_Widget::Board_Widget(QWidget * parent): QWidget(parent) {
 	installEventFilter(this);
 	textHistory = new QTextEdit(parent);
 	textHistory->setReadOnly(true);
-	textHistory->setGeometry(480, 10, 300, 250);
+	textHistory->setGeometry(480, 270, 300, 130);
 	textHistory->show();
 }
 
@@ -99,16 +99,16 @@ void Board_Widget::paintEvent(QPaintEvent *event) {
 	history = game->getHistory();
 	textHistory->clear();
 	foreach (MOVE tmp, history) {
-		QString tmpStr = "-=X:";
+		QString tmpStr = "X:";
 		QString tmpNum;
 		tmpNum.setNum(tmp.from.x);
 		tmpStr = tmpStr+tmpNum;
 		tmpNum.setNum(tmp.from.y);
-		tmpStr = tmpStr+"=-|-=Y:"+tmpNum;
+		tmpStr = tmpStr+"  Y:"+tmpNum;
 		tmpNum.setNum(tmp.to.x);
-		tmpStr = tmpStr+"=-|-=X:"+tmpNum;
+		tmpStr = tmpStr+"  X:"+tmpNum;
 		tmpNum.setNum(tmp.to.y);
-		tmpStr = tmpStr+"=-|-=Y:"+tmpNum+"=-";
+		tmpStr = tmpStr+"  Y:"+tmpNum;
 		textHistory->append(tmpStr);
 	}
 	// move indication
