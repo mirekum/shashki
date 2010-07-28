@@ -46,7 +46,10 @@ void Game::finish(GAMESTATE res_flag) {
 	if (bp->type() == NETWORK) bp->giveLastMoves(lastMove);
 	emit finishGame(res_flag);
 }
+QList<MOVE> Game::getHistory() {
+	return history;
 
+}
 void Game::recieveMove() {
 	GAMESTATE res_flag;
 	MOVE mv = current->getMove();
@@ -57,6 +60,8 @@ void Game::recieveMove() {
 		move();
 		return;
 	}
+	qDebug()<<"in histori";
+	history<<mv;
 	lastMove[moveNum++] = mv;
 	emit updateBoard();
 	// check finish
