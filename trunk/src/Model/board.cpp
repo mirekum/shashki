@@ -16,7 +16,7 @@ COLOR getColor(FIGURE type) {
 
 // class constructor
 // set firstly figures positions and the board state
-BOARD::BOARD() {
+void BOARD::reset(){
 	// zeroize the board
 	b = w = bk = wk = 0;
 	for (int i = 0; i < size; i++)
@@ -33,6 +33,9 @@ BOARD::BOARD() {
 		scell(i,   7, WHITE_PAWN);
 		w += 3;
 	}
+}
+BOARD::BOARD() {
+	reset();
 }
 
 // set cell value

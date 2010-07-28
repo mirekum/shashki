@@ -5,7 +5,7 @@ Game::Game() {
 	bp = NULL;
 	thread = NULL;
 	moveNum = 0;
-	globalMoveNum = 1;
+	globalMoveNum = 2;
 }
 
 void Game::init(Player *_wp, Player *_bp) {
@@ -47,13 +47,15 @@ void Game::finish(GAMESTATE res_flag) {
 	if (bp->type() == NETWORK) bp->giveLastMoves(lastMove);
 	emit finishGame(res_flag);
 }
+
 QList<History> Game::getHistory() {
 	return history;
-
 }
+
 int Game::getMove() {
 	return moveNum;
 }
+
 void Game::recieveMove() {
 	GAMESTATE res_flag;
 	MOVE mv = current->getMove();

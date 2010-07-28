@@ -98,6 +98,7 @@
 		bool move(MOVE _move);
 		bool move(CELL from, CELL to);
 		bool move(int x1, int y1, int x2, int y2);
+		void reset();
 		// getters
 		int first() {return ufirst;}
 		int white() {return w;}
