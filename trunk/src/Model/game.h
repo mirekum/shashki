@@ -27,12 +27,14 @@
 		MOVE lastMove[Player::maxFiguresNumber];
 		Player *current;
 		getMoveThread *thread;
+		QList<MOVE> history;
 	public:
 		Game();
 		void init(Player *wp, Player *bp);
 		void start();
 		// getters
 		BOARD& getBoard() {return board;}
+		QList<MOVE> getHistory();
 	protected:
 		void setCurrentPlayer(COLOR color);
 		void move();

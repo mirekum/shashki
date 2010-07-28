@@ -40,6 +40,10 @@ void Board_Widget::status(GAMESTATE res_flag) {
 
 Board_Widget::Board_Widget(QWidget * parent): QWidget(parent) {
 	installEventFilter(this);
+	textHistory = new QTextEdit(parent);
+	textHistory->setReadOnly(true);
+	textHistory->setGeometry(480, 10, 300, 250);
+	textHistory->show();
 }
 
 void Board_Widget::paintEvent(QPaintEvent *event) {
@@ -90,6 +94,22 @@ void Board_Widget::paintEvent(QPaintEvent *event) {
 				paint.drawEllipse(QRect(x0 + i * 44 + 10, y0 + j * 44 + 10, 24, 24));
 			}
 		}
+	}
+	QList<MOVE> history;
+	history = game->getHistory();
+	textHistory->clear();
+	foreach (MOVE tmp, history) {
+		QString tmpStr = "-=X:";
+		QString tmpNum;
+		tmpNum.setNum(tmp.from.x);
+		tmpStr = tmpStr+tmpNum;
+		tmpNum.setNum(tmp.from.y);
+		tmpStr = tmpStr+"=-|-=Y:"+tmpNum;
+		tmpNum.setNum(tmp.to.x);
+		tmpStr = tmpStr+"=-|-=X:"+tmpNum;
+		tmpNum.setNum(tmp.to.y);
+		tmpStr = tmpStr+"=-|-=Y:"+tmpNum+"=-";
+		textHistory->append(tmpStr);
 	}
 	// move indication
 	if (!end_flag) {

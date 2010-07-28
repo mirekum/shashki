@@ -15,6 +15,7 @@
 		GAMESTATE end_flag;
 		MOVE result;
 		COLOR currentColor;
+		QTextEdit*textHistory;
 	public:
 		Board_Widget(QWidget * parent = 0);
 		void init(Game *_game);
