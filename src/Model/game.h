@@ -4,7 +4,11 @@
 	#include <QtCore>
 	#include "Model/board.h"
 	#include "Players/player.h"
-	
+	struct History{
+		MOVE move;
+		bool color;
+		int moveNum;
+	};
 	class getMoveThread: public QThread {
 	protected:
 		Player *current;
@@ -27,14 +31,15 @@
 		MOVE lastMove[Player::maxFiguresNumber];
 		Player *current;
 		getMoveThread *thread;
-		QList<MOVE> history;
+		QList<History> history;
+		int globalMoveNum;
 	public:
 		Game();
 		void init(Player *wp, Player *bp);
 		void start();
 		// getters
 		BOARD& getBoard() {return board;}
-		QList<MOVE> getHistory();
+		QList<History> getHistory();
 		int getMove();
 	protected:
 		void setCurrentPlayer(COLOR color);

@@ -5,6 +5,7 @@ Game::Game() {
 	bp = NULL;
 	thread = NULL;
 	moveNum = 0;
+	globalMoveNum = 1;
 }
 
 void Game::init(Player *_wp, Player *_bp) {
@@ -46,7 +47,7 @@ void Game::finish(GAMESTATE res_flag) {
 	if (bp->type() == NETWORK) bp->giveLastMoves(lastMove);
 	emit finishGame(res_flag);
 }
-QList<MOVE> Game::getHistory() {
+QList<History> Game::getHistory() {
 	return history;
 
 }
@@ -64,7 +65,16 @@ void Game::recieveMove() {
 		return;
 	}
 	qDebug()<<"in histori";
-	history<<mv;
+	History mvh;
+	mvh.move = mv;
+	mvh.moveNum=globalMoveNum;
+	if(current->getColor() == WHITE) {
+		mvh.color = false;
+	}
+	else{
+		mvh.color = true;
+	}
+	history<<mvh;
 	lastMove[moveNum++] = mv;
 	emit updateBoard();
 	// check finish
@@ -76,6 +86,7 @@ void Game::recieveMove() {
 	if (!board.canMove()) {
 		// change current player
 		setCurrentPlayer(current->getColor() == WHITE ? BLACK : WHITE);
+		globalMoveNum++;
 	}
 	move();
 }

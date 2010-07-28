@@ -95,38 +95,34 @@ void Board_Widget::paintEvent(QPaintEvent *event) {
 			}
 		}
 	}
-	QList<MOVE> history;
+	QList<History> history;
 	history = game->getHistory();
 	textHistory->clear();
-	bool color_flag = false;
-	int tmpHod=2;
-	foreach (MOVE tmp, history) {
+	foreach (History tmp, history) {
 		QString tmpStr;
 		QString tmpNum;
-		if (color_flag == false) {
+		if (tmp.color == false) {
 			tmpStr = "W::";
-			color_flag = true;
-			tmpNum.setNum(tmpHod/2);
+			tmpNum.setNum(tmp.moveNum);
 			tmpStr = tmpStr+tmpNum+"::";
 		}
 		else{
 			tmpStr = "B::";
-			color_flag = false;
-			tmpNum.setNum(tmpHod/2);
+			tmpNum.setNum(tmp.moveNum);
 			tmpStr = tmpStr+tmpNum+"::";
 		}
 		tmpStr = tmpStr+"X:";
-		tmpNum.setNum(tmp.from.x);
+		tmpNum.setNum(tmp.move.from.x);
 		tmpStr = tmpStr+tmpNum;
-		tmpNum.setNum(tmp.from.y);
+		tmpNum.setNum(tmp.move.from.y);
 		tmpStr = tmpStr+"  Y:"+tmpNum;
-		tmpNum.setNum(tmp.to.x);
+		tmpNum.setNum(tmp.move.to.x);
 		tmpStr = tmpStr+"  X:"+tmpNum;
-		tmpNum.setNum(tmp.to.y);
+		tmpNum.setNum(tmp.move.to.y);
 		tmpStr = tmpStr+"  Y:"+tmpNum;
 		textHistory->append(tmpStr);
-		tmpHod++;
 	}
+	
 	// move indication
 	if (!end_flag) {
 		paint.setBrush(QBrush(Qt::yellow));
