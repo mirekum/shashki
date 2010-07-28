@@ -103,12 +103,12 @@ void Board_Widget::paintEvent(QPaintEvent *event) {
 		QString tmpNum;
 		if (tmp.color == false) {
 			tmpStr = "W::";
-			tmpNum.setNum(tmp.moveNum);
+			tmpNum.setNum(tmp.moveNum/2);
 			tmpStr = tmpStr+tmpNum+"::";
 		}
-		else{
+		else {
 			tmpStr = "B::";
-			tmpNum.setNum(tmp.moveNum);
+			tmpNum.setNum(tmp.moveNum/2);
 			tmpStr = tmpStr+tmpNum+"::";
 		}
 		tmpStr = tmpStr+"X:";

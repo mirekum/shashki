@@ -15,9 +15,6 @@ enum ERROR{
 /* methods of class of the network player */
 Network_Player::Network_Player() {
 	tcp_socket = NULL;
-	udp_listen_socket = new QUdpSocket(this);
-	udp_listen_socket->bind(PORT_CONNECT_ANNOUNCE);
-	connect(udp_listen_socket, SIGNAL(readyRead()), this, SLOT(processAnnouncement()));
 	game_in_progress = false;
 	tcp_server = NULL;
 	next_block_size = 0;
@@ -62,18 +59,18 @@ void Network_Player::processAnnouncement() {
 		datagram.resize(udp_socket->pendingDatagramSize());
 		udp_socket->readDatagram(datagram.data(), datagram.size());
 		char* tmp = datagram.data();
-		const char *recv_color = & tmp[0];
-		const char *recv_need_answer = & tmp[1];
+		const char recv_color =  tmp[0];
+		const char recv_need_answer =  tmp[1];
 		const char *recv_ip = & tmp[2];
 		qDebug()<<recv_color<<"INPUT DATA";
 		QHostAddress recv_address;
-		if (((recv_color[0] == 'B') && (color == WHITE)) ||
-		    ((recv_color[0] == 'W') && (color == BLACK))) {
+		if (((recv_color == 'B') && (color == WHITE)) ||
+		    ((recv_color == 'W') && (color == BLACK))) {
 			recv_address.setAddress(recv_ip);
 			if ((recv_address != QHostAddress:: Null)  && 
 			    (recv_address != localhost_address) &&
                             (recv_ip != self_ip)) {
-				if (recv_need_answer[0] == 'Y') {
+				if (recv_need_answer == 'Y') {
 					sendAnnouncement("N");
 				}
 				if (!servers_list.contains(recv_ip)) {
@@ -161,21 +158,22 @@ void Network_Player::slotConnected() {
 
 void Network_Player::slotReadyRead() {
 	if (cur_move) {
-		if (game_in_progress == false) {
-			qDebug()<<"vait read signal";
-			QDataStream in(tcp_socket);
-			in.setVersion(QDataStream::Qt_4_0);
-				for (;;) {
-					if (!next_block_size) {
-						if (tcp_socket->bytesAvailable() < sizeof(quint16)) {
-							break;
-						}
-						in >> next_block_size;
-					}
-					if (tcp_socket->bytesAvailable() < next_block_size) {
-						qDebug()<<"reed signal";
-						break;
-					}
+		qDebug()<<"vait read signal";
+		QDataStream in(tcp_socket);
+		in.setVersion(QDataStream::Qt_4_0);
+		for (;;) {
+			if (!next_block_size) {
+				if (tcp_socket->bytesAvailable() < sizeof(quint16)) {
+					break;
+				}
+				in >> next_block_size;
+			}
+			if (tcp_socket->bytesAvailable() < next_block_size) {
+				qDebug()<<"reed signal";
+				break;
+			}
+			if (game_in_progress == false) {
+
 					in >>game_in_progress;
 					qDebug()<<game_in_progress<<"-signal";
 					if (game_in_progress == true) {
@@ -186,38 +184,25 @@ void Network_Player::slotReadyRead() {
 						tcp_socket->close();
 					}
 					next_block_size = 0;
-				}
-		}
-		else{	
-			qDebug()<<"vait read";
-			QDataStream in(tcp_socket);
-			in.setVersion(QDataStream::Qt_4_0);
-				for (;;) {
-					if (!next_block_size) {
-						if (tcp_socket->bytesAvailable() < sizeof(quint16)) {
-							qDebug()<<"read lern";
-							break;
-						}
-						in >> next_block_size;
-						qDebug()<<next_block_size;
-					}
-					if (tcp_socket->bytesAvailable() < next_block_size) {
-						qDebug()<<"reed";
-						break;
-					}
-					result.from.x = 0;
-					result.from.y = 0;
-					result.to.x = 0;
-					result.to.y = 0;
-					in >>result.from.x>>result.from.y>>result.to.x>>result.to.y;
-					cur_move = false;
-					qDebug()<<result.from.x;
-					qDebug()<<result.from.y;
-					qDebug()<<result.to.x;
-					qDebug()<<result.to.y;
-					next_block_size = 0;
 					return;
-				}
+			}
+			else{	
+				qDebug()<<"vait read";
+				QDataStream in(tcp_socket);
+				in.setVersion(QDataStream::Qt_4_0);
+						result.from.x = 0;
+						result.from.y = 0;
+						result.to.x = 0;
+						result.to.y = 0;
+						in >>result.from.x>>result.from.y>>result.to.x>>result.to.y;
+						cur_move = false;
+						qDebug()<<result.from.x;
+						qDebug()<<result.from.y;
+						qDebug()<<result.to.x;
+						qDebug()<<result.to.y;
+						next_block_size = 0;
+						return;
+			}
 		}
 	}
 }
@@ -280,6 +265,9 @@ bool Network_Player::isIp(QString ip) {
 bool Network_Player::setSelfIp(QString ip){
 	if (isIp(ip)) {
 		self_ip = ip;
+		udp_listen_socket = new QUdpSocket(this);
+		udp_listen_socket->bind(PORT_CONNECT_ANNOUNCE);
+		connect(udp_listen_socket, SIGNAL(readyRead()), this, SLOT(processAnnouncement()));
 		return true;
 	}
 	return false;
