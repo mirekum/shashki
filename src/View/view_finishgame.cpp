@@ -7,7 +7,7 @@ View_FinishGame::View_FinishGame(View_Main &main_ui) {
 void View_FinishGame::show(GAMESTATE res_flag) {
 	// draw info wrapper
 	box = new QLabel(window);
-	box->setGeometry(480, 110, 300, 200);
+	box->setGeometry(480, 10, 300, 200);
 	box->setFrameStyle(QFrame::Box | QFrame::Plain);
 	box->setLineWidth(3);
 	switch (res_flag) {
