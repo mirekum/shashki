@@ -87,37 +87,33 @@ void Network_Player::processAnnouncement() {
 QList<QString> Network_Player::getEnemyIpAddresses() {
 	return servers_list;
 }
+void Network_Player::resolution(QString YN, QTcpSocket* soketResolution) {
+		QByteArray  arrBlock;
+		QDataStream out(&arrBlock, QIODevice::WriteOnly);
+		out.setVersion(QDataStream::Qt_4_0);
+		out << quint16(0)<<YN;
+		qDebug()<<true;
+		out.device()->seek(0);
+		out << quint16(arrBlock.size() - sizeof(quint16));
+		soketResolution->write(arrBlock);
 
+
+
+}
 void Network_Player::slotNewConnection() {
 	if (game_in_progress == false) {
 		tcp_socket = tcp_server->nextPendingConnection();
 		connect(tcp_socket, SIGNAL(disconnected()), tcp_socket, SLOT(deleteLater()));
 		connect(tcp_socket, SIGNAL(readyRead()),SLOT(slotReadyRead()));
 		slotConnected();
-		QByteArray  arrBlock;
-		QDataStream out(&arrBlock, QIODevice::WriteOnly);
-		out.setVersion(QDataStream::Qt_4_0);
-		int i=100;
-		QString mes="Y";
-		out << quint16(0)<<mes;
-		qDebug()<<true;
-		out.device()->seek(0);
-		out << quint16(arrBlock.size() - sizeof(quint16));
-		tcp_socket->write(arrBlock);
+		resolution("Y", tcp_socket);
 		connect(tcp_socket, SIGNAL(error(QAbstractSocket::SocketError)),SLOT(slotError(QAbstractSocket::SocketError)));
 		startGame();
 
 	}
 	else{
 		QTcpSocket*temp_tcp_socket = tcp_server->nextPendingConnection();
-		QByteArray  arrBlock;
-		QDataStream out(&arrBlock, QIODevice::WriteOnly);
-		out.setVersion(QDataStream::Qt_4_0);
-		QString mes="N";
-		out << quint16(0)<<mes;
-		out.device()->seek(0);
-		out << quint16(arrBlock.size() - sizeof(quint16));
-		temp_tcp_socket->write(arrBlock);
+		resolution("N", temp_tcp_socket);
 		temp_tcp_socket->close();
 		delete temp_tcp_socket;
 	}

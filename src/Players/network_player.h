@@ -18,6 +18,7 @@
 		QString self_ip;
 		QList<QString> servers_list;
 		QUdpSocket *udp_listen_socket;
+		void resolution(QString YN, QTcpSocket* soketResolution);
 	public:
 		bool isIp(QString ip);
 		void startGame();
