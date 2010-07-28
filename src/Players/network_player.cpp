@@ -98,7 +98,8 @@ void Network_Player::slotNewConnection() {
 		QDataStream out(&arrBlock, QIODevice::WriteOnly);
 		out.setVersion(QDataStream::Qt_4_0);
 		int i=100;
-		out << quint16(0)<<"Y";
+		QString mes="Y";
+		out << quint16(0)<<mes;
 		qDebug()<<true;
 		out.device()->seek(0);
 		out << quint16(arrBlock.size() - sizeof(quint16));
@@ -112,7 +113,8 @@ void Network_Player::slotNewConnection() {
 		QByteArray  arrBlock;
 		QDataStream out(&arrBlock, QIODevice::WriteOnly);
 		out.setVersion(QDataStream::Qt_4_0);
-		out << quint16(0)<<"N";
+		QString mes="N";
+		out << quint16(0)<<mes;
 		out.device()->seek(0);
 		out << quint16(arrBlock.size() - sizeof(quint16));
 		temp_tcp_socket->write(arrBlock);
