@@ -35,6 +35,7 @@
 		// getters
 		BOARD& getBoard() {return board;}
 		QList<MOVE> getHistory();
+		int getMove();
 	protected:
 		void setCurrentPlayer(COLOR color);
 		void move();

@@ -98,9 +98,24 @@ void Board_Widget::paintEvent(QPaintEvent *event) {
 	QList<MOVE> history;
 	history = game->getHistory();
 	textHistory->clear();
+	bool color_flag = false;
+	int tmpHod=2;
 	foreach (MOVE tmp, history) {
-		QString tmpStr = "X:";
+		QString tmpStr;
 		QString tmpNum;
+		if (color_flag == false) {
+			tmpStr = "W::";
+			color_flag = true;
+			tmpNum.setNum(tmpHod/2);
+			tmpStr = tmpStr+tmpNum+"::";
+		}
+		else{
+			tmpStr = "B::";
+			color_flag = false;
+			tmpNum.setNum(tmpHod/2);
+			tmpStr = tmpStr+tmpNum+"::";
+		}
+		tmpStr = tmpStr+"X:";
 		tmpNum.setNum(tmp.from.x);
 		tmpStr = tmpStr+tmpNum;
 		tmpNum.setNum(tmp.from.y);
@@ -110,6 +125,7 @@ void Board_Widget::paintEvent(QPaintEvent *event) {
 		tmpNum.setNum(tmp.to.y);
 		tmpStr = tmpStr+"  Y:"+tmpNum;
 		textHistory->append(tmpStr);
+		tmpHod++;
 	}
 	// move indication
 	if (!end_flag) {

@@ -50,6 +50,9 @@ QList<MOVE> Game::getHistory() {
 	return history;
 
 }
+int Game::getMove() {
+	return moveNum;
+}
 void Game::recieveMove() {
 	GAMESTATE res_flag;
 	MOVE mv = current->getMove();
