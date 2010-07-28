@@ -98,7 +98,7 @@ void Network_Player::slotNewConnection() {
 		QDataStream out(&arrBlock, QIODevice::WriteOnly);
 		out.setVersion(QDataStream::Qt_4_0);
 		int i=100;
-		out << quint16(0)<<true;
+		out << quint16(0)<<"Y";
 		qDebug()<<true;
 		out.device()->seek(0);
 		out << quint16(arrBlock.size() - sizeof(quint16));
@@ -112,7 +112,7 @@ void Network_Player::slotNewConnection() {
 		QByteArray  arrBlock;
 		QDataStream out(&arrBlock, QIODevice::WriteOnly);
 		out.setVersion(QDataStream::Qt_4_0);
-		out << quint16(0)<<false;
+		out << quint16(0)<<"N";
 		out.device()->seek(0);
 		out << quint16(arrBlock.size() - sizeof(quint16));
 		temp_tcp_socket->write(arrBlock);
@@ -173,10 +173,10 @@ void Network_Player::slotReadyRead() {
 				break;
 			}
 			if (game_in_progress == false) {
-
-					in >>game_in_progress;
-					qDebug()<<game_in_progress<<"-signal";
-					if (game_in_progress == true) {
+					QString mes;
+					in >>mes;
+					qDebug()<<mes<<"-signal";
+					if (mes == "Y") {
 						qDebug()<<game_in_progress<<"signal";
 						startGame();
 					}
