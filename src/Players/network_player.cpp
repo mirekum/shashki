@@ -1,3 +1,15 @@
+/*
+1.UDP
+--->WY"SELFIP1"--->||--->BY"SELFIP1"--->
+<---BN"SELFIP2"<---||<---WN"SELFIP2"<---
+<---BN"SELFIP3"<---||<---WN"SELFIP3"<---
+-------||----------||-------||----------
+<---BN"SELFIPK"<---||<---WN"SELFIPK"<---
+2.TCP
+<-connect---||<-connect---
+---->Y----->||---->N----->
+----game----||Hold or new connect
+*/
 #include "Players/network_player.h"
 #include <QtNetwork>
 
@@ -92,7 +104,7 @@ void Network_Player::resolution(QString YN, QTcpSocket* soketResolution) {
 		QDataStream out(&arrBlock, QIODevice::WriteOnly);
 		out.setVersion(QDataStream::Qt_4_0);
 		out << quint16(0)<<YN;
-		qDebug()<<true;
+		qDebug()<<YN;
 		out.device()->seek(0);
 		out << quint16(arrBlock.size() - sizeof(quint16));
 		soketResolution->write(arrBlock);
