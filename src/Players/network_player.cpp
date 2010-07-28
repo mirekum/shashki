@@ -74,7 +74,7 @@ void Network_Player::processAnnouncement() {
 		const char recv_color =  tmp[0];
 		const char recv_need_answer =  tmp[1];
 		const char *recv_ip = & tmp[2];
-		qDebug()<<recv_color<<"INPUT DATA";
+		qDebug()<<recv_color<<"DATA ";
 		QHostAddress recv_address;
 		if (((recv_color == 'B') && (color == WHITE)) ||
 		    ((recv_color == 'W') && (color == BLACK))) {
@@ -108,9 +108,6 @@ void Network_Player::resolution(QString YN, QTcpSocket* soketResolution) {
 		out.device()->seek(0);
 		out << quint16(arrBlock.size() - sizeof(quint16));
 		soketResolution->write(arrBlock);
-
-
-
 }
 void Network_Player::slotNewConnection() {
 	if (game_in_progress == false) {
@@ -121,7 +118,6 @@ void Network_Player::slotNewConnection() {
 		resolution("Y", tcp_socket);
 		connect(tcp_socket, SIGNAL(error(QAbstractSocket::SocketError)),SLOT(slotError(QAbstractSocket::SocketError)));
 		startGame();
-
 	}
 	else{
 		QTcpSocket*temp_tcp_socket = tcp_server->nextPendingConnection();
