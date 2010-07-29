@@ -143,7 +143,7 @@ void Network_Player::slotError(QAbstractSocket::SocketError err) {
 void Network_Player::createClient( QString Host) {
 	if (tcp_socket != NULL) {
 		tcp_socket->close();
-		delete tcp_socket;
+		//delete tcp_socket;
 		tcp_socket = NULL;
 	};
 	qDebug()<<"conect too hast:" <<Host;
@@ -170,7 +170,7 @@ void Network_Player::slotConnected() {
 	out << quint16(0) <<mess;
 	out.device()->seek(0);
 	out << quint16(arr_block.size() - sizeof(quint16));
-	qDebug()<<quint16(arr_block.size() - sizeof(quint16));
+	qDebug()<<quint16(arr_block.size() - sizeof(quint16))<<mess;
 	tcp_socket->write(arr_block);
 }
 
