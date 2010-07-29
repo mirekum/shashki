@@ -6,7 +6,7 @@
 	#include "Players/player.h"
 	struct History{
 		MOVE move;
-		bool color;
+		COLOR color;
 		int moveNum;
 	};
 	class getMoveThread: public QThread {
@@ -41,6 +41,7 @@
 		BOARD& getBoard() {return board;}
 		QList<History> getHistory();
 		int getMove();
+		void goByHistoryState(int state);
 	protected:
 		void setCurrentPlayer(COLOR color);
 		void move();

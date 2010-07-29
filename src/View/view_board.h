@@ -25,6 +25,8 @@
 		bool eventFilter(QObject *target, QEvent *event);
 		virtual void paintEvent(QPaintEvent *event);
 		void status(GAMESTATE res_flag);
+	public slots:
+		void rollHistory();
 	};
 	
 	class View_Board: public Player, public View {
