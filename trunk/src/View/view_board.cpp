@@ -42,9 +42,15 @@ Board_Widget::Board_Widget(QWidget * parent): QWidget(parent) {
 	installEventFilter(this);
 	list_history = new QListWidget(parent);
 	list_history->setGeometry(480, 270, 300, 130);
+	connect(list_history, SIGNAL(currentRowChanged(int currentRow) ), this,SLOT(rollHistory()));
 	list_history->show();
-}
 
+}
+void Board_Widget::rollHistory() {
+	//int* state = & list_history->currentRow;
+	qDebug()<<"go"<<2<<"in histry";
+	game->goByHistoryState(2);
+}
 void Board_Widget::paintEvent(QPaintEvent *event) {
 	QPainter paint(this);
 	// draw coordinate lines
@@ -100,7 +106,7 @@ void Board_Widget::paintEvent(QPaintEvent *event) {
 	foreach (History tmp, history) {
 		QString tmpStr;
 		QString tmpNum;
-		if (tmp.color == false) {
+		if (tmp.color == WHITE) {
 			tmpStr = "W::";
 			tmpNum.setNum(tmp.moveNum/2);
 			tmpStr = tmpStr+tmpNum+"::";

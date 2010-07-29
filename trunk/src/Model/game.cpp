@@ -55,7 +55,31 @@ QList<History> Game::getHistory() {
 int Game::getMove() {
 	return moveNum;
 }
+void Game::goByHistoryState(int state) {
+	board.reset();
+	int ch = 0;
+	globalMoveNum = 0;
+	board.startMove(WHITE);
+	QList<History> tmp_history;
+	foreach (History tmp, history) {
+		if (ch == state){
+			current->setColor(tmp.color);
+			move();
+			break;
+		}
+		tmp_history<<tmp;
+		board.move(tmp.move);
+		ch++;
+		if (!board.canMove()) {
+			// change current player
+			board.startMove(tmp.color == WHITE ? BLACK : WHITE);
+			globalMoveNum++;
+		}
 
+	}
+	history = tmp_history;
+	emit updateBoard();
+}
 void Game::recieveMove() {
 	GAMESTATE res_flag;
 	MOVE mv = current->getMove();
@@ -70,12 +94,7 @@ void Game::recieveMove() {
 	History mvh;
 	mvh.move = mv;
 	mvh.moveNum=globalMoveNum;
-	if(current->getColor() == WHITE) {
-		mvh.color = false;
-	}
-	else{
-		mvh.color = true;
-	}
+	mvh.color = current->getColor();
 	history<<mvh;
 	lastMove[moveNum++] = mv;
 	emit updateBoard();
