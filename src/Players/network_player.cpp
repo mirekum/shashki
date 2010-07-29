@@ -114,10 +114,7 @@ void Network_Player::slotNewConnection() {
 		tcp_socket = tcp_server->nextPendingConnection();
 		connect(tcp_socket, SIGNAL(disconnected()), tcp_socket, SLOT(deleteLater()));
 		connect(tcp_socket, SIGNAL(readyRead()),SLOT(slotReadyRead()));
-		slotConnected();
-		resolution("Y", tcp_socket);
 		connect(tcp_socket, SIGNAL(error(QAbstractSocket::SocketError)),SLOT(slotError(QAbstractSocket::SocketError)));
-		startGame();
 	}
 	else{
 		QTcpSocket*temp_tcp_socket = tcp_server->nextPendingConnection();
@@ -160,6 +157,21 @@ void Network_Player::createClient( QString Host) {
 }
 void Network_Player::slotConnected() {
 	qDebug()<<"Received the connected() signal";
+	QString mess;
+	if (color == BLACK) {
+		mess = mess+"B";
+	}
+	else if (color == WHITE) {
+		mess = mess+"W";
+	}
+	QByteArray  arr_block;
+	QDataStream out(&arr_block, QIODevice::WriteOnly);
+	out.setVersion(QDataStream::Qt_4_0);
+	out << quint16(0) <<mess;
+	out.device()->seek(0);
+	out << quint16(arr_block.size() - sizeof(quint16));
+	qDebug()<<quint16(arr_block.size() - sizeof(quint16));
+	tcp_socket->write(arr_block);
 }
 
 void Network_Player::slotReadyRead() {
@@ -186,8 +198,20 @@ void Network_Player::slotReadyRead() {
 						qDebug()<<game_in_progress<<"signal";
 						startGame();
 					}
-					else{
+					else if (mes == "N") {
 						tcp_socket->close();
+					}
+					else if ((mes == "B")&&(color == WHITE)||(mes == "W")&&(color == BLACK)) {
+						mes = "Y";
+						QByteArray  arr_block;
+						QDataStream out(&arr_block, QIODevice::WriteOnly);
+						out.setVersion(QDataStream::Qt_4_0);
+						out << quint16(0) <<mes;
+						out.device()->seek(0);
+						out << quint16(arr_block.size() - sizeof(quint16));
+						qDebug()<<quint16(arr_block.size() - sizeof(quint16));
+						tcp_socket->write(arr_block);	
+						startGame();
 					}
 					next_block_size = 0;
 					return;
