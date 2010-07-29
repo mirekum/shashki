@@ -1,15 +1,15 @@
 /*
 1.UDP
-|--->WY"SELFIP1"--->||--->BY"SELFIP1"--->
-|<---BN"SELFIP2"<---||<---WN"SELFIP2"<---
-|<---BN"SELFIP3"<---||<---WN"SELFIP3"<---
-|-------||----------||-------||----------
-|<---BN"SELFIPK"<---||<---WN"SELFIPK"<---
+|--->WY"SELFIP1"--->|  |--->BY"SELFIP1"--->
+|<---BN"SELFIP2"<---|  |<---WN"SELFIP2"<---
+|<---BN"SELFIP3"<---|  |<---WN"SELFIP3"<---
+|-------||----------|  |-------||----------
+|<---BN"SELFIPK"<---|  |<---WN"SELFIPK"<---
 2.TCP
-|<-connect---||<-connect---
-|<----B/W<---||<----B/W<---
-|---->Y----->||---->N----->
-|----game----||Hold or new connect
+|<-connect---|  |<-connect---
+|<----B/W<---|  |<----B/W<---
+|---->Y----->|  |---->N----->
+|----game----|  |Hold or new connect
 */
 #include "Players/network_player.h"
 #include <QtNetwork>
@@ -100,7 +100,7 @@ void Network_Player::processAnnouncement() {
 QList<QString> Network_Player::getEnemyIpAddresses() {
 	return servers_list;
 }
-void Network_Player::resolution(QString YN, QTcpSocket* soketResolution) {
+void Network_Player::sendGameConfirmation(QString YN, QTcpSocket* soket) {
 		QByteArray  arrBlock;
 		QDataStream out(&arrBlock, QIODevice::WriteOnly);
 		out.setVersion(QDataStream::Qt_4_0);
@@ -108,7 +108,7 @@ void Network_Player::resolution(QString YN, QTcpSocket* soketResolution) {
 		qDebug()<<YN;
 		out.device()->seek(0);
 		out << quint16(arrBlock.size() - sizeof(quint16));
-		soketResolution->write(arrBlock);
+		soket->write(arrBlock);
 }
 void Network_Player::slotNewConnection() {
 	if (game_in_progress == false) {
@@ -119,7 +119,7 @@ void Network_Player::slotNewConnection() {
 	}
 	else{
 		QTcpSocket*temp_tcp_socket = tcp_server->nextPendingConnection();
-		resolution("N", temp_tcp_socket);
+		sendGameConfirmation("N", temp_tcp_socket);
 		temp_tcp_socket->close();
 		delete temp_tcp_socket;
 	}
@@ -177,7 +177,7 @@ void Network_Player::slotConnected() {
 
 void Network_Player::slotReadyRead() {
 	if (cur_move) {
-		qDebug()<<"vait read signal";
+		qDebug()<<"wait read signal";
 		QDataStream in(tcp_socket);
 		in.setVersion(QDataStream::Qt_4_0);
 		for (;;) {
@@ -188,7 +188,7 @@ void Network_Player::slotReadyRead() {
 				in >> next_block_size;
 			}
 			if (tcp_socket->bytesAvailable() < next_block_size) {
-				qDebug()<<"reed signal";
+				qDebug()<<"read signal";
 				break;
 			}
 			if (game_in_progress == false) {
@@ -231,21 +231,21 @@ void Network_Player::slotReadyRead() {
 					return;
 			}
 			else{	
-				qDebug()<<"vait read";
+				qDebug()<<"wait read";
 				QDataStream in(tcp_socket);
 				in.setVersion(QDataStream::Qt_4_0);
-						result.from.x = 0;
-						result.from.y = 0;
-						result.to.x = 0;
-						result.to.y = 0;
-						in >>result.from.x>>result.from.y>>result.to.x>>result.to.y;
-						cur_move = false;
-						qDebug()<<result.from.x;
-						qDebug()<<result.from.y;
-						qDebug()<<result.to.x;
-						qDebug()<<result.to.y;
-						next_block_size = 0;
-						return;
+				result.from.x = 0;
+				result.from.y = 0;
+				result.to.x = 0;
+				result.to.y = 0;
+				in >>result.from.x>>result.from.y>>result.to.x>>result.to.y;
+				cur_move = false;
+				qDebug()<<result.from.x;
+				qDebug()<<result.from.y;
+				qDebug()<<result.to.x;
+				qDebug()<<result.to.y;
+				next_block_size = 0;
+				return;
 			}
 		}
 	}
@@ -256,8 +256,8 @@ QList<QString> Network_Player::getSelfIpAddresses() {
 	QList<QNetworkInterface> list = QNetworkInterface::allInterfaces();
 	QHostAddress localhost_address("127.0.0.1");
 	foreach (QHostAddress ip_temp,QNetworkInterface::allAddresses ()){
-		temp=ip_temp.toString();
-		if ((temp.count(":")==0)&&(ip_temp!=localhost_address)) {
+		temp = ip_temp.toString();
+		if ((temp.count(":") == 0)&&(ip_temp != localhost_address)) {
 			list_interfase<<temp;
 		}
 	}
