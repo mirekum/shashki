@@ -32,7 +32,7 @@ void Board_Widget::init(Game *_game) {
 	game = _game;
 	board = &game->getBoard();
 	end_flag = END_NONE;
-	connect(list_history, SIGNAL(currentRowChanged(int) ), this, SLOT(rollHistory()));
+	connect(list_history, SIGNAL(itemDoubleClicked (QListWidgetItem * )), this, SLOT(rollHistory(QListWidgetItem * )));
 }
 
 void Board_Widget::status(GAMESTATE res_flag) {
@@ -41,14 +41,15 @@ void Board_Widget::status(GAMESTATE res_flag) {
 
 Board_Widget::Board_Widget(QWidget * parent): QWidget(parent) {
 	list_history = new QListWidget(parent);
-	list_history->setGeometry(480, 270, 300, 130);
+	list_history->setGeometry(480, 10, 300, 400);
 	list_history->show();
 	installEventFilter(this);
 }
-void Board_Widget::rollHistory() {
+void Board_Widget::rollHistory(QListWidgetItem * state ) {
 	//int* state = & list_history->currentRow;
-	qDebug()<<"go"<<2<<"in histry";
-	game->goByHistoryState(2);
+	int st = list_history->row(state);
+	qDebug()<<"go"<<st<<"in histry";
+	game->goByHistoryState(st);
 }
 void Board_Widget::paintEvent(QPaintEvent *event) {
 	QPainter paint(this);
@@ -102,28 +103,33 @@ void Board_Widget::paintEvent(QPaintEvent *event) {
 	QList<History> history;
 	history = game->getHistory();
 	list_history->clear();
+	char tmpChar = 'A';
 	foreach (History tmp, history) {
 		QString tmpStr;
 		QString tmpNum;
 		if (tmp.color == WHITE) {
-			tmpStr = "W::";
 			tmpNum.setNum(tmp.moveNum/2);
-			tmpStr = tmpStr+tmpNum+"::";
+			tmpStr = tmpStr+tmpNum;
+			tmpStr = tmpStr+"W  ";
+
 		}
 		else {
-			tmpStr = "B::";
 			tmpNum.setNum(tmp.moveNum/2);
-			tmpStr = tmpStr+tmpNum+"::";
+			tmpStr = tmpStr+tmpNum;
+			tmpStr = tmpStr+"B  ";
+
 		}
-		tmpStr = tmpStr+"X:";
-		tmpNum.setNum(tmp.move.from.x);
-		tmpStr = tmpStr+tmpNum;
+		tmpChar = 'A';
+		tmpStr = tmpStr;
+		tmpChar = tmpChar+tmp.move.from.x;
+		tmpStr = tmpStr+tmpChar;
+		tmpChar = 'A';
 		tmpNum.setNum(tmp.move.from.y);
-		tmpStr = tmpStr+"  Y:"+tmpNum;
-		tmpNum.setNum(tmp.move.to.x);
-		tmpStr = tmpStr+"  X:"+tmpNum;
+		tmpStr = tmpStr+tmpNum+" ";
+		tmpChar = tmpChar+tmp.move.to.x;
+		tmpStr = tmpStr+tmpChar;
 		tmpNum.setNum(tmp.move.to.y);
-		tmpStr = tmpStr+"  Y:"+tmpNum;
+		tmpStr = tmpStr+tmpNum;
 		list_history->addItem(tmpStr);
 	}
 	
