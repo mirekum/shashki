@@ -7,6 +7,7 @@
 |<---BN"SELFIPK"<---||<---WN"SELFIPK"<---
 2.TCP
 |<-connect---||<-connect---
+|<----B/W<---||<----B/W<---
 |---->Y----->||---->N----->
 |----game----||Hold or new connect
 */
