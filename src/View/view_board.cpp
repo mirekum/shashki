@@ -32,6 +32,7 @@ void Board_Widget::init(Game *_game) {
 	game = _game;
 	board = &game->getBoard();
 	end_flag = END_NONE;
+	connect(list_history, SIGNAL(currentRowChanged(int) ), this, SLOT(rollHistory()));
 }
 
 void Board_Widget::status(GAMESTATE res_flag) {
@@ -39,12 +40,10 @@ void Board_Widget::status(GAMESTATE res_flag) {
 }
 
 Board_Widget::Board_Widget(QWidget * parent): QWidget(parent) {
-	installEventFilter(this);
 	list_history = new QListWidget(parent);
 	list_history->setGeometry(480, 270, 300, 130);
-	connect(list_history, SIGNAL(currentRowChanged(int currentRow) ), this,SLOT(rollHistory()));
 	list_history->show();
-
+	installEventFilter(this);
 }
 void Board_Widget::rollHistory() {
 	//int* state = & list_history->currentRow;
