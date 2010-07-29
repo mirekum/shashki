@@ -200,6 +200,7 @@ void Network_Player::slotReadyRead() {
 					}
 					else if (mes == "N") {
 						tcp_socket->close();
+						tcp_socket = NULL;
 					}
 					else if ((mes == "B")&&(color == WHITE)||(mes == "W")&&(color == BLACK)) {
 						mes = "Y";
@@ -212,6 +213,18 @@ void Network_Player::slotReadyRead() {
 						qDebug()<<quint16(arr_block.size() - sizeof(quint16));
 						tcp_socket->write(arr_block);	
 						startGame();
+					}
+					else {
+						mes = "N";
+						QByteArray  arr_block;
+						QDataStream out(&arr_block, QIODevice::WriteOnly);
+						out.setVersion(QDataStream::Qt_4_0);
+						out << quint16(0) <<mes;
+						out.device()->seek(0);
+						out << quint16(arr_block.size() - sizeof(quint16));
+						qDebug()<<quint16(arr_block.size() - sizeof(quint16));
+						tcp_socket->write(arr_block);
+						tcp_socket->close();
 					}
 					next_block_size = 0;
 					return;
