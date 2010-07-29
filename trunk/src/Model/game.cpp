@@ -57,6 +57,8 @@ int Game::getMove() {
 }
 void Game::goByHistoryState(int state) {
 	board.reset();
+	thread->exit();
+	delete thread;
 	int ch = 0;
 	globalMoveNum = 0;
 	board.startMove(WHITE);
@@ -64,6 +66,7 @@ void Game::goByHistoryState(int state) {
 	foreach (History tmp, history) {
 		if (ch == state){
 			current->setColor(tmp.color);
+			board.startMove(tmp.color);
 			move();
 			break;
 		}
@@ -83,6 +86,7 @@ void Game::goByHistoryState(int state) {
 void Game::recieveMove() {
 	GAMESTATE res_flag;
 	MOVE mv = current->getMove();
+	thread->exit();
 	delete thread;
 	// check move
 	if (!board.move(mv)) {

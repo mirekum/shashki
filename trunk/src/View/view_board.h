@@ -15,7 +15,7 @@
 		GAMESTATE end_flag;
 		MOVE result;
 		COLOR currentColor;
-		QListWidget*list_history;
+		QListWidget *list_history;
 	public:
 		Board_Widget(QWidget * parent = 0);
 		void init(Game *_game);
@@ -26,7 +26,7 @@
 		virtual void paintEvent(QPaintEvent *event);
 		void status(GAMESTATE res_flag);
 	public slots:
-		void rollHistory();
+		void rollHistory(QListWidgetItem * state);
 	};
 	
 	class View_Board: public Player, public View {
