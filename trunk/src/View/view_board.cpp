@@ -40,10 +40,9 @@ void Board_Widget::status(GAMESTATE res_flag) {
 
 Board_Widget::Board_Widget(QWidget * parent): QWidget(parent) {
 	installEventFilter(this);
-	textHistory = new QTextEdit(parent);
-	textHistory->setReadOnly(true);
-	textHistory->setGeometry(480, 270, 300, 130);
-	textHistory->show();
+	list_history = new QListWidget(parent);
+	list_history->setGeometry(480, 270, 300, 130);
+	list_history->show();
 }
 
 void Board_Widget::paintEvent(QPaintEvent *event) {
@@ -97,7 +96,7 @@ void Board_Widget::paintEvent(QPaintEvent *event) {
 	}
 	QList<History> history;
 	history = game->getHistory();
-	textHistory->clear();
+	list_history->clear();
 	foreach (History tmp, history) {
 		QString tmpStr;
 		QString tmpNum;
@@ -120,7 +119,7 @@ void Board_Widget::paintEvent(QPaintEvent *event) {
 		tmpStr = tmpStr+"  X:"+tmpNum;
 		tmpNum.setNum(tmp.move.to.y);
 		tmpStr = tmpStr+"  Y:"+tmpNum;
-		textHistory->append(tmpStr);
+		list_history->addItem(tmpStr);
 	}
 	
 	// move indication
