@@ -21,7 +21,6 @@ void View_Board::init(Game *_game) {
 	canvas->init(game);
 	canvas->setGeometry(10, 10, 450, 400);
 	canvas->show();
-	connect(canvas , SIGNAL(readyExec()), this, SLOT(readyExec()));
 }
 
 // view hiding
@@ -33,7 +32,7 @@ void Board_Widget::init(Game *_game) {
 	game = _game;
 	board = &game->getBoard();
 	end_flag = END_NONE;
-	connect(list_history, SIGNAL(itemDoubleClicked (QListWidgetItem * )), this, SLOT(rollHistory(QListWidgetItem * )));
+
 }
 
 void Board_Widget::status(GAMESTATE res_flag) {
@@ -41,17 +40,9 @@ void Board_Widget::status(GAMESTATE res_flag) {
 }
 
 Board_Widget::Board_Widget(QWidget * parent): QWidget(parent) {
-	list_history = new QListWidget(parent);
-	list_history->setGeometry(480, 10, 300, 400);
-	list_history->show();
 	installEventFilter(this);
 }
-void Board_Widget::rollHistory(QListWidgetItem * state ) {
-	//int* state = & list_history->currentRow;
-	int st = list_history->row(state);
-	qDebug()<<"go"<<st<<"in histry";
-	game->goByHistoryState(st);
-}
+
 void Board_Widget::paintEvent(QPaintEvent *event) {
 	QPainter paint(this);
 	// draw coordinate lines
@@ -101,39 +92,7 @@ void Board_Widget::paintEvent(QPaintEvent *event) {
 			}
 		}
 	}
-	QList<History> history;
-	history = game->getHistory();
-	list_history->clear();
-	char tmpChar = 'A';
-	foreach (History tmp, history) {
-		QString tmpStr;
-		QString tmpNum;
-		if (tmp.color == WHITE) {
-			tmpNum.setNum(tmp.moveNum/2);
-			tmpStr = tmpStr+tmpNum;
-			tmpStr = tmpStr+"W  ";
 
-		}
-		else {
-			tmpNum.setNum(tmp.moveNum/2);
-			tmpStr = tmpStr+tmpNum;
-			tmpStr = tmpStr+"B  ";
-
-		}
-		tmpChar = 'A';
-		tmpStr = tmpStr;
-		tmpChar = tmpChar+tmp.move.from.x;
-		tmpStr = tmpStr+tmpChar;
-		tmpChar = 'A';
-		tmpNum.setNum(tmp.move.from.y);
-		tmpStr = tmpStr+tmpNum+" ";
-		tmpChar = tmpChar+tmp.move.to.x;
-		tmpStr = tmpStr+tmpChar;
-		tmpNum.setNum(tmp.move.to.y);
-		tmpStr = tmpStr+tmpNum;
-		list_history->addItem(tmpStr);
-	}
-	
 	// move indication
 	if (!end_flag) {
 		paint.setBrush(QBrush(Qt::yellow));
@@ -205,17 +164,12 @@ bool Board_Widget::isReady() {
 void View_Board::execMove(BOARD board) {
 	qDebug()<<"startMove human";
 	canvas->startMove(color);
-	/*do {
-		if (canvas->isReady()) {
-			result = canvas->getMove();
-			break;
-		}
-		usleep(300);
-	} while (true);
-	emit moveExecuted();*/
+	connect(canvas , SIGNAL(readyExec()), this, SLOT(readyExec()));
+
 }
 void View_Board::readyExec() {
 	result = canvas->getMove();
+	disconnect(canvas , SIGNAL(readyExec()), this, SLOT(readyExec()));
 	emit moveExecuted();
 }
 void View_Board::updateBoard() {
