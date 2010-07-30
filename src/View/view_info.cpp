@@ -54,7 +54,7 @@ void View_Info::updateHistory() {
 		tmpStr = tmpStr+tmpChar;
 		tmpChar = 'A';
 		tmpNum.setNum(tmp.move.from.y+1);
-		tmpStr = tmpStr+tmpNum+" ";
+		tmpStr = tmpStr+tmpNum+"--->";
 		tmpChar = tmpChar+tmp.move.to.x;
 		tmpStr = tmpStr+tmpChar;
 		tmpNum.setNum(tmp.move.to.y+1);
