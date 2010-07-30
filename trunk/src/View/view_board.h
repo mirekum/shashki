@@ -27,6 +27,8 @@
 		void status(GAMESTATE res_flag);
 	public slots:
 		void rollHistory(QListWidgetItem * state);
+	signals:
+		void readyExec();
 	};
 	
 	class View_Board: public Player, public View {
@@ -50,6 +52,7 @@
 		void drawCanvas();
 		void drawFigures();
 	public slots:
+		void readyExec();
 		void updateBoard();
 		void finishGame(GAMESTATE res_flag);
 	};

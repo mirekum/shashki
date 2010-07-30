@@ -9,18 +9,6 @@
 		COLOR color;
 		int moveNum;
 	};
-	class getMoveThread: public QThread {
-	protected:
-		Player *current;
-		BOARD *board;
-	public:
-		void setData(Player *_current, BOARD &_board) {
-			current = _current;
-			board = &_board;
-		}
-	protected:
-		void run();
-	};
 	
 	class Game: public QObject {
 		Q_OBJECT
@@ -30,7 +18,6 @@
 		int moveNum;
 		MOVE lastMove[Player::maxFiguresNumber];
 		Player *current;
-		getMoveThread *thread;
 		QList<History> history;
 		int globalMoveNum;
 	public:

@@ -21,6 +21,7 @@ void View_Board::init(Game *_game) {
 	canvas->init(game);
 	canvas->setGeometry(10, 10, 450, 400);
 	canvas->show();
+	connect(canvas , SIGNAL(readyExec()), this, SLOT(readyExec()));
 }
 
 // view hiding
@@ -177,6 +178,7 @@ bool Board_Widget::eventFilter(QObject *target, QEvent *event) {
 				return true;
 			}
 			ready = 2;
+			emit readyExec();
 			return true;
 		}
 		return true;
@@ -201,17 +203,21 @@ bool Board_Widget::isReady() {
 
 // request move from human
 void View_Board::execMove(BOARD board) {
+	qDebug()<<"startMove human";
 	canvas->startMove(color);
-	do {
+	/*do {
 		if (canvas->isReady()) {
 			result = canvas->getMove();
 			break;
 		}
 		usleep(300);
 	} while (true);
+	emit moveExecuted();*/
+}
+void View_Board::readyExec() {
+	result = canvas->getMove();
 	emit moveExecuted();
 }
-
 void View_Board::updateBoard() {
 	canvas->update();
 }
