@@ -63,12 +63,17 @@ void Game::goByHistoryState(int state) {
 	globalMoveNum = 0;
 	board.startMove(WHITE);
 	QList<History> tmp_history;
+	COLOR last = WHITE;
 	foreach (History tmp, history) {
 		if (ch == state){
-			current = tmp.color == WHITE ? wp : bp;
-			current->setColor(tmp.color);
-			board.startMove(tmp.color);
-			move();
+			if (last == tmp.color) {
+				qDebug()<<"last == tmp.color";
+				setCurrentPlayer(tmp.color);
+			}
+			else {
+				qDebug()<<"last != tmp.color";
+				
+			}
 			break;
 		}
 		tmp_history<<tmp;
@@ -78,6 +83,7 @@ void Game::goByHistoryState(int state) {
 			// change current player
 			board.startMove(tmp.color == WHITE ? BLACK : WHITE);
 			globalMoveNum++;
+			last = tmp.color == WHITE ? BLACK : WHITE;
 		}
 
 	}
@@ -85,6 +91,7 @@ void Game::goByHistoryState(int state) {
 	qDebug()<<"emit updateBoard();";
 	emit updateBoard();
 	qDebug()<<"------------------";
+	move();	
 }
 void Game::recieveMove() {
 	GAMESTATE res_flag;

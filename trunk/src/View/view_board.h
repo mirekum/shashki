@@ -15,7 +15,7 @@
 		GAMESTATE end_flag;
 		MOVE result;
 		COLOR currentColor;
-		QListWidget *list_history;
+
 	public:
 		Board_Widget(QWidget * parent = 0);
 		void init(Game *_game);
@@ -25,8 +25,7 @@
 		bool eventFilter(QObject *target, QEvent *event);
 		virtual void paintEvent(QPaintEvent *event);
 		void status(GAMESTATE res_flag);
-	public slots:
-		void rollHistory(QListWidgetItem * state);
+
 	signals:
 		void readyExec();
 	};
