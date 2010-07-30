@@ -11,6 +11,7 @@
 		Game *game;
 		QWidget *window;
 		QFrame *infowrap;
+		QLabel *lable_history;
 		QListWidget *list_history;
 	public:
 		View_Info(View_Main &main_ui);
