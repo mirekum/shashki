@@ -90,6 +90,11 @@ void Board_Widget::paintEvent(QPaintEvent *event) {
 				paint.setPen(QPen(IS_WHITE(f) ? Qt::black : Qt::white, 3));
 				paint.drawEllipse(QRect(x0 + i * 44 + 10, y0 + j * 44 + 10, 24, 24));
 			}
+			if (ready == 1) {
+				paint.setPen(QPen(IS_WHITE(f) ? Qt::black : Qt::white, 3));
+				paint.drawEllipse(QRect(x0 + result.from.x * 44 - 10, y0 + result.from.y * 44 - 10, 64, 64));
+				
+			}
 		}
 	}
 
@@ -105,7 +110,9 @@ void Board_Widget::paintEvent(QPaintEvent *event) {
 	}
 }
 
-bool Board_Widget::eventFilter(QObject *target, QEvent *event) {         
+bool Board_Widget::eventFilter(QObject *target, QEvent *event) {   
+	//QPainter paint(this);    
+	//paint.setPen(QPen(Qt::red, 1));  
 	if (event->type() == QEvent::MouseButtonPress && read_flag) {
 		QMouseEvent *mouseEvent = (QMouseEvent*)event;
 		int x = (mouseEvent->pos().x() - 44) / 44, y = (mouseEvent->pos().y() - 44) / 44;
@@ -117,6 +124,7 @@ bool Board_Widget::eventFilter(QObject *target, QEvent *event) {
 				|| (currentColor == WHITE && !IS_WHITE(f))
 				|| (currentColor == BLACK && !IS_BLACK(f))
 			) return true;
+			update();
 			ready = 1;
 			return true;
 		}
@@ -134,6 +142,7 @@ bool Board_Widget::eventFilter(QObject *target, QEvent *event) {
 					return true;
 				}
 				ready = 1;
+				update();
 				return true;
 			}
 			ready = 2;
@@ -153,7 +162,12 @@ void Board_Widget::startMove(COLOR color) {
 
 MOVE Board_Widget::getMove() {
 	read_flag = false;
-	return result;
+	MOVE tmp_move = result;
+	result.from.x = 0;
+	result.from.y = 0;
+	result.to.x = 0;
+	result.to.y = 0;
+	return tmp_move;
 }
 
 bool Board_Widget::isReady() {
