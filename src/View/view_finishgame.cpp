@@ -6,7 +6,7 @@ View_FinishGame::View_FinishGame(View_Main &main_ui) {
 
 void View_FinishGame::show(GAMESTATE res_flag) {
 	// draw info wrapper
-	box = new QLabel(window);
+	/*box = new QLabel(window);
 	box->setGeometry(480, 10, 300, 200);
 	box->setFrameStyle(QFrame::Box | QFrame::Plain);
 	box->setLineWidth(3);
@@ -21,6 +21,21 @@ void View_FinishGame::show(GAMESTATE res_flag) {
 			box->setText("Draw! (0:0)");
 		break;
 	}
-	box->show();
+	box->show();*/
+	QString mes;
+	switch (res_flag) {
+		case END_WHITE:
+			mes = "White has won! (1:0)";
+		break;
+		case END_BLACK:
+			mes = "Black has won! (0:1)";
+		break;
+		case END_DRAW:
+			mes = "Draw! (0:0)";
+		break;
+	}
+	QMessageBox::information(0, "GAME FINISH", mes);
+
+
 }
 

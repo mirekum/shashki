@@ -30,7 +30,7 @@ void Game::setCurrentPlayer(COLOR color) {
 	board.startMove(color);
 	connect(current, SIGNAL(moveExecuted()), this, SLOT(recieveMove()));
 	moveNum = 0;
-	//emit currentPlayer(color);
+	emit currentPlayer(color);
 	qDebug()<<"emit currentPlayer(color);";
 }
 
