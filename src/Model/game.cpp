@@ -60,7 +60,7 @@ void Game::goByHistoryState(int state) {
 	disconnect(current, SIGNAL(moveExecuted()), this, SLOT(recieveMove()));
 	board.reset();
 	int ch = 0;
-	globalMoveNum = 0;
+	globalMoveNum = 2;
 	board.startMove(WHITE);
 	QList<History> tmp_history;
 	COLOR last = WHITE;
