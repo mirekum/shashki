@@ -101,7 +101,7 @@ void Board_Widget::paintEvent(QPaintEvent *event) {
 				if (count != 0) {
 					for(int i =0; i < count; i++)
 					{
-						paint.setBrush(QBrush(Qt::magenta));
+						paint.setBrush(QBrush(Qt::yellow));
 						paint.drawRect(QRect(x0 + res[i].x * 44, y0 + res[i].y * 44, 44, 44));	
 					}
 				}
