@@ -10,8 +10,8 @@
 	protected:
 		Game *game;
 		QWidget *window;
-		QLabel *lable_history;
-		QListWidget *list_history;
+		QLabel *label_history;
+		QListWidget *list_history_widget;
 	public:
 		View_Info(View_Main &main_ui);
 		// view initialization

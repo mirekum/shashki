@@ -9,16 +9,16 @@ void View_Info::init(Game *_game) {
 	// model
 	game = _game;
 	// draw info wrapper
-	list_history = new QListWidget(window);
-	list_history->setGeometry(480, 40, 300, 370);
-	list_history->show();
-	lable_history = new QLabel(window);
-	lable_history->setGeometry(480, 10, 300, 30);
-	lable_history->setFrameStyle(QFrame::Box | QFrame::Plain);
-	lable_history->setText("HISTORY:");
-	lable_history->show();
+	list_history_widget = new QListWidget(window);
+	list_history_widget->setGeometry(480, 40, 300, 370);
+	list_history_widget->show();
+	label_history = new QLabel(window);
+	label_history->setGeometry(480, 10, 300, 30);
+	label_history->setFrameStyle(QFrame::Box | QFrame::Plain);
+	label_history->setText("HISTORY:");
+	label_history->show();
 		// signal to update model
-	connect(list_history, SIGNAL(itemDoubleClicked (QListWidgetItem * )), this, SLOT(rollHistory(QListWidgetItem * )));
+	connect(list_history_widget, SIGNAL(itemDoubleClicked (QListWidgetItem * )), this, SLOT(rollHistory(QListWidgetItem * )));
 	connect(game, SIGNAL(updateBoard()), SLOT(updateHistory()));
 	
 }
@@ -26,7 +26,7 @@ void View_Info::updateHistory() {
 	qDebug()<<"Updait hist info";
 	QList<History> history;
 	history = game->getHistory();
-	list_history->clear();
+	list_history_widget->clear();
 	char tmpChar = 'A';
 	foreach (History tmp, history) {
 		QString tmpStr;
@@ -54,12 +54,12 @@ void View_Info::updateHistory() {
 		tmpStr = tmpStr+tmpChar;
 		tmpNum.setNum(tmp.move.to.y+1);
 		tmpStr = tmpStr+tmpNum;
-		list_history->addItem(tmpStr);
+		list_history_widget->addItem(tmpStr);
 	}
 }
 void View_Info::rollHistory(QListWidgetItem * state ) {
 	//int* state = & list_history->currentRow;
-	int st = list_history->row(state);
+	int st = list_history_widget->row(state);
 	qDebug()<<"go"<<st<<"in histry";
 	game->goByHistoryState(st);
 }
