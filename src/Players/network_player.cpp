@@ -245,7 +245,9 @@ void Network_Player::slotReadyRead() {
 				qDebug()<<result.to.x;
 				qDebug()<<result.to.y;
 				next_block_size = 0;
+				moveExecuted();
 				return;
+				
 			}
 		}
 	}
@@ -286,16 +288,9 @@ void Network_Player::giveLastMoves(MOVE lastMove[maxFiguresNumber]) {
 	}
 }
 void Network_Player::execMove(BOARD board) {
-	sleep(1);	
+	sleep(1);cur_move = true;	
 	slotReadyRead();
-	do {
-		if (cur_move == false) {
-			break;
-		}
-		usleep(300);
-	} while (true);
-	moveExecuted();
-	cur_move = true;
+
 }
 MOVE Network_Player::getMove() {
 	return result;

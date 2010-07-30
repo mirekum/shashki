@@ -4,7 +4,7 @@
 	#include <pthread.h>
 	#include <vector>
 	#include "Players/player.h"
-	
+
 	// chosen move
 	class CHOOSEN_MOVE {
 	public:
@@ -51,6 +51,9 @@
 		// getters
 		int getLevel() {return max_step;};
 		int getThrNum() {return thr_num;};
+		void walking(BOARD board);
+	protected slots:
+		void deliteFlow();
 	protected:
 		// choose the best partial half-move
 		virtual int choose(BOARD board, COLOR _color, MOVE *res, int step = 0, int last = -MINMAX_END, bool smflag = true);
@@ -67,6 +70,18 @@
 		pthread_mutex_t *queue_mutex;
 		int mark;
 		pthread_mutex_t *mark_mutex;
+	};
+
+	class MoveThread: public QThread {
+	protected:
+		BOARD *board;
+		Ai_Player *current;
+	public:
+		void setData(BOARD &_board, Ai_Player *_current) {
+			board = &_board;
+			current = _current;
+		}
+		void run();
 	};
 	
 #endif

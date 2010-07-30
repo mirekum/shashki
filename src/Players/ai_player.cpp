@@ -2,6 +2,28 @@
 
 // choose partial half-move
 void Ai_Player::execMove(BOARD board) {
+	qDebug()<<"????????????????????????";
+	qDebug()<<"thread create";
+	MoveThread*thread = new MoveThread;
+	qDebug()<<"thread set data";
+	thread->setData(board, this);
+	qDebug()<<"thread connect";
+	connect(thread, SIGNAL(finished()), this, SLOT(deliteFlow()));
+	qDebug()<<"thread run";
+	thread->start(QThread::NormalPriority);
+	qDebug()<<"thread out";
+	qDebug()<<"????????????????????????";
+
+}
+void MoveThread::run(){
+	current->walking(board[0]);
+}
+void Ai_Player::deliteFlow() {
+	MoveThread*thread = (MoveThread*)sender();
+	delete thread;
+	qDebug()<<"delete thread";
+}
+void Ai_Player::walking(BOARD board) {
 	CHOOSEN_MOVE_ARRAY moves_queue; // first level moves queue
 	// go round all figures on the board and make moves queue
 	for (int i = 0; i < board.size; i++) {
@@ -53,6 +75,7 @@ void Ai_Player::execMove(BOARD board) {
 	// return the best move
 	sleep(1);
 	emit moveExecuted();
+	qDebug()<<"moveExecuted()";
 }
 
 // first call of choose functio

@@ -3,9 +3,9 @@
 Game::Game() {
 	wp = NULL;
 	bp = NULL;
-	thread = NULL;
 	moveNum = 0;
 	globalMoveNum = 2;
+
 }
 
 void Game::init(Player *_wp, Player *_bp) {
@@ -16,30 +16,31 @@ void Game::init(Player *_wp, Player *_bp) {
 }
 
 void Game::start() {
+	qDebug()<<"start";
 	setCurrentPlayer(WHITE);
 	// first move
 	move();
 }
 
 void Game::setCurrentPlayer(COLOR color) {
+	qDebug()<<"setCurrentPlayer";
 	current = color == WHITE ? wp : bp;
 	current->setColor(color);
 	current->giveLastMoves(lastMove);
 	board.startMove(color);
+	connect(current, SIGNAL(moveExecuted()), this, SLOT(recieveMove()));
 	moveNum = 0;
-	emit currentPlayer(color);
+	//emit currentPlayer(color);
+	qDebug()<<"emit currentPlayer(color);";
 }
 
 void Game::move() {
 	// request move from current player
-	thread = new getMoveThread;
-	thread->setData(current, board);
-	connect(thread, SIGNAL(finished()), SLOT(recieveMove()));
-	thread->start(QThread::NormalPriority);
-}
 
-void getMoveThread::run() {
-	current->execMove(*board);
+	emit updateBoard();
+	qDebug()<<"move start";
+	current->execMove(board);
+	qDebug()<<"move end";
 }
 
 void Game::finish(GAMESTATE res_flag) {
@@ -56,15 +57,15 @@ int Game::getMove() {
 	return moveNum;
 }
 void Game::goByHistoryState(int state) {
+	disconnect(current, SIGNAL(moveExecuted()), this, SLOT(recieveMove()));
 	board.reset();
-	thread->exit();
-	delete thread;
 	int ch = 0;
 	globalMoveNum = 0;
 	board.startMove(WHITE);
 	QList<History> tmp_history;
 	foreach (History tmp, history) {
 		if (ch == state){
+			current = tmp.color == WHITE ? wp : bp;
 			current->setColor(tmp.color);
 			board.startMove(tmp.color);
 			move();
@@ -81,16 +82,16 @@ void Game::goByHistoryState(int state) {
 
 	}
 	history = tmp_history;
+	qDebug()<<"emit updateBoard();";
 	emit updateBoard();
+	qDebug()<<"------------------";
 }
 void Game::recieveMove() {
 	GAMESTATE res_flag;
 	MOVE mv = current->getMove();
-	thread->exit();
-	delete thread;
-	// check move
 	if (!board.move(mv)) {
 		// wrong move - request move again
+		qDebug()<<"error move() ";
 		move();
 		return;
 	}
@@ -101,7 +102,9 @@ void Game::recieveMove() {
 	mvh.color = current->getColor();
 	history<<mvh;
 	lastMove[moveNum++] = mv;
+	qDebug()<<"emit updateBoard();";
 	emit updateBoard();
+	qDebug()<<"------------------";
 	// check finish
 	if (res_flag = board.isWin()) {
 		finish(res_flag);
@@ -110,6 +113,7 @@ void Game::recieveMove() {
 	// continue game
 	if (!board.canMove()) {
 		// change current player
+		disconnect(current, SIGNAL(moveExecuted()), this, SLOT(recieveMove()));
 		setCurrentPlayer(current->getColor() == WHITE ? BLACK : WHITE);
 		globalMoveNum++;
 	}
