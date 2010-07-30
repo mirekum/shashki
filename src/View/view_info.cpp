@@ -15,7 +15,7 @@ void View_Info::init(Game *_game) {
 	infowrap->setLineWidth(1);
 	infowrap->show();
 	list_history = new QListWidget(window);
-	list_history->setGeometry(480, 40, 300, 400);
+	list_history->setGeometry(480, 40, 300, 370);
 	list_history->show();
 	lable_history = new QLabel(window);
 	lable_history->setGeometry(480, 10, 300, 30);
