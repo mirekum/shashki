@@ -15,8 +15,13 @@ void View_Info::init(Game *_game) {
 	infowrap->setLineWidth(1);
 	infowrap->show();
 	list_history = new QListWidget(window);
-	list_history->setGeometry(480, 10, 300, 400);
+	list_history->setGeometry(480, 40, 300, 400);
 	list_history->show();
+	lable_history = new QLabel(window);
+	lable_history->setGeometry(480, 10, 300, 30);
+	lable_history->setFrameStyle(QFrame::Box | QFrame::Plain);
+	lable_history->setText("HISTORY:");
+	lable_history->show();
 		// signal to update model
 	connect(list_history, SIGNAL(itemDoubleClicked (QListWidgetItem * )), this, SLOT(rollHistory(QListWidgetItem * )));
 	connect(game, SIGNAL(updateBoard()), SLOT(updateHistory()));
