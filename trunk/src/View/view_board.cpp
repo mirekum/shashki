@@ -94,7 +94,17 @@ void Board_Widget::paintEvent(QPaintEvent *event) {
 				paint.setBrush(QBrush( Qt::gray));
 				paint.setPen(QPen(Qt::black, 3));
 				paint.drawEllipse(QRect(x0 + result.from.x * 44 , y0 + result.from.y * 44 , 44, 44));
-				
+				CELL figure_cell(result.from.x, result.from.y);
+				CELL *res = new CELL [65];
+				int count = 0;
+				count = board->moves(figure_cell,res);
+				if (count != 0) {
+					for(int i =0; i < count; i++)
+					{
+						paint.setBrush(QBrush(Qt::magenta));
+						paint.drawRect(QRect(x0 + res[i].x * 44, y0 + res[i].y * 44, 44, 44));	
+					}
+				}
 			}
 		}
 	}
