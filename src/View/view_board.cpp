@@ -92,7 +92,7 @@ void Board_Widget::paintEvent(QPaintEvent *event) {
 			}
 			if (ready == 1) {
 				paint.setPen(QPen(IS_WHITE(f) ? Qt::black : Qt::white, 3));
-				paint.drawEllipse(QRect(x0 + result.from.x * 44 - 10, y0 + result.from.y * 44 - 10, 64, 64));
+				paint.drawEllipse(QRect(x0 + result.from.x * 44 - 5, y0 + result.from.y * 44 - 5, 59, 59));
 				
 			}
 		}
