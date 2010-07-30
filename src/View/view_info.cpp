@@ -9,11 +9,6 @@ void View_Info::init(Game *_game) {
 	// model
 	game = _game;
 	// draw info wrapper
-	infowrap = new QFrame(window);
-	infowrap->setGeometry(480, 10, 300, 400);
-	infowrap->setFrameStyle(QFrame::Box | QFrame::Plain);
-	infowrap->setLineWidth(1);
-	infowrap->show();
 	list_history = new QListWidget(window);
 	list_history->setGeometry(480, 40, 300, 370);
 	list_history->show();
@@ -70,6 +65,5 @@ void View_Info::rollHistory(QListWidgetItem * state ) {
 }
 // view hiding
 void View_Info::hide() {
-	infowrap->hide();
 }
 
