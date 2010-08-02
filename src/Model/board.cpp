@@ -331,7 +331,29 @@ bool BOARD::canMove() {
 	// a non first half-move - can move by blocked figure only
 	return moves(ublocked) ? true : false;
 }
-
+unsigned int BOARD::eatMoves(CELL *res) {
+	unsigned int k = 0;
+	unsigned int tmp = 0;
+	CELL tmp_figure;
+	CELL *tmp_res = new CELL [4];
+	for (int x = 0; x < size ; x++) {
+		for (int y = 0; y < size ; y++) {
+			tmp_figure.x = x;
+			tmp_figure.y = y;
+			if (canEat(tmp_figure)){
+				tmp = moves(tmp_figure, tmp_res);
+				qDebug()<<"canEat:"<<"X="<<tmp_figure.x<<"Y="<<tmp_figure.y;
+				if (res != NULL) {
+					for (int i = 0; i < tmp ; i++) {
+					res[k + i] = tmp_res[i];
+					}
+					k = k + tmp;
+				}
+			}
+		}
+	}
+	return k;
+}
 // gets array of the possible partial half-moves for the cell
 // if res is not NULL, moves will be situated there
 // return value - number of possible partial half-moves
