@@ -92,6 +92,7 @@
 		// get cell value
 		FIGURE gcell(int x, int y);
 		FIGURE gcell(CELL figure);
+		unsigned int eatMoves(CELL *arr = NULL);
 		// gets array of the possible partial half-moves for the cell
 		unsigned int moves(CELL figure, CELL *arr = NULL);
 		// execs the partial half-move

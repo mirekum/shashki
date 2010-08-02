@@ -79,8 +79,20 @@ void Board_Widget::paintEvent(QPaintEvent *event) {
 		}
 	}
 	// draw figures
-	for (int i = 0, x0 = 44; i < 8; i++) {
-		for (int j = 0, y0 = 44; j < 8; j++) {
+	int x0 = 44;
+	int y0 = 44;
+	int maxFiguresNumber = board->size*2;
+	CELL *res = new CELL [maxFiguresNumber];
+	int count = 0;
+	count = board->eatMoves(res);
+	if (count != 0) {
+		for(int i =0; i < count; i++) {
+			paint.setBrush(QBrush(Qt::red));
+			paint.drawRect(QRect(x0 + res[i].x * 44, y0 + res[i].y * 44, 44, 44));	
+		}
+	}
+	for (int i = 0; i < 8; i++) {
+		for (int j = 0; j < 8; j++) {
 			FIGURE f = board->gcell(i, j);
 			if (IS_EMPTY(f)) continue;
 			paint.setBrush(QBrush(IS_WHITE(f) ? Qt::white : Qt::black));
@@ -95,12 +107,11 @@ void Board_Widget::paintEvent(QPaintEvent *event) {
 				paint.setPen(QPen(Qt::black, 3));
 				paint.drawEllipse(QRect(x0 + result.from.x * 44 , y0 + result.from.y * 44 , 44, 44));
 				CELL figure_cell(result.from.x, result.from.y);
-				CELL *res = new CELL [65];
+				CELL *res = new CELL [4];
 				int count = 0;
 				count = board->moves(figure_cell,res);
 				if (count != 0) {
-					for(int i =0; i < count; i++)
-					{
+					for(int i =0; i < count; i++) {
 						paint.setBrush(QBrush(Qt::yellow));
 						paint.drawRect(QRect(x0 + res[i].x * 44, y0 + res[i].y * 44, 44, 44));	
 					}

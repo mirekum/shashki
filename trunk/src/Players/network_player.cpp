@@ -147,7 +147,7 @@ void Network_Player::createClient( QString Host) {
 		//delete tcp_socket;
 		tcp_socket = NULL;
 	};
-	qDebug()<<"conect too hast:" <<Host;
+	qDebug()<<"connect to hast:" <<Host;
 	tcp_socket = new QTcpSocket(this);
 	next_block_size = 0;
 	tcp_socket->connectToHost(Host, PORT_CONNECT);
