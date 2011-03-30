@@ -4,7 +4,7 @@
 	#include <pthread.h>
 	#include <vector>
 	#include "Players/player.h"
-
+	
 	// chosen move
 	class CHOOSEN_MOVE {
 	public:
@@ -29,8 +29,6 @@
 	protected:
 		// minimax limit
 		const static int MINMAX_END = 2000000;
-		// is alpha-beta pruning on?
-		bool ab;
 		// level (search tree depth)
 		unsigned int max_step;
 		// statistiс rating function
@@ -39,7 +37,7 @@
 		unsigned int thr_num;
 	public:
 		// initialization
-		Ai_Player(int level = 4) {max_step = level; ab = true; thr_num = 2;}
+		Ai_Player(int level = 4) {max_step = level; thr_num = 1; srand(time(0));}
 		// get player type
 		virtual PLAYER_TYPE type() {return AI;};
 		// choose partial half-move
@@ -51,12 +49,9 @@
 		// getters
 		int getLevel() {return max_step;};
 		int getThrNum() {return thr_num;};
-		void walking(BOARD board);
-	protected slots:
-		void deliteFlow();
 	protected:
 		// choose the best partial half-move
-		virtual int choose(BOARD board, COLOR _color, MOVE *res, int step = 0, int last = -MINMAX_END, bool smflag = true);
+		virtual int choose(BOARD board, COLOR _color, int step = 0, int alpha = -MINMAX_END, int beta = MINMAX_END, bool smflag = true);
 	friend void *ai_prl_first_choose(void *ptr);
 	};
 	
@@ -68,20 +63,8 @@
 		int next_move_num;
 		CHOOSEN_MOVE_ARRAY *moves_queue;
 		pthread_mutex_t *queue_mutex;
-		int mark;
+		int alpha, beta;
 		pthread_mutex_t *mark_mutex;
-	};
-
-	class MoveThread: public QThread {
-	protected:
-		BOARD *board;
-		Ai_Player *current;
-	public:
-		void setData(BOARD &_board, Ai_Player *_current) {
-			board = &_board;
-			current = _current;
-		}
-		void run();
 	};
 	
 #endif

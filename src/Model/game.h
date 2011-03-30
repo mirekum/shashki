@@ -4,10 +4,18 @@
 	#include <QtCore>
 	#include "Model/board.h"
 	#include "Players/player.h"
-	struct History{
-		MOVE move;
-		COLOR color;
-		int moveNum;
+	
+	class getMoveThread: public QThread {
+	protected:
+		Player *current;
+		BOARD *board;
+	public:
+		void setData(Player *_current, BOARD &_board) {
+			current = _current;
+			board = &_board;
+		}
+	protected:
+		void run();
 	};
 	
 	class Game: public QObject {
@@ -18,17 +26,13 @@
 		int moveNum;
 		MOVE lastMove[Player::maxFiguresNumber];
 		Player *current;
-		QList<History> history;
-		int globalMoveNum;
+		getMoveThread *thread;
 	public:
 		Game();
 		void init(Player *wp, Player *bp);
 		void start();
 		// getters
 		BOARD& getBoard() {return board;}
-		QList<History> getHistory();
-		int getMove();
-		void goByHistoryState(int state);
 	protected:
 		void setCurrentPlayer(COLOR color);
 		void move();

@@ -69,6 +69,7 @@
 	class BOARD {
 	public:
 		const static unsigned int size = 8;
+		const static unsigned int drawMoves = 32;
 	protected:
 		unsigned int b, w, bk, wk; // numbers of figures and kings
 		FIGURE cells[size][size];  // [x][y]; x - col, y - row
@@ -76,6 +77,9 @@
 		bool ueaten;               // flag, indicating eating at last partial half-move
 		COLOR utype;               // player type for current half-move
 		CELL ublocked;             // blocked for current half-move figure
+		// for draw detecting
+		unsigned int drawCount, drawFigures;
+		bool drawFlag;
 	public:
 		BOARD();
 		// qDebug for the board
@@ -92,14 +96,12 @@
 		// get cell value
 		FIGURE gcell(int x, int y);
 		FIGURE gcell(CELL figure);
-		unsigned int eatMoves(CELL *arr = NULL);
 		// gets array of the possible partial half-moves for the cell
 		unsigned int moves(CELL figure, CELL *arr = NULL);
 		// execs the partial half-move
 		bool move(MOVE _move);
 		bool move(CELL from, CELL to);
 		bool move(int x1, int y1, int x2, int y2);
-		void reset();
 		// getters
 		int first() {return ufirst;}
 		int white() {return w;}
@@ -107,6 +109,7 @@
 		int whiteKing() {return wk;}
 		int blackKing() {return bk;}
 		int getCurrentColor() {return utype;}
+		int figuresCount() {return w + b;}
 		// checks the possibility of continuing the half-move by current player
 		bool canMove();
 		// checks the physical possibility of the move from one cell to the other one
