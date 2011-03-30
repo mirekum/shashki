@@ -32,7 +32,6 @@ void Board_Widget::init(Game *_game) {
 	game = _game;
 	board = &game->getBoard();
 	end_flag = END_NONE;
-
 }
 
 void Board_Widget::status(GAMESTATE res_flag) {
@@ -54,14 +53,14 @@ void Board_Widget::paintEvent(QPaintEvent *event) {
 	for (int j = 1; j <= 8; j++) {
 		paint.drawRect(QRect(0, j * 44, 44, 44));
 	}
-	paint.drawText(60 + 44*0, 30, "A");
-	paint.drawText(60 + 44*1, 30, "B");
-	paint.drawText(60 + 44*2, 30, "C");
-	paint.drawText(60 + 44*3, 30, "D");
-	paint.drawText(60 + 44*4, 30, "E");
-	paint.drawText(60 + 44*5, 30, "F");
-	paint.drawText(60 + 44*6, 30, "G");
-	paint.drawText(60 + 44*7, 30, "H");
+	paint.drawText(60 + 44*0, 30, "1");
+	paint.drawText(60 + 44*1, 30, "2");
+	paint.drawText(60 + 44*2, 30, "3");
+	paint.drawText(60 + 44*3, 30, "4");
+	paint.drawText(60 + 44*4, 30, "5");
+	paint.drawText(60 + 44*5, 30, "6");
+	paint.drawText(60 + 44*6, 30, "7");
+	paint.drawText(60 + 44*7, 30, "8");
 	paint.drawText(15, 75 + 44*0, "1");
 	paint.drawText(15, 75 + 44*1, "2");
 	paint.drawText(15, 75 + 44*2, "3");
@@ -79,20 +78,8 @@ void Board_Widget::paintEvent(QPaintEvent *event) {
 		}
 	}
 	// draw figures
-	int x0 = 44;
-	int y0 = 44;
-	int maxFiguresNumber = board->size*2;
-	CELL *res = new CELL [maxFiguresNumber];
-	int count = 0;
-	count = board->eatMoves(res);
-	if (count != 0) {
-		for(int i =0; i < count; i++) {
-			paint.setBrush(QBrush(Qt::red));
-			paint.drawRect(QRect(x0 + res[i].x * 44, y0 + res[i].y * 44, 44, 44));	
-		}
-	}
-	for (int i = 0; i < 8; i++) {
-		for (int j = 0; j < 8; j++) {
+	for (int i = 0, x0 = 44; i < 8; i++) {
+		for (int j = 0, y0 = 44; j < 8; j++) {
 			FIGURE f = board->gcell(i, j);
 			if (IS_EMPTY(f)) continue;
 			paint.setBrush(QBrush(IS_WHITE(f) ? Qt::white : Qt::black));
@@ -102,24 +89,8 @@ void Board_Widget::paintEvent(QPaintEvent *event) {
 				paint.setPen(QPen(IS_WHITE(f) ? Qt::black : Qt::white, 3));
 				paint.drawEllipse(QRect(x0 + i * 44 + 10, y0 + j * 44 + 10, 24, 24));
 			}
-			if (ready == 1) {
-				paint.setBrush(QBrush( Qt::gray));
-				paint.setPen(QPen(Qt::black, 3));
-				paint.drawEllipse(QRect(x0 + result.from.x * 44 , y0 + result.from.y * 44 , 44, 44));
-				CELL figure_cell(result.from.x, result.from.y);
-				CELL *res = new CELL [4];
-				int count = 0;
-				count = board->moves(figure_cell,res);
-				if (count != 0) {
-					for(int i =0; i < count; i++) {
-						paint.setBrush(QBrush(Qt::yellow));
-						paint.drawRect(QRect(x0 + res[i].x * 44, y0 + res[i].y * 44, 44, 44));	
-					}
-				}
-			}
 		}
 	}
-
 	// move indication
 	if (!end_flag) {
 		paint.setBrush(QBrush(Qt::yellow));
@@ -132,9 +103,7 @@ void Board_Widget::paintEvent(QPaintEvent *event) {
 	}
 }
 
-bool Board_Widget::eventFilter(QObject *target, QEvent *event) {   
-	//QPainter paint(this);    
-	//paint.setPen(QPen(Qt::red, 1));  
+bool Board_Widget::eventFilter(QObject *target, QEvent *event) {         
 	if (event->type() == QEvent::MouseButtonPress && read_flag) {
 		QMouseEvent *mouseEvent = (QMouseEvent*)event;
 		int x = (mouseEvent->pos().x() - 44) / 44, y = (mouseEvent->pos().y() - 44) / 44;
@@ -146,7 +115,6 @@ bool Board_Widget::eventFilter(QObject *target, QEvent *event) {
 				|| (currentColor == WHITE && !IS_WHITE(f))
 				|| (currentColor == BLACK && !IS_BLACK(f))
 			) return true;
-			update();
 			ready = 1;
 			return true;
 		}
@@ -164,11 +132,9 @@ bool Board_Widget::eventFilter(QObject *target, QEvent *event) {
 					return true;
 				}
 				ready = 1;
-				update();
 				return true;
 			}
 			ready = 2;
-			emit readyExec();
 			return true;
 		}
 		return true;
@@ -184,12 +150,7 @@ void Board_Widget::startMove(COLOR color) {
 
 MOVE Board_Widget::getMove() {
 	read_flag = false;
-	MOVE tmp_move = result;
-	result.from.x = 0;
-	result.from.y = 0;
-	result.to.x = 0;
-	result.to.y = 0;
-	return tmp_move;
+	return result;
 }
 
 bool Board_Widget::isReady() {
@@ -198,16 +159,17 @@ bool Board_Widget::isReady() {
 
 // request move from human
 void View_Board::execMove(BOARD board) {
-	qDebug()<<"startMove human";
 	canvas->startMove(color);
-	connect(canvas , SIGNAL(readyExec()), this, SLOT(readyExec()));
-
-}
-void View_Board::readyExec() {
-	result = canvas->getMove();
-	disconnect(canvas , SIGNAL(readyExec()), this, SLOT(readyExec()));
+	do {
+		if (canvas->isReady()) {
+			result = canvas->getMove();
+			break;
+		}
+		usleep(300);
+	} while (true);
 	emit moveExecuted();
 }
+
 void View_Board::updateBoard() {
 	canvas->update();
 }

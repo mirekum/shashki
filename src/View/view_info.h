@@ -10,18 +10,13 @@
 	protected:
 		Game *game;
 		QWidget *window;
-		QLabel *label_history;
-		QListWidget *list_history_widget;
+		QFrame *infowrap;
 	public:
 		View_Info(View_Main &main_ui);
 		// view initialization
 		void init(Game *_game);
 		// view hiding
 		void hide();
-	protected slots:
-		void updateHistory();
-		void rollHistory(QListWidgetItem * state);
-
 	};
 	
 #endif

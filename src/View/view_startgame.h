@@ -5,7 +5,6 @@
 	#include "View/view_main.h"
 	#include "Players/player.h"
 	#include "Players/ai_player.h"
-	#include "Players/network_player.h"
 	
 	class View_StartGame: public QObject, public View {
 		Q_OBJECT
@@ -15,7 +14,6 @@
 		QFrame *settingsBox;
 		QPushButton *next_btn;
 		Ai_Player *AiPlr;
-		Network_Player *NetworkPlr;
 		PLAYER_TYPE wPlr, bPlr;
 		Player *wp, *bp;
 		COLOR curColor;
@@ -30,11 +28,6 @@
 		void setupAi();
 		void setupAiShowLevel();
 		void setupAiEnd();
-		// set up network
-		void setupNetwork();
-		void setupNetworkShowInterface();
-		void setupNetworkShowSearch();
-		void setupNetworkEnd();
 		// send data for game creation
 		void sendPlayersData();
 	signals:
@@ -46,12 +39,6 @@
 		void setupPlayerEndSlot(Player *p);
 		// set up ai
 		void setupAiGetLevel();
-		// set up network
-		void setupNetworkGetInterface();
-		void setupNetworkGetSearch();
-		void setupNetworkUpdateSearch1();
-		void setupNetworkUpdateSearch2();
-		void setupNetworkIP();
 	};
 	
 #endif
