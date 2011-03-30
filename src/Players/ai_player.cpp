@@ -59,7 +59,6 @@ void Ai_Player::execMove(BOARD board) {
 		}
 	}
 	rnd = rand() % best_moves.size();
-	rnd = best_moves.size()-1;
 	result.from = best_moves[rnd].from;
 	result.to = best_moves[rnd].to;
 	//qDebug() << "result [" << rnd+1 << "/" << best_moves.size() << "]: " << result.from.x+1 << "," << result.from.y+1 << " -> "
