@@ -2,28 +2,6 @@
 
 // choose partial half-move
 void Ai_Player::execMove(BOARD board) {
-	qDebug()<<"????????????????????????";
-	qDebug()<<"thread create";
-	MoveThread*thread = new MoveThread;
-	qDebug()<<"thread set data";
-	thread->setData(board, this);
-	qDebug()<<"thread connect";
-	connect(thread, SIGNAL(finished()), this, SLOT(deliteFlow()));
-	qDebug()<<"thread run";
-	thread->start(QThread::NormalPriority);
-	qDebug()<<"thread out";
-	qDebug()<<"????????????????????????";
-
-}
-void MoveThread::run(){
-	current->walking(board[0]);
-}
-void Ai_Player::deliteFlow() {
-	MoveThread*thread = (MoveThread*)sender();
-	delete thread;
-	qDebug()<<"delete thread";
-}
-void Ai_Player::walking(BOARD board) {
 	CHOOSEN_MOVE_ARRAY moves_queue; // first level moves queue
 	// go round all figures on the board and make moves queue
 	for (int i = 0; i < board.size; i++) {
@@ -46,7 +24,8 @@ void Ai_Player::walking(BOARD board) {
 	sync->next_move_num = 0;
 	sync->moves_queue = &moves_queue;
 	sync->queue_mutex = &queue_mutex;
-	sync->mark = -MINMAX_END;
+	sync->alpha = -MINMAX_END;
+	sync->beta = MINMAX_END;
 	sync->mark_mutex = &mark_mutex;
 	
 	// child threads
@@ -62,20 +41,34 @@ void Ai_Player::walking(BOARD board) {
 		pthread_join(threads[i], NULL);
 	}
 	
-	// calculate maximum of moves marks and choose the best move
-	int max = -MINMAX_END;
+	// choose the best move
+	int score = -MINMAX_END, rnd = 0;
+	std::vector<CHOOSEN_MOVE> best_moves;
+	//qDebug() << "--------------------------- " << thr_num << " ------";
 	for (int i = 0; i < moves_queue.size(); i++) {
-		if (moves_queue[i].mark >= max) {
-			max = moves_queue[i].mark;
-			result.from = moves_queue[i].from;
-			result.to = moves_queue[i].to;
+		//qDebug() << i+1 << ") " << moves_queue[i].from.x+1 << "," << moves_queue[i].from.y+1 << " -> "
+		//		 << moves_queue[i].to.x+1 << "," << moves_queue[i].to.y+1 << " || " << moves_queue[i].mark;
+		if (moves_queue[i].mark >= score) {
+			score = moves_queue[i].mark;
 		}
 	}
+	//qDebug() << "best score: " << score;
+	for (int i = 0; i < moves_queue.size(); i++) {
+		if (moves_queue[i].mark == score) {
+			best_moves.push_back(moves_queue[i]);
+		}
+	}
+	rnd = rand() % best_moves.size();
+	rnd = best_moves.size()-1;
+	result.from = best_moves[rnd].from;
+	result.to = best_moves[rnd].to;
+	//qDebug() << "result [" << rnd+1 << "/" << best_moves.size() << "]: " << result.from.x+1 << "," << result.from.y+1 << " -> "
+	//					<< result.to.x+1 << "," << result.to.y+1 << " || " << score;
 	
 	// return the best move
-	sleep(1);
+	//getchar();
+	//sleep(1);
 	emit moveExecuted();
-	qDebug()<<"moveExecuted()";
 }
 
 // first call of choose functio
@@ -107,38 +100,41 @@ void *ai_prl_first_choose(void *ptr) {
 			// half-move continuing
 			if (board_copy.moves(move->to)) {
 				// continue current half-move
-				move->mark = sync->plr->choose(board_copy, sync->plr->color, NULL, 0, sync->mark, false);
+				move->mark = sync->plr->choose(board_copy, sync->plr->color, 0, sync->alpha, sync->beta, false);
 			}
 			// half-move is finished
 			else {
 				// start enemy half-move
-				move->mark = sync->plr->choose(board_copy, sync->plr->color == WHITE ? BLACK : WHITE, NULL, 1, sync->mark, true);
+				move->mark = -sync->plr->choose(board_copy, sync->plr->color == WHITE ? BLACK : WHITE, 1, -sync->beta, -sync->alpha, true);
 			}
 			
 			// remember mark
-			pthread_mutex_lock(sync->mark_mutex);
-			if (move->mark > sync->mark) {
-				sync->mark = move->mark;
-			}
-			pthread_mutex_unlock(sync->mark_mutex);
+			/*{
+				pthread_mutex_lock(sync->mark_mutex);
+				if (move->mark > sync->alpha) {
+					sync->alpha = move->mark;
+				}
+				if (move->mark < sync->beta) {
+					sync->beta = move->mark;
+				}
+				pthread_mutex_unlock(sync->mark_mutex);
+			}*/
 		}
 	}
 }
 
-
 // choose the best partial half-move
-int Ai_Player::choose(BOARD board, COLOR _color, MOVE *res, int step, int last, bool smflag) {
+int Ai_Player::choose(BOARD board, COLOR cColor, int step, int alpha, int beta, bool smflag) {
 	// not last partial half-move
 	if (step < max_step) {
-		bool minimax = (step % 2 == 0 ? 1 : 0); // max or min we must calculate (1 - max, 0 - min)
-		int max = -MINMAX_END, min = MINMAX_END; // max and min of SRF value
+		int score = -MINMAX_END;
 		// go round all figures on the board
 		for (int i = 0; i < board.size; i++) {
 			for (int j = 0; j < board.size; j++) {
 				int m;
 				CELL d(i, j), arr[16];
 				// first partial half-move
-				if (smflag) board.startMove(_color);
+				if (smflag) board.startMove(cColor);
 				// array of the possible partial half-moves for current figure
 				m = board.moves(d, arr);
 				// go round array of the possible partial half-moves for current figure
@@ -150,46 +146,22 @@ int Ai_Player::choose(BOARD board, COLOR _color, MOVE *res, int step, int last, 
 					// half-move continuing
 					if (board_copy.moves(arr[k])) {
 						// continue current half-move
-						s = choose(board_copy, _color, NULL, step, (minimax ? max : min), false);
+						s = choose(board_copy, cColor, step, alpha, beta, false);
 					}
 					// half-move is finished
 					else {
 						// start enemy half-move
-						s = choose(board_copy, _color == WHITE ? BLACK : WHITE, NULL, step + 1, (minimax ? max : min), true);
+						s = -choose(board_copy, cColor == WHITE ? BLACK : WHITE, step + 1, -beta, -alpha, true);
 					}
-					// calculate max of SRF values
-					if (minimax) {
-						if (s >= max) {
-							if (res != NULL) {
-								res->from = d;
-								res->to = arr[k];
-							}
-							max = s;
-						}
-						// alpha-beta pruning
-						if (ab && s > last && last > -MINMAX_END && last < MINMAX_END) {
-							return s;
-						}
-					}
-					// calculate min of SRF values
-					else {
-						if (s <= min) {
-							if (res != NULL) {
-								res->from = d;
-								res->to = arr[k];
-							}
-							min = s;
-						}
-						// alpha-beta pruning
-						if (ab && s < last && last > -MINMAX_END && last < MINMAX_END) {
-							return s;
-						}
-					}
+					// calculate max of SRF value
+					if (s > score) score = s;
+					if (score > alpha) alpha = score;
+					if (alpha >= beta)return alpha;
 				}
 			}
 		}
 		// result of going round this tree branch
-		return (minimax ? max : min);
+		return score;
 	}
 	// last partial half-move
 	else {

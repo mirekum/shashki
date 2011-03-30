@@ -4,7 +4,7 @@
 	#include <QtCore>
 	#include "Model/board.h"
 	
-	enum PLAYER_TYPE {HUMAN, AI, NETWORK, BLUETOOTH};
+	enum PLAYER_TYPE {HUMAN, AI, BLUETOOTH};
 	
 	class Player: public QObject {
 		Q_OBJECT
@@ -27,15 +27,6 @@
 		MOVE getMove() {return result;}
 		// set player level (for AI players)
 		virtual void setLevel(int level) {};
-		// give last moves array to player
-		virtual void giveLastMoves(MOVE lastMove[maxFiguresNumber]) {
-			for (int i = 0; i < maxFiguresNumber; i++) {
-				lastMove[i].from.x = 0;
-				lastMove[i].from.y = 0;
-				lastMove[i].to.x = 0;
-				lastMove[i].to.y = 0;
-			}
-		};
 		// getters
 		COLOR getColor() {return color;};
 	signals:
