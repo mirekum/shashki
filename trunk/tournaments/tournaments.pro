@@ -2,7 +2,6 @@ TEMPLATE = app
 TARGET = ../tournament
 DEPENDPATH += . ../src
 INCLUDEPATH += . ../src
-QT += network
 CONFIG += qt debug warn_off
 OBJECTS_DIR = ../bin/tournaments
 MOC_DIR = ../bin/tournaments

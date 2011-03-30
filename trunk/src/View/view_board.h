@@ -15,7 +15,6 @@
 		GAMESTATE end_flag;
 		MOVE result;
 		COLOR currentColor;
-
 	public:
 		Board_Widget(QWidget * parent = 0);
 		void init(Game *_game);
@@ -25,9 +24,6 @@
 		bool eventFilter(QObject *target, QEvent *event);
 		virtual void paintEvent(QPaintEvent *event);
 		void status(GAMESTATE res_flag);
-
-	signals:
-		void readyExec();
 	};
 	
 	class View_Board: public Player, public View {
@@ -51,7 +47,6 @@
 		void drawCanvas();
 		void drawFigures();
 	public slots:
-		void readyExec();
 		void updateBoard();
 		void finishGame(GAMESTATE res_flag);
 	};

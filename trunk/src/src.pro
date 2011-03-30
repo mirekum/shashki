@@ -2,7 +2,6 @@ TEMPLATE = app
 TARGET = ../shashki
 DEPENDPATH += .
 INCLUDEPATH += .
-QT += network
 CONFIG += qt debug warn_off
 OBJECTS_DIR = ../bin/src
 MOC_DIR = ../bin/src
