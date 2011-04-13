@@ -19,6 +19,7 @@
 		void init(Game *_game);
 		virtual PLAYER_TYPE type() {return HUMAN;};
 		virtual void execMove(BOARD board);
+	protected:
 		bool isReady();
 		bool eventFilter(QObject *target, QEvent *event);
 		virtual void paintEvent(QPaintEvent *event);
