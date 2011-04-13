@@ -4,12 +4,10 @@
 	#include <QtCore>
 	#include "Model/board.h"
 	
-	enum PLAYER_TYPE {HUMAN, AI, BLUETOOTH};
+	enum PLAYER_TYPE {HUMAN, AI};
 	
 	class Player: public QObject {
 		Q_OBJECT
-	public:
-		const static unsigned int maxFiguresNumber = BOARD::size*2;
 	protected:
 		// player color
 		COLOR color;
@@ -30,7 +28,6 @@
 		// getters
 		COLOR getColor() {return color;};
 	signals:
-		void error(int errorID);
 		void moveExecuted();
 	};
 	

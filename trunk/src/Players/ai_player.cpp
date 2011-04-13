@@ -33,7 +33,7 @@ void Ai_Player::execMove(BOARD board) {
 	
 	// run child threads
 	for (int i = 0; i < thr_num; i++) {
-		if (pthread_create(&threads[i], NULL, &ai_prl_first_choose, (void*)sync)) exit(1);
+		if (pthread_create(&threads[i], NULL, &ai_plr_first_choose, (void*)sync)) exit(1);
 	}
 	
 	// wait threads termination
@@ -42,7 +42,7 @@ void Ai_Player::execMove(BOARD board) {
 	}
 	
 	// choose the best move
-	int score = -MINMAX_END, rnd = 0;
+	double score = -MINMAX_END, rnd = 0;
 	std::vector<CHOOSEN_MOVE> best_moves;
 	//qDebug() << "--------------------------- " << thr_num << " ------";
 	for (int i = 0; i < moves_queue.size(); i++) {
@@ -71,7 +71,7 @@ void Ai_Player::execMove(BOARD board) {
 }
 
 // first call of choose functio
-void *ai_prl_first_choose(void *ptr) {
+void *ai_plr_first_choose(void *ptr) {
 	// threads synchronisation object
 	MOVES_SYNC *sync = (MOVES_SYNC*)ptr;
 	
@@ -123,10 +123,11 @@ void *ai_prl_first_choose(void *ptr) {
 }
 
 // choose the best partial half-move
-int Ai_Player::choose(BOARD board, COLOR cColor, int step, int alpha, int beta, bool smflag) {
+// NegaScout
+double Ai_Player::choose(BOARD board, COLOR cColor, int step, double alpha, double beta, bool smflag) {
 	// not last partial half-move
 	if (step < max_step) {
-		int score = -MINMAX_END;
+		double score = -MINMAX_END;
 		// go round all figures on the board
 		for (int i = 0; i < board.size; i++) {
 			for (int j = 0; j < board.size; j++) {
@@ -138,7 +139,7 @@ int Ai_Player::choose(BOARD board, COLOR cColor, int step, int alpha, int beta, 
 				m = board.moves(d, arr);
 				// go round array of the possible partial half-moves for current figure
 				for (int k = 0; k < m; k++) {
-					int s; // current SRF value
+					double s; // current SRF value
 					BOARD board_copy = board;
 					// exec current partial half-move
 					board_copy.move(d, arr[k]);
@@ -155,7 +156,7 @@ int Ai_Player::choose(BOARD board, COLOR cColor, int step, int alpha, int beta, 
 					// calculate max of SRF value
 					if (s > score) score = s;
 					if (score > alpha) alpha = score;
-					if (alpha >= beta)return alpha;
+					if (alpha >= beta) return alpha;
 				}
 			}
 		}
@@ -167,18 +168,123 @@ int Ai_Player::choose(BOARD board, COLOR cColor, int step, int alpha, int beta, 
 		return srf(board);
 	}
 	
-	return 0;
+	return 0.0;
+}
+
+// AlphaBeta
+double Ai_Player_AlphaBeta::choose(BOARD board, COLOR cColor, int step, double alpha, double beta, bool smflag) {
+	// not last partial half-move
+	if (step < max_step) {
+		double score = -MINMAX_END;
+		// go round all figures on the board
+		for (int i = 0; i < board.size; i++) {
+			for (int j = 0; j < board.size; j++) {
+				int m;
+				CELL d(i, j), arr[16];
+				// first partial half-move
+				if (smflag) board.startMove(cColor);
+				// array of the possible partial half-moves for current figure
+				m = board.moves(d, arr);
+				// go round array of the possible partial half-moves for current figure
+				for (int k = 0; k < m; k++) {
+					double s; // current SRF value
+					BOARD board_copy = board;
+					// exec current partial half-move
+					board_copy.move(d, arr[k]);
+					// half-move continuing
+					if (board_copy.moves(arr[k])) {
+						// continue current half-move
+						s = choose(board_copy, cColor, step, alpha, beta, false);
+					}
+					// half-move is finished
+					else {
+						// start enemy half-move
+						s = -choose(board_copy, cColor == WHITE ? BLACK : WHITE, step + 1, -beta, -alpha, true);
+					}
+					// calculate max of SRF value
+					if (s > score) score = s;
+					if (score > alpha) alpha = score;
+					if (alpha >= beta) return alpha;
+				}
+			}
+		}
+		// result of going round this tree branch
+		return score;
+	}
+	// last partial half-move
+	else {
+		return srf(board);
+	}
+	
+	return 0.0;
+}
+
+// NegaMax
+double Ai_Player_NegaMax::choose(BOARD board, COLOR cColor, int step, double alpha, double beta, bool smflag) {
+	// not last partial half-move
+	if (step < max_step) {
+		double score = -MINMAX_END;
+		// go round all figures on the board
+		for (int i = 0; i < board.size; i++) {
+			for (int j = 0; j < board.size; j++) {
+				int m;
+				CELL d(i, j), arr[16];
+				// first partial half-move
+				if (smflag) board.startMove(cColor);
+				// array of the possible partial half-moves for current figure
+				m = board.moves(d, arr);
+				// go round array of the possible partial half-moves for current figure
+				for (int k = 0; k < m; k++) {
+					double s; // current SRF value
+					BOARD board_copy = board;
+					// exec current partial half-move
+					board_copy.move(d, arr[k]);
+					// half-move continuing
+					if (board_copy.moves(arr[k])) {
+						// continue current half-move
+						s = choose(board_copy, cColor, step, alpha, beta, false);
+					}
+					// half-move is finished
+					else {
+						// start enemy half-move
+						s = -choose(board_copy, cColor == WHITE ? BLACK : WHITE, step + 1, -beta, -alpha, true);
+					}
+					// calculate max of SRF value
+					if (s > score) score = s;
+				}
+			}
+		}
+		// result of going round this tree branch
+		return score;
+	}
+	// last partial half-move
+	else {
+		return srf(board);
+	}
+	
+	return 0.0;
+}
+
+// AI players Fabric
+Player *Ai_Player::createAiPlayer(char *str, int level) {
+	if (strcmp(str, "negamax") == 0)
+		return new Ai_Player_NegaMax(level);
+	if (strcmp(str, "alphabeta") == 0)
+		return new Ai_Player_AlphaBeta(level);
+	if (strcmp(str, "negascout") == 0)
+		return new Ai_Player(level);
+	return NULL;
 }
 
 // statistiс rating function
-int Ai_Player::srf(BOARD board) {
+double Ai_Player::srf(BOARD board) {
 	if (color == WHITE) {
-		return (board.white() - board.black()) + 2*(board.whiteKing() - board.blackKing());
+		return (board.white() - board.black()) + 2.5 * (board.whiteKing() - board.blackKing());
 	}
 	else if (color == BLACK) {
-		return (board.black() - board.white()) + 2*(board.blackKing() - board.whiteKing());
+		return (board.black() - board.white()) + 2.5 * (board.blackKing() - board.whiteKing());
 	}
 	
-	return 0;
+	return 0.0;
 }
 

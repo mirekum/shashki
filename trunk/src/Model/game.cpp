@@ -4,7 +4,6 @@ Game::Game() {
 	wp = NULL;
 	bp = NULL;
 	thread = NULL;
-	moveNum = 0;
 }
 
 void Game::init(Player *_wp, Player *_bp) {
@@ -24,7 +23,6 @@ void Game::setCurrentPlayer(COLOR color) {
 	current = color == WHITE ? wp : bp;
 	current->setColor(color);
 	board.startMove(color);
-	moveNum = 0;
 	emit currentPlayer(color);
 }
 
@@ -54,7 +52,6 @@ void Game::recieveMove() {
 		move();
 		return;
 	}
-	lastMove[moveNum++] = mv;
 	emit updateBoard();
 	// check finish
 	if (res_flag = board.isWin()) {
@@ -66,6 +63,7 @@ void Game::recieveMove() {
 		// change current player
 		setCurrentPlayer(current->getColor() == WHITE ? BLACK : WHITE);
 	}
+	// next move, please!
 	move();
 }
 
