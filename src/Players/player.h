@@ -1,13 +1,11 @@
 #ifndef _PLAYER_H_
 	#define _PLAYER_H_
 	
-	#include <QtCore>
 	#include "Model/board.h"
 	
 	enum PLAYER_TYPE {HUMAN, AI};
 	
-	class Player: public QObject {
-		Q_OBJECT
+	class Player {
 	protected:
 		// player color
 		COLOR color;
@@ -27,8 +25,6 @@
 		virtual void setLevel(int level) {};
 		// getters
 		COLOR getColor() {return color;};
-	signals:
-		void moveExecuted();
 	};
 	
 #endif

@@ -1,48 +1,58 @@
 #include "View/view_board.h"
 
-View_Board::View_Board(View_Main &main_ui) {
-	window = main_ui.getWindow();
+View_Board::View_Board(QWidget *parent):QWidget(parent) {
+	qDebug() << "View_Board::View_Board(QWidget *parent):QWidget(parent)";
+	
+	window = parent;
 }
 
-// view initialization
 void View_Board::init(Game *_game) {
+	qDebug() << "View_Board::init(Game *_game) -> BEGIN";
+	
 	// model
 	game = _game;
 	board = &game->getBoard();
+	end_flag = END_NONE;
 	
 	// signal to update model
 	connect(game, SIGNAL(updateBoard()), SLOT(updateBoard()));
-	
 	// signal to finish game
 	connect(game, SIGNAL(finishGame(GAMESTATE)), SLOT(finishGame(GAMESTATE)));
 	
 	// draw board wrapper
-	canvas = new Board_Widget(window);
-	canvas->init(game);
-	canvas->setGeometry(10, 10, 450, 400);
-	canvas->show();
-}
-
-// view hiding
-void View_Board::hide() {
-	canvas->hide();
-}
-
-void Board_Widget::init(Game *_game) {
-	game = _game;
-	board = &game->getBoard();
-	end_flag = END_NONE;
-}
-
-void Board_Widget::status(GAMESTATE res_flag) {
-	end_flag = res_flag;
-}
-
-Board_Widget::Board_Widget(QWidget * parent): QWidget(parent) {
+	setGeometry(10, 10, 450, 400);
+	
+	// events
 	installEventFilter(this);
+	
+	// show board
+	show();
+	
+	qDebug() << "View_Board::init(Game *_game) -> END";
 }
 
-void Board_Widget::paintEvent(QPaintEvent *event) {
+void View_Board::execMove(BOARD board) {
+	qDebug() << "View_Board::execMove(BOARD board) -> BEGIN";
+	
+	read_flag = true;
+	ready = 0;
+	qDebug() << "ready = 0;";
+	do {
+		if (isReady()) {
+			qDebug() << "View_Board::execMove(BOARD board) -> result = " << result.from.x+1 << "," << result.from.y+1 << " >> " << result.to.x+1 << "," << result.to.y+1;
+			break;
+		}
+		usleep(300);
+	} while (true);
+	
+	qDebug() << "View_Board::execMove(BOARD board) -> END";
+}
+
+bool View_Board::isReady() {
+	return ready == 2;
+}
+
+void View_Board::paintEvent(QPaintEvent *event) {
 	QPainter paint(this);
 	// draw coordinate lines
 	paint.setPen(QPen(Qt::white, 1));
@@ -103,38 +113,45 @@ void Board_Widget::paintEvent(QPaintEvent *event) {
 	}
 }
 
-bool Board_Widget::eventFilter(QObject *target, QEvent *event) {         
+bool View_Board::eventFilter(QObject *target, QEvent *event) {         
 	if (event->type() == QEvent::MouseButtonPress && read_flag) {
 		QMouseEvent *mouseEvent = (QMouseEvent*)event;
 		int x = (mouseEvent->pos().x() - 44) / 44, y = (mouseEvent->pos().y() - 44) / 44;
 		FIGURE f = board->gcell(x, y);
 		if (ready == 0) {
+			qDebug() << "if (ready == 0) ...";
 			result.from.x = x;
 			result.from.y = y;
 			if (0
-				|| (currentColor == WHITE && !IS_WHITE(f))
-				|| (currentColor == BLACK && !IS_BLACK(f))
+				|| (color == WHITE && !IS_WHITE(f))
+				|| (color == BLACK && !IS_BLACK(f))
 			) return true;
 			ready = 1;
+			qDebug() << "ready = 1;";
 			return true;
 		}
 		else if (ready == 1) {
+			qDebug() << "if (ready == 1) ...";
 			result.to.x = x;
 			result.to.y = y;
 			if (!board->canMove(result)) {
 				result.from.x = x;
 				result.from.y = y;
 				if (0
-					|| (currentColor == WHITE && !IS_WHITE(f))
-					|| (currentColor == BLACK && !IS_BLACK(f))
+					|| (color == WHITE && !IS_WHITE(f))
+					|| (color == BLACK && !IS_BLACK(f))
 				) {
 					ready = 0;
+					qDebug() << "ready = 0;";
 					return true;
 				}
 				ready = 1;
+				qDebug() << "ready = 1;";
 				return true;
 			}
 			ready = 2;
+			qDebug() << "ready = 2;";
+			read_flag = false;
 			return true;
 		}
 		return true;
@@ -142,39 +159,15 @@ bool Board_Widget::eventFilter(QObject *target, QEvent *event) {
 	return false;
 };
 
-void Board_Widget::startMove(COLOR color) {
-	read_flag = true;
-	ready = 0;
-	currentColor = color;
-}
-
-MOVE Board_Widget::getMove() {
-	read_flag = false;
-	return result;
-}
-
-bool Board_Widget::isReady() {
-	return ready == 2;
-}
-
-// request move from human
-void View_Board::execMove(BOARD board) {
-	canvas->startMove(color);
-	do {
-		if (canvas->isReady()) {
-			result = canvas->getMove();
-			break;
-		}
-		usleep(300);
-	} while (true);
-	emit moveExecuted();
-}
-
 void View_Board::updateBoard() {
-	canvas->update();
+	update();
 }
 
+// finishing Game
 void View_Board::finishGame(GAMESTATE res_flag) {
-	canvas->status(res_flag);
-	canvas->update();
+	qDebug() << "View_Board::finishGame(GAMESTATE res_flag)";
+	
+	end_flag = res_flag;
+	update();
 }
+

@@ -28,7 +28,6 @@
 	void *ai_plr_first_choose(void *ptr);
 	
 	class Ai_Player: public Player {
-		Q_OBJECT
 	protected:
 		// minimax limit
 		const static int MINMAX_END = 2000000;

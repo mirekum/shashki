@@ -1,15 +1,15 @@
 #ifndef _CONTROL_H_
 	#define _CONTROL_H_
 	
-	#include <QtCore>
+	#include <QtGui>
 	#include "Model/game.h"
 	#include "View/view_main.h"
 	#include "View/view_startgame.h"
-	#include "View/view_finishgame.h"
 	#include "View/view_board.h"
 	#include "View/view_info.h"
+	#include "View/view_finishgame.h"
 	
-	class Control: public QObject {
+	class Control: public QApplication {
 		Q_OBJECT
 	protected:
 		Game *game;
@@ -19,12 +19,16 @@
 		View_Board *board_ui;
 		View_Info *info_ui;
 	public:
-		Control(Game &_game, View_Main &_main_ui, View_StartGame &_start_ui, View_FinishGame &_finish_ui, View_Board &_board_ui, View_Info &_info_ui);
+		// create application
+		Control(int &argc, char** argv);
+		// close (destroy) application
+		~Control();
 	signals:
+		void newGameSignal();
 		void startGameSignal();
 	public slots:
+		void newGame();
 		void createGame(Player *wp, Player *bp);
-		void startGameSlot();
 		void finishGame(GAMESTATE);
 	};
 	

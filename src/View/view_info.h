@@ -1,22 +1,19 @@
 #ifndef _VIEW_INFO_H_
 	#define _VIEW_INFO_H_
 	
+	#include <QtGui>
 	#include "Model/game.h"
-	#include "View/view.h"
 	#include "View/view_main.h"
 	
-	class View_Info: public QObject, public View {
+	class View_Info: public QFrame {
 		Q_OBJECT
 	protected:
 		Game *game;
 		QWidget *window;
-		QFrame *infowrap;
 	public:
-		View_Info(View_Main &main_ui);
+		View_Info(QWidget *parent);
 		// view initialization
 		void init(Game *_game);
-		// view hiding
-		void hide();
 	};
 	
 #endif

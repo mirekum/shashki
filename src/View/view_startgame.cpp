@@ -1,12 +1,67 @@
 #include "View/view_startgame.h"
 
-View_StartGame::View_StartGame(View_Main &main_ui) {
-	window = main_ui.getWindow();
+View_StartGame::View_StartGame(QWidget *parent) {
+	qDebug() << "View_StartGame::View_StartGame(QWidget *parent)";
+	
+	window = parent;
 	wp = NULL;
 	bp = NULL;
 }
+
+void View_StartGame::show() {
+	qDebug() << "View_StartGame::show() -> BEGIN";
+	
+	// greeting box
+	greeting = new QFrame(window);
+	greeting->setGeometry(40, 40, 720, 340);
+	greeting->setFrameStyle(QFrame::Box | QFrame::Plain);
+	greeting->setLineWidth(3);
+	greeting->show();
+	qDebug() << "View_StartGame::show() -> greeting box";
+	
+	// choose white player
+	QGroupBox *plr1 = new QGroupBox(greeting);
+	plr1->setObjectName("White player");
+	plr1->setGeometry(10, 5, 340, 270);
+	QLabel *plr1_Label = new QLabel("White player");
+	QRadioButton *plr1_Human = new QRadioButton("Human");
+	QRadioButton *plr1_Ai = new QRadioButton("Computer");
+	plr1_Ai->setChecked(true);
+	QVBoxLayout *plr1_Layout = new QVBoxLayout;
+	plr1_Layout->addWidget(plr1_Label);
+	plr1_Layout->addWidget(plr1_Human);
+	plr1_Layout->addWidget(plr1_Ai);
+	plr1->setLayout(plr1_Layout);
+	plr1->show();
+	qDebug() << "View_StartGame::show() -> choose white player";
+	
+	// choose black player
+	QGroupBox *plr2 = new QGroupBox(greeting);
+	plr2->setObjectName("Black player");
+	plr2->setGeometry(360, 5, 340, 270);
+	QLabel *plr2_Label = new QLabel("Black player", plr2);
+	QRadioButton *plr2_Human = new QRadioButton("Human", plr2);
+	QRadioButton *plr2_Ai = new QRadioButton("Computer", plr2);
+	plr2_Ai->setChecked(true);
+	QVBoxLayout *plr2_Layout = new QVBoxLayout;
+	plr2_Layout->addWidget(plr2_Label);
+	plr2_Layout->addWidget(plr2_Human);
+	plr2_Layout->addWidget(plr2_Ai);
+	plr2->setLayout(plr2_Layout);
+	plr2->show();
+	qDebug() << "View_StartGame::show() -> choose black player";
+	
+	// start game button
+	QPushButton *start_btn = new QPushButton("Start game!", greeting);
+	start_btn->setGeometry(260, 280, 200, 45);
+	start_btn->show();
+	connect(start_btn, SIGNAL(clicked()), SLOT(startGame()));
+	
+	qDebug() << "View_StartGame::show() -> END";
+}
+
 void View_StartGame::startGame() {
-	greeting->hide();
+	qDebug() << "View_StartGame::startGame()";
 	
 	// set white player type
 	QList<QRadioButton*> wLst = greeting->findChild<QGroupBox*>("White player")->findChildren<QRadioButton*>();
@@ -18,22 +73,23 @@ void View_StartGame::startGame() {
 	if (bLst.at(0)->isChecked()) bPlr = HUMAN;
 	else if (bLst.at(1)->isChecked()) bPlr = AI;
 	
+	// destroy greeting box
+	greeting->hide();
+	delete greeting;
+	
 	// set up players
+	qDebug() << "View_StartGame -> setupPlayerBegin(WHITE)";
 	setupPlayerBegin(WHITE);
 }
-View_StartGame::~View_StartGame() {
-	qDebug()<<"wp dell";
-	if (wp) delete wp;
-	qDebug()<<"bp dell";
-	if (bp) delete bp;
-}
+
 void View_StartGame::setupPlayerBegin(COLOR color) {
 	curColor = color;
 	PLAYER_TYPE plr = (color == WHITE ? wPlr : bPlr);
 	
+	qDebug() << "View_StartGame::setupPlayerBegin(COLOR color) -> BEGIN -> " << (color == WHITE ? "White" : "Black");
+	
 	// settings box
-	QFrame *settings = new QFrame(window);
-	settingsBox = settings;
+	settings = new QFrame(window);
 	settings->setGeometry(40, 40, 720, 340);
 	settings->setFrameStyle(QFrame::Box | QFrame::Plain);
 	settings->setLineWidth(3);
@@ -45,10 +101,9 @@ void View_StartGame::setupPlayerBegin(COLOR color) {
 	header->show();
 	
 	// next button
-	QPushButton *_next_btn = new QPushButton("Next >>", settings);
-	next_btn = _next_btn;
-	_next_btn->setGeometry(260, 280, 200, 45);
-	_next_btn->show();
+	next_btn = new QPushButton("Next >>", settings);
+	next_btn->setGeometry(260, 280, 200, 45);
+	next_btn->show();
 	
 	connect(this, SIGNAL(setupPlayerEndSignal(Player*)), SLOT(setupPlayerEndSlot(Player*)));
 	
@@ -63,18 +118,20 @@ void View_StartGame::setupPlayerBegin(COLOR color) {
 		exit(1);
 	}
 }
+
 // set up ai
 void View_StartGame::setupAi() {
+	qDebug() << "View_StartGame::setupAi()";
+	
 	// begin
 	setupAiShowLevel();
 }
-void View_StartGame::setupAiEnd() {
-	Player *p = (Player*)AiPlr;
-	emit setupPlayerEndSignal(p);
-}
+
 // ai level
 void View_StartGame::setupAiShowLevel() {
-	QGroupBox *ai_level = new QGroupBox(settingsBox);
+	qDebug() << "View_StartGame::setupAiShowLevel()";
+	
+	QGroupBox *ai_level = new QGroupBox(settings);
 	ai_level->setObjectName("Ai level");
 	ai_level->setGeometry(180, 40, 360, 240);
 	QLabel *ai_level_Label = new QLabel("Ai Level:");
@@ -92,9 +149,11 @@ void View_StartGame::setupAiShowLevel() {
 	connect(next_btn, SIGNAL(clicked()), SLOT(setupAiGetLevel()));
 }
 void View_StartGame::setupAiGetLevel() {
+	qDebug() << "View_StartGame::setupAiGetLevel()";
+	
 	disconnect(next_btn, SIGNAL(clicked()), this, SLOT(setupAiGetLevel()));
-	settingsBox->findChild<QGroupBox*>("Ai level")->hide();
-	QList<QRadioButton*> ai_level = settingsBox->findChild<QGroupBox*>("Ai level")->findChildren<QRadioButton*>();
+	settings->findChild<QGroupBox*>("Ai level")->hide();
+	QList<QRadioButton*> ai_level = settings->findChild<QGroupBox*>("Ai level")->findChildren<QRadioButton*>();
 	if (ai_level.at(0)->isChecked()) AiPlr->setLevel(2);
 	else if (ai_level.at(1)->isChecked()) AiPlr->setLevel(4);
 	else if (ai_level.at(2)->isChecked()) AiPlr->setLevel(6);
@@ -102,70 +161,38 @@ void View_StartGame::setupAiGetLevel() {
 	setupAiEnd();
 }
 
-
+void View_StartGame::setupAiEnd() {
+	qDebug() << "View_StartGame::setupAiEnd()";
+	
+	Player *p = (Player*)AiPlr;
+	emit setupPlayerEndSignal(p);
+}
 
 void View_StartGame::setupPlayerEndSlot(Player *p) {
-	settingsBox->hide();
+	qDebug() << "View_StartGame::setupPlayerEndSlot(Player *p)";
+	
+	settings->hide();
+	delete settings;
 	disconnect(this, SIGNAL(setupPlayerEndSignal(Player*)), this, SLOT(setupPlayerEndSlot(Player*)));
 	if (curColor == WHITE) {
 		wp = p;
+		qDebug() << "View_StartGame -> setupPlayerBegin(BLACK)";
 		setupPlayerBegin(BLACK);
 	} else if (curColor == BLACK) {
 		bp = p;
-		sendPlayersData();
+		qDebug() << "View_StartGame emit createGame(wp, bp);";
+		emit createGame(wp, bp);
 	} else {
 		exit(1);
 	}
 }
 
-// send data for game creation
-void View_StartGame::View_StartGame::sendPlayersData() {
-	emit createGame(wp, bp);
-}
-
-// show first screen
-void View_StartGame::show() {
-	// greeting box
-	greeting = new QFrame(window);
-	greeting->setGeometry(40, 40, 720, 340);
-	greeting->setFrameStyle(QFrame::Box | QFrame::Plain);
-	greeting->setLineWidth(3);
-	greeting->show();
+View_StartGame::~View_StartGame() {
+	qDebug() << "View_StartGame::~View_StartGame() -> BEGIN";
 	
-	// choose white player
-	QGroupBox *plr1 = new QGroupBox(greeting);
-	plr1->setObjectName("White player");
-	plr1->setGeometry(10, 5, 340, 270);
-	QLabel *plr1_Label = new QLabel("White player");
-	QRadioButton *plr1_Human = new QRadioButton("Human");
-	QRadioButton *plr1_Ai = new QRadioButton("Computer");
-	plr1_Ai->setChecked(true);
-	QVBoxLayout *plr1_Layout = new QVBoxLayout;
-	plr1_Layout->addWidget(plr1_Label);
-	plr1_Layout->addWidget(plr1_Human);
-	plr1_Layout->addWidget(plr1_Ai);
-	plr1->setLayout(plr1_Layout);
-	plr1->show();
+	if (wp) delete wp;
+	if (bp) delete bp;
 	
-	// choose black player
-	QGroupBox *plr2 = new QGroupBox(greeting);
-	plr2->setObjectName("Black player");
-	plr2->setGeometry(360, 5, 340, 270);
-	QLabel *plr2_Label = new QLabel("Black player", plr2);
-	QRadioButton *plr2_Human = new QRadioButton("Human", plr2);
-	QRadioButton *plr2_Ai = new QRadioButton("Computer", plr2);
-	plr2_Ai->setChecked(true);
-	QVBoxLayout *plr2_Layout = new QVBoxLayout;
-	plr2_Layout->addWidget(plr2_Label);
-	plr2_Layout->addWidget(plr2_Human);
-	plr2_Layout->addWidget(plr2_Ai);
-	plr2->setLayout(plr2_Layout);
-	plr2->show();
-	
-	// start game button
-	QPushButton *start_btn = new QPushButton("Start game!", greeting);
-	start_btn->setGeometry(260, 280, 200, 45);
-	start_btn->show();
-	connect(start_btn, SIGNAL(clicked()), SLOT(startGame()));
+	qDebug() << "View_StartGame::~View_StartGame() -> END";
 }
 

@@ -1,18 +1,17 @@
 #ifndef _VIEW_FINISHGAME_H_
 	#define _VIEW_FINISHGAME_H_
 	
-	#include "View/view.h"
-	#include "View/view_main.h"
+	#include <QtGui>
 	#include "Model/game.h"
+	#include "View/view_main.h"
 	
-	class View_FinishGame: public QObject, public View {
+	class View_FinishGame: public QLabel {
 		Q_OBJECT
 	protected:
 		QWidget *window;
-		QLabel *box;
 	public:
-		View_FinishGame(View_Main &main_ui);
-		void show(GAMESTATE res_flag);
+		View_FinishGame(QWidget *parent);
+		void showResult(GAMESTATE res_flag);
 	};
 	
 #endif
