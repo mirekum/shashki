@@ -1,20 +1,32 @@
 #include "Model/game.h"
 
 Game::Game() {
+	qDebug() << "Game::Game()";
+	
 	wp = NULL;
 	bp = NULL;
 	thread = NULL;
 }
 
+Game::~Game() {
+	qDebug() << "Game::~Game()";
+}
+
 void Game::init(Player *_wp, Player *_bp) {
+	qDebug() << "Game::init(Player *_wp, Player *_bp)";
+	
 	if (!_wp || !_bp) exit(1);
+	
 	// players
 	wp = _wp;
 	bp = _bp;
 }
 
 void Game::start() {
+	qDebug() << "Game::start()";
+	
 	setCurrentPlayer(WHITE);
+	
 	// first move
 	move();
 }
@@ -39,6 +51,8 @@ void getMoveThread::run() {
 }
 
 void Game::finish(GAMESTATE res_flag) {
+	qDebug() << "Game::finish(GAMESTATE res_flag)";
+	
 	emit finishGame(res_flag);
 }
 
@@ -49,6 +63,7 @@ void Game::recieveMove() {
 	// check move
 	if (!board.move(mv)) {
 		// wrong move - request move again
+		qDebug() << "(!) wrong move: " << mv.from.x+1 << "," << mv.from.y+1 << " >> " << mv.to.x+1 << "," << mv.to.y+1;
 		move();
 		return;
 	}

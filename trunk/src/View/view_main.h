@@ -1,22 +1,20 @@
 #ifndef _VIEW_MAIN_H_
 	#define _VIEW_MAIN_H_
 	
-	#include "View/view.h"
+	#include <QtGui>
+	#include "Model/game.h"
 	
-	class View_Main: public QObject, public View {
+	class View_Main: public QMainWindow {
 		Q_OBJECT
-	protected:
-		QMainWindow *window;
 	public:
 		View_Main();
 		~View_Main();
-		// show main app window
-		void show();
-		// getters
-		QWidget* getWindow() {return window;};
+	signals:
+		void newGameSignal();
+		void quit();
 	protected slots:
 		void menuNewgame();
-		void menuExit();
+		void menuQuit();
 	};
 	
 #endif

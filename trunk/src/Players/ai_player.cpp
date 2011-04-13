@@ -67,7 +67,6 @@ void Ai_Player::execMove(BOARD board) {
 	// return the best move
 	//getchar();
 	//sleep(1);
-	emit moveExecuted();
 }
 
 // first call of choose functio

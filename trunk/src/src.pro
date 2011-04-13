@@ -11,7 +11,6 @@ HEADERS += Model/board.h \
            Model/game.h \
            Players/player.h \
            Players/ai_player.h \
-           View/view.h \
            View/view_main.h \
            View/view_startgame.h \
            View/view_finishgame.h \

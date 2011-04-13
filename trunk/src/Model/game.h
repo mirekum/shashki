@@ -27,9 +27,9 @@
 		getMoveThread *thread;
 	public:
 		Game();
+		~Game();
 		void init(Player *wp, Player *bp);
 		void start();
-		// getters
 		BOARD& getBoard() {return board;}
 	protected:
 		void setCurrentPlayer(COLOR color);
