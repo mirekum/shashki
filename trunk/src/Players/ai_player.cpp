@@ -124,9 +124,10 @@ void *ai_plr_first_choose(void *ptr) {
 // choose the best partial half-move
 // NegaScout
 double Ai_Player::choose(BOARD board, COLOR cColor, int step, double alpha, double beta, bool smflag) {
+	bool first = true;
 	// not last partial half-move
 	if (step < max_step) {
-		double score = -MINMAX_END;
+		double tmp = -MINMAX_END;
 		// go round all figures on the board
 		for (int i = 0; i < board.size; i++) {
 			for (int j = 0; j < board.size; j++) {
@@ -138,29 +139,53 @@ double Ai_Player::choose(BOARD board, COLOR cColor, int step, double alpha, doub
 				m = board.moves(d, arr);
 				// go round array of the possible partial half-moves for current figure
 				for (int k = 0; k < m; k++) {
-					double s; // current SRF value
 					BOARD board_copy = board;
 					// exec current partial half-move
 					board_copy.move(d, arr[k]);
-					// half-move continuing
-					if (board_copy.moves(arr[k])) {
-						// continue current half-move
-						s = choose(board_copy, cColor, step, alpha, beta, false);
+					// first move - full window
+					if (first) {
+						// half-move continuing
+						if (board_copy.moves(arr[k])) {
+							// continue current half-move
+							tmp = choose(board_copy, cColor, step, alpha, beta, false);
+						}
+						// half-move is finished
+						else {
+							// start enemy half-move
+							tmp = -choose(board_copy, cColor == WHITE ? BLACK : WHITE, step + 1, -beta, -alpha, true);
+						}
+						// not first yet
+						first = false;
+						// calculate max of SRF value
+						if (tmp > alpha) alpha = tmp;
 					}
-					// half-move is finished
+					// not first - null window
 					else {
-						// start enemy half-move
-						s = -choose(board_copy, cColor == WHITE ? BLACK : WHITE, step + 1, -beta, -alpha, true);
+						if (board_copy.moves(arr[k])) {
+							// continue current half-move
+							tmp = choose(board_copy, cColor, step, alpha, alpha+1, false);
+							if (tmp > alpha && tmp < beta) {
+								tmp = choose(board_copy, cColor, step, tmp, beta, false);
+							}
+						}
+						// half-move is finished
+						else {
+							// start enemy half-move
+							tmp = -choose(board_copy, cColor == WHITE ? BLACK : WHITE, step + 1, -(alpha+1), -alpha, true);
+							if (tmp > alpha && tmp < beta) {
+								tmp = -choose(board_copy, cColor == WHITE ? BLACK : WHITE, step + 1, -beta, -tmp, true);
+							}
+						}
 					}
+					
 					// calculate max of SRF value
-					if (s > score) score = s;
-					if (score > alpha) alpha = score;
+					if (tmp > alpha) alpha = tmp;
 					if (alpha >= beta) return alpha;
 				}
 			}
 		}
 		// result of going round this tree branch
-		return score;
+		return alpha;
 	}
 	// last partial half-move
 	else {
