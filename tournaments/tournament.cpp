@@ -1,7 +1,7 @@
 #include "tournament.h"
 
 // проведение турнира
-Tournament::Tournament(char *_title, Player *_wp, Player *_bp, int _Num) {
+Tournament::Tournament(std::string _title, Player *_wp, Player *_bp, int _Num) {
 	Cnt = 0;
 	w = b = d = 0;
 	Num = _Num;
@@ -9,27 +9,24 @@ Tournament::Tournament(char *_title, Player *_wp, Player *_bp, int _Num) {
 	wp = _wp;
 	bp = _bp;
 	// поехали!
-	for (int i = 0; i < Num; i++) {
-		game();
-	}
+	startGame();
 }
 
 // проведение одного матча
-void Tournament::game() {
-	Game *game = new Game();
-	
+void Tournament::startGame() {
+	// создаём игру
+	game = new Game();
+	// подсоединяемся к слоту
 	connect(game, SIGNAL(finishGame(GAMESTATE)), SLOT(finishGame(GAMESTATE)));
-	
+	// запускаем игру
 	game->init(wp, bp);
 	game->start();
-	
-	//disconnect(game, SIGNAL(finishGame(GAMESTATE)), SLOT(finishGame(GAMESTATE)));
 }
 
 // результаты турнира
 void Tournament::results() {
 	qDebug() << "----------------------------------------";
-	qDebug() << title;
+	qDebug() << title.c_str();
 	qDebug() << "White: " << w;
 	qDebug() << "Black: " << b;
 	qDebug() << "Draws: " << d;
@@ -38,7 +35,8 @@ void Tournament::results() {
 
 // конец игры
 void Tournament::finishGame(GAMESTATE res_flag) {
-	//qDebug() << title << " -> " << res_flag;
+	// удаляем игру
+	delete game;
 	// запоминаем результат
 	switch (res_flag) {
 		case END_WHITE:
@@ -51,9 +49,13 @@ void Tournament::finishGame(GAMESTATE res_flag) {
 			d++;
 		break;
 	}
+	// промежуточные результаты
+	if (Cnt % 100 == 0) qDebug() << title.c_str() << " :: " << Cnt << " (w: " << w << ", b: " << b << ", d: " << d << ")";
 	// следим за окончанием
 	if (++Cnt >= Num) {
 		results();
+	} else {
+		startGame();
 	}
 }
 

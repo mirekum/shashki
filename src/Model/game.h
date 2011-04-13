@@ -23,8 +23,6 @@
 	protected:
 		BOARD board;
 		Player *wp, *bp;
-		int moveNum;
-		MOVE lastMove[Player::maxFiguresNumber];
 		Player *current;
 		getMoveThread *thread;
 	public:

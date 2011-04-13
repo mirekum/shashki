@@ -5,9 +5,8 @@
 // entry point
 int main(int argc, char** argv) {
 	// board test
-	Test_Board boardTest;
-	QTest::qExec(&boardTest);
-	
+	Test_Board test1;
+	QTest::qExec(&test1);
 	
 	// exit
 	return 0;

@@ -2,6 +2,7 @@
 	#define _TOURNAMENT_H_
 	
 	#include <QtCore>
+	#include <string>
 	#include "Model/board.h"
 	#include "Model/game.h"
 	#include "Players/player.h"
@@ -9,20 +10,22 @@
 	class Tournament: public QObject {
 		Q_OBJECT
 	protected:
+		// игра
+		Game *game;
 		// игроки
 		Player *wp, *bp;
 		// метаинформация
-		char *title;
+		std::string title;
 		// кол-во партий
 		int Num;
 		// счётчики
 		int Cnt, w, b, d;
 	public:
 		// проведение турнира
-		Tournament(char *_title, Player *_wp, Player *_bp, int _Num);
+		Tournament(std::string _title, Player *_wp, Player *_bp, int _Num);
 	protected:
 		// проведение одного матча
-		void game();
+		void startGame();
 		// результаты турнира
 		void results();
 	public slots:
