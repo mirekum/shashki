@@ -6,7 +6,7 @@
 	#include <string.h>
 	#include "Players/player.h"
 	
-	enum AI_PLAYER_TYPE {NegaMax_Ai, AlphaBeta_Ai, NegaScout_Ai};
+	enum AI_PLAYER_LEVEL {LVL_L, LVL_M, LVL_D};
 	
 	// chosen move
 	class CHOOSEN_MOVE {
@@ -37,42 +37,81 @@
 		virtual double srf(BOARD board);
 		// threads number
 		unsigned int thr_num;
+		// randomization
+		bool rndFlag;
+		// time control
+		bool timeCtr;
 	public:
 		// initialization
-		Ai_Player(int level = 4) {max_step = level; thr_num = 1; srand(time(0));}
+		Ai_Player(AI_PLAYER_LEVEL level = LVL_M) {
+			// player level
+			setLevel(level);
+			// multi-threading
+			thr_num = 1;
+			// randomization
+			srand(time(0));
+			rndFlag = true;
+		}
 		// get player type
 		virtual PLAYER_TYPE type() {return AI;};
 		// choose partial half-move
 		virtual void execMove(BOARD board);
 		// set ai level
-		void setLevel(int level) {max_step = level;};
+		void setLevel(AI_PLAYER_LEVEL level) {
+			// time control
+			timeCtr = true;
+			// player level
+			switch (level) {
+				case LVL_L:
+					max_step = 8;
+				break;
+				case LVL_M:
+					max_step = 9;
+				break;
+				case LVL_D:
+					max_step = 10;
+				break;
+			}
+		};
+		// set ai depth and turn off time control
+		void setDepth(int depth) {
+			timeCtr = false;
+			max_step = depth;
+		};
 		// set threads number
-		void setThrNum(int num) {thr_num = num;};
+		void setThrNum(int num) {
+			thr_num = num;
+		};
 		// getters
 		int getLevel() {return max_step;};
 		int getThrNum() {return thr_num;};
+		// randomization control
+		void randomize(bool var) {rndFlag = var;}
 		// AI players Fabric
-		static Player *createAiPlayer(char *str, int level);
+		static Player *createAiPlayer(char *str, AI_PLAYER_LEVEL level);
+		static Player *createAiPlayer(char *str, int depth);
 	protected:
 		// choose the best partial half-move
-		virtual double choose(BOARD board, COLOR _color, int step = 0, double alpha = -MINMAX_END, double beta = MINMAX_END, bool smflag = true);
+		virtual double choose(BOARD board, COLOR _color, int step = 0, double alpha = -MINMAX_END, double beta = MINMAX_END, bool smflag = true, time_t endTime = -1);
+		// time control
+		int getTimeForMove();
 	friend void *ai_plr_first_choose(void *ptr);
 	};
 	
+	// NegaScout
+	class Ai_Player_NegaScout: public Ai_Player {
+	public:
+		// initialization
+		Ai_Player_NegaScout(AI_PLAYER_LEVEL level = LVL_M): Ai_Player(level) {}
+	};
+	
+	// AlphaBeta
 	class Ai_Player_AlphaBeta: public Ai_Player {
 	public:
 		// initialization
-		Ai_Player_AlphaBeta(int level = 4): Ai_Player(level) {}
+		Ai_Player_AlphaBeta(AI_PLAYER_LEVEL level = LVL_M): Ai_Player(level) {}
 		// choose the best partial half-move
-		virtual double choose(BOARD board, COLOR _color, int step = 0, double alpha = -MINMAX_END, double beta = MINMAX_END, bool smflag = true);
-	};
-	
-	class Ai_Player_NegaMax: public Ai_Player {
-	public:
-		// initialization
-		Ai_Player_NegaMax(int level = 4): Ai_Player(level) {}
-		// choose the best partial half-move
-		virtual double choose(BOARD board, COLOR _color, int step = 0, double alpha = -MINMAX_END, double beta = MINMAX_END, bool smflag = true);
+		virtual double choose(BOARD board, COLOR _color, int step = 0, double alpha = -MINMAX_END, double beta = MINMAX_END, bool smflag = true, time_t endTime = -1);
 	};
 	
 	// moves synchronization between threads
@@ -85,6 +124,7 @@
 		pthread_mutex_t *queue_mutex;
 		double alpha, beta;
 		pthread_mutex_t *mark_mutex;
+		time_t endTime;
 	};
 	
 #endif

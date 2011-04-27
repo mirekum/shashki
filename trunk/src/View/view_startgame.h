@@ -20,6 +20,7 @@
 	public:
 		View_StartGame(QWidget *parent);
 		void show();
+		void hide();
 		void setupPlayerBegin(COLOR color);
 		~View_StartGame();
 		// set up Ai player

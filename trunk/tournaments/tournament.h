@@ -3,6 +3,7 @@
 	
 	#include <QtCore>
 	#include <string>
+	#include <ctype.h>
 	#include "Model/board.h"
 	#include "Model/game.h"
 	#include "Players/player.h"
@@ -32,6 +33,9 @@
 		// конец игры
 		void finishGame(GAMESTATE);
 	};
+	
+	// вспомогательная функция: строка - число?
+	bool is_numeric(char *s);
 	
 #endif
 

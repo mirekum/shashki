@@ -58,6 +58,7 @@ void Game::finish(GAMESTATE res_flag) {
 
 void Game::recieveMove() {
 	GAMESTATE res_flag;
+	//sleep(1);
 	MOVE mv = current->getMove();
 	delete thread;
 	// check move
