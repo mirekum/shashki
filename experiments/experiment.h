@@ -14,10 +14,10 @@
 		COLOR color;
 		int minExp, maxExp;
 		double Covar;
-		int minLvl, maxLvl;
+		int minDepth, maxDepth;
 	public:
-		Experiment(const BOARD &_board, COLOR _color, int _minExp, int _maxExp, double _Covar, int minLvl, int maxLvl);
-		void run(PLAYER_TYPE plr);
+		Experiment(const BOARD &_board, COLOR _color, int _minExp, int _maxExp, double _Covar, int minDepth, int maxDepth, char *title = "Experiment");
+		void run(Ai_Player *player, char *title = "Default");
 	protected:
 		READY_STATE isReady(const times_array &times, double &M, double &covar);
 	};

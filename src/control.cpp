@@ -45,6 +45,7 @@ void Control::newGame() {
 	board_ui->hide();
 	info_ui->hide();
 	finish_ui->hide();
+	start_ui->hide();
 	
 	// show start dialog
 	start_ui->show();

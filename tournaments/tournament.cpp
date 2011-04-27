@@ -59,3 +59,12 @@ void Tournament::finishGame(GAMESTATE res_flag) {
 	}
 }
 
+// вспомогательная функция: строка - число?
+bool is_numeric(char *s) {
+	if (!s) return false;
+	while (*s) {
+		if (!isdigit(*s++)) return false;
+	}
+	return true;
+}
+

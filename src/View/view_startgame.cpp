@@ -4,6 +4,8 @@ View_StartGame::View_StartGame(QWidget *parent) {
 	qDebug() << "View_StartGame::View_StartGame(QWidget *parent)";
 	
 	window = parent;
+	greeting = NULL;
+	settings = NULL;
 	wp = NULL;
 	bp = NULL;
 }
@@ -60,6 +62,18 @@ void View_StartGame::show() {
 	qDebug() << "View_StartGame::show() -> END";
 }
 
+void View_StartGame::hide() {
+	qDebug() << "View_StartGame::hide() -> greeting box";
+	
+	if (greeting) delete greeting;
+	greeting = NULL;
+	
+	if (settings) delete settings;
+	settings = NULL;
+	
+	qDebug() << "View_StartGame::hide() -> END";
+}
+
 void View_StartGame::startGame() {
 	qDebug() << "View_StartGame::startGame()";
 	
@@ -76,6 +90,7 @@ void View_StartGame::startGame() {
 	// destroy greeting box
 	greeting->hide();
 	delete greeting;
+	greeting = NULL;
 	
 	// set up players
 	qDebug() << "View_StartGame -> setupPlayerBegin(WHITE)";
@@ -154,9 +169,9 @@ void View_StartGame::setupAiGetLevel() {
 	disconnect(next_btn, SIGNAL(clicked()), this, SLOT(setupAiGetLevel()));
 	settings->findChild<QGroupBox*>("Ai level")->hide();
 	QList<QRadioButton*> ai_level = settings->findChild<QGroupBox*>("Ai level")->findChildren<QRadioButton*>();
-	if (ai_level.at(0)->isChecked()) AiPlr->setLevel(2);
-	else if (ai_level.at(1)->isChecked()) AiPlr->setLevel(4);
-	else if (ai_level.at(2)->isChecked()) AiPlr->setLevel(6);
+	if (ai_level.at(0)->isChecked()) AiPlr->setLevel(LVL_L);
+	else if (ai_level.at(1)->isChecked()) AiPlr->setLevel(LVL_M);
+	else if (ai_level.at(2)->isChecked()) AiPlr->setLevel(LVL_D);
 	// end
 	setupAiEnd();
 }
@@ -173,6 +188,7 @@ void View_StartGame::setupPlayerEndSlot(Player *p) {
 	
 	settings->hide();
 	delete settings;
+	settings = NULL;
 	disconnect(this, SIGNAL(setupPlayerEndSignal(Player*)), this, SLOT(setupPlayerEndSlot(Player*)));
 	if (curColor == WHITE) {
 		wp = p;

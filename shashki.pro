@@ -1,3 +1,3 @@
 TEMPLATE = subdirs
-SUBDIRS = src tests tournaments
+SUBDIRS = src tests experiments tournaments
 

@@ -1,5 +1,4 @@
 #include <QtCore>
-#include "experiment.h"
 #include "test_board.h"
 
 // entry point

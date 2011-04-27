@@ -4,30 +4,26 @@
 #include "experiment.h"
 
 // class constructor
-Experiment::Experiment(const BOARD &_board, COLOR _color, int _minExp, int _maxExp, double _Covar, int _minLvl, int _maxLvl):
-	minExp(_minExp), maxExp(_maxExp), Covar(_Covar), minLvl(_minLvl), maxLvl(_maxLvl)
+Experiment::Experiment(const BOARD &_board, COLOR _color, int _minExp, int _maxExp, double _Covar, int _minDepth, int _maxDepth, char *title):
+	minExp(_minExp), maxExp(_maxExp), Covar(_Covar), minDepth(_minDepth), maxDepth(_maxDepth)
 {
 	board = _board;
 	color = _color;
+	qDebug() << "====== " << title << " ======";
+	qDebug() << board;
+	qDebug() << "    " << (color == WHITE ? "White moves" : "Black moves");
+	qDebug() << " -------------------";
 };
 
-void Experiment::run(PLAYER_TYPE plr) {
-	Player *player;
+void Experiment::run(Ai_Player *player, char *title) {
 	time_t start_time, end_time;
-	switch (plr) {
-		case AI:
-			player = new Ai_Player();
-			std::cout << "=== Ai_Player ===" << std::endl;
-		break;
-		default:
-			exit(1);
-		break;
-	}
+	std::cout << "=== " << title << " ===" << std::endl;
 	player->setColor(color);
+	player->randomize(false);
 	board.startMove(color);
 	// go round need levels
-	for (int n = minLvl; n <= maxLvl; n++) {
-		player->setLevel(n);
+	for (int n = minDepth; n <= maxDepth; n++) {
+		player->setDepth(n);
 		times_array times;
 		double M = -1.0, covar = -1.0;
 		READY_STATE res;
@@ -38,7 +34,9 @@ void Experiment::run(PLAYER_TYPE plr) {
 			player->execMove(board);
 			time(&end_time);
 			// adds time difference to array
-			//std::cout << "[" << ++k << "] time: " << difftime(end_time, start_time) << " | " << covar << std::endl;
+			//MOVE mv = player->getMove();
+			//std::cout << "[" << ++k << "] time: " << difftime(end_time, start_time) << " | " << covar << " || " <<
+			//	mv.from.x << " , " << mv.from.y << " -> " << mv.to.x << " , " << mv.to.y << std::endl;
 			times.push_back(difftime(end_time, start_time));
 		}
 		// remember results
